@@ -104,8 +104,8 @@ To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundari
 | ID | Feature | Description | Acceptance Criteria |
 |---|---|---|---|
 | **FR-1** | Swatch Cropper | Interactive browser-based image cropper restricting aspect ratio to 1:1. | User can zoom, pan, and crop a square swatch resized client-side to $\le 800\times800$px before upload. |
-| **FR-2** | Optical Deskewing | OpenCV backend detects thread angle and straightens the image. | Returns deskewed image, estimated warp spacing $\Delta x$, weft spacing $\Delta y$, and rotation angle $\theta$. |
-| **FR-3** | AI Curation & Manual Fallback | Gemini suggests candidate weave; graceful manual fallback. | Returns structured JSON with suggested weave family, twill direction, confidence, and technical description. If uncertain or offline, returns `unavailable` and presents manual weave selector. |
+| **FR-2** | Optical Deskewing | OpenCV backend detects thread angle and straightens the image. | Returns deskewed image, estimated warp spacing $\Delta x$, weft spacing $\Delta y$, and rotation angle $\theta$. If FFT peak detection is ambiguous or fails, sets `spacing_detected: false`, `dx_px: null`, `dy_px: null` and prompts manual slider adjustment. Never invents synthetic measurements. |
+| **FR-3** | AI Curation & Manual Fallback | Gemini suggests candidate weave; graceful manual fallback. | Returns structured JSON with suggested weave family, twill direction, heuristic confidence, and technical description. Confidence is treated strictly as an uncalibrated heuristic suggestion, not proof of ground truth. If uncertain or offline, returns `unavailable` and presents manual weave selector. |
 | **FR-4** | Master Tile Editor | $N \times N$ interactive binary toggle matrix ($N \in \{2, 3, 4\}$). | Clicking a cell toggles binary state (1 = Warp over Weft, 0 = Weft over Warp). Capped at 16 cells max. Presets available for all 11 supported weaves. |
 | **FR-5** | Live Tiled Overlay & Grid Alignment | Semi-transparent rendering of the tiled master matrix over the fabric photo with phase alignment. | Master tile replicates across the viewport. Includes draggable $X/Y$ grid origin offsets, $\Delta x$ (EPI), $\Delta y$ (PPI), rotation fine-tuning, and opacity slider (0–100%). |
 | **FR-6** | Color & Provenance Metadata | User sets yarn colors and optional historical documentation. | Allows setting `warp_color` and `weft_color` hex values. Captures optional provenance metadata (`title`, `origin`, `maker`, `date_period`, `notes`) embedded in WIF remarks. |
@@ -158,9 +158,10 @@ To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundari
 - **Health Check Endpoint:** `GET /healthz` returning `{"status": "healthy", "service": "threadlore-core"}`.
 
 ### 5.3 AI Service (Google Cloud Vertex AI)
-- **Model:** Configurable via `GEMINI_MODEL` (default: `gemini-2.5-flash`, with support for `gemini-2.0-flash` or `gemini-1.5-flash`).
-- **Endpoint Location:** Configurable via `LOCATION` (e.g. `global` or `us-central1`).
+- **Model:** `gemini-3.8-flash` on Vertex AI (with `google-genai==3.3.0`), configurable via `GEMINI_MODEL` (with fallback to `gemini-2.5-flash` or `gemini-2.0-flash`).
+- **Endpoint Location:** Configurable via `LOCATION` (e.g. `global` or `us-central1`), decoupled from the Cloud Run hosting region.
 - **Invocation:** Asynchronous REST call via official Google GenAI SDK (`google-genai`).
+- **Heuristic Confidence Model:** `confidence` (float $0.0 \dots 1.0$) is treated strictly as an **uncalibrated heuristic indicator** of model certainty, not a mathematical verification of accuracy. The UI presents this as a helpful suggestion indicator (e.g., "Suggestion: Moderate Confidence"), never as verified ground truth.
 - **Structured Output Schema:** Pydantic model enforcing:
   ```json
   {
@@ -201,6 +202,7 @@ where $1$ denotes a warp thread over a weft thread, and $0$ denotes weft over wa
    - The number of shafts required is $S = |U_C|$.
    - Assign 1-based shaft index to each column: $\text{Shaft}(j) = \text{index of } C_j \text{ in } U_C + 1$.
    - **Constraint:** If $S > 4$, raise `LoomShaftOverflowError`.
+   - *Test Interface Note:* For standard master tiles ($N \le 4$), $S$ can mathematically never exceed 4. To rigorously test the $S > 4$ guardrail, the compiler exposes an underlying `factor_matrix(matrix: list[list[int]])` function that accepts arbitrary matrices (e.g., $5\times5$ satin), while `factor_drawdown` enforces $N \in \{2, 3, 4\}$ for user swatches.
 
 2. **Treadle (Treadling) Allocation:**
    - Scan rows $R_i = D_{i,*}$ for $i \in [0, N-1]$.
@@ -265,15 +267,16 @@ def validate_weave_structure(matrix: list[list[int]], max_allowed_float: int = 4
   - `[WIF]` (Version=1.1, Date, Developers=ThreadLore, Source Program=ThreadLore)
   - `[CONTENTS]` (Lists presence of active sections)
   - `[WEAVING]` (Mandatory: `Shafts=S`, `Treadles=T`, `Rising shed=1`)
-  - `[WARP]` (Threads=$W$, Units=Decipoints or Pixels, Thickness=...)
-  - `[WEFT]` (Threads=$H$, Units=Decipoints or Pixels, Thickness=...)
+  - `[WARP]` (Threads=$W$, Units=Inches | Centimeters | Decipoints, Thickness=...)
+  - `[WEFT]` (Threads=$H$, Units=Inches | Centimeters | Decipoints, Thickness=...)
   - `[COLOR PALETTE]` (Entries=2, Range=0,255)
   - `[COLOR TABLE]` (1=Warp RGB, 2=Weft RGB)
   - `[WARP COLORS]` and `[WEFT COLORS]` (Per-thread color references)
   - `[THREADING]` (End $j \rightarrow$ Shaft $s$)
   - `[TIEUP]` (Treadle $t \rightarrow$ comma-separated list of raised shafts)
   - `[TREADLING]` (Pick $i \rightarrow$ Treadle $t$)
-  - `[NOTES]` (Optional user-supplied provenance metadata: title, origin, maker, period, notes)
+  - `[NOTES]` (Numbered 1-based lines containing user-supplied provenance metadata: `1=Title: ...`, `2=Origin: ...`, `3=Artisan: ...`, `4=Period: ...`, `5=Remarks: ...`)
+- **Independent Reader Compliance:** Exported `.wif` files must validate cleanly against external tools (Handweaving.net, Asunder/pyweaving) without parser warnings.
 - **Practical Repeat Expansion:** User can configure repeat count $K$ (e.g. expand a $4\times4$ master repeat into a $40 \times 40$ thread project draft) so the exported file is directly mountable on a physical loom.
 
 ---

@@ -145,7 +145,7 @@ Create a `.env` file in the project root:
 ```env
 PROJECT_ID=threadlore-dev
 LOCATION=us-central1
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.8-flash
 GCS_BUCKET_NAME=threadlore-swatches-dev
 CORS_ORIGINS=["http://localhost:5173", "http://127.0.0.1:5173"]
 ```
