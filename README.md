@@ -145,18 +145,24 @@ Create a `.env` file in the project root:
 ```env
 PROJECT_ID=threadlore-dev
 LOCATION=us-central1
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.8-flash
 GCS_BUCKET_NAME=threadlore-swatches-dev
 CORS_ORIGINS=["http://localhost:5173", "http://127.0.0.1:5173"]
 ```
 
 ### 3. Launch Development Servers
 ```bash
-# Terminal 1: Run FastAPI backend
-uvicorn app.api.server:app --app-dir backend --reload --port 8000
+# Terminal 1: Run FastAPI backend (from project root)
+uvicorn backend.app.api.server:app --reload --port 8000
 
 # Terminal 2: Run Vite frontend
 npm --prefix frontend run dev
+```
+
+Or using the unified Makefile:
+```bash
+make run-backend
+make run-frontend
 ```
 
 Open your browser at `http://localhost:5173`.
