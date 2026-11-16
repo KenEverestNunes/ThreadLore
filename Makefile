@@ -9,17 +9,18 @@ setup:
 	cd frontend && $(NPM) install
 
 lint-backend:
-	ruff check backend/
-	ruff format --check backend/
+	ruff check backend/ scripts/
+	ruff format --check backend/ scripts/
 
 format-backend:
-	ruff format backend/
+	ruff format backend/ scripts/
 
 typecheck-backend:
-	mypy backend/app/
+	mypy backend/app/ scripts/
 
 test-backend:
-	pytest backend/tests/ -v -m "not integration"
+	pytest backend/tests/ -v
+	$(PYTHON) scripts/verify_wif_handweaving.py
 
 lint-frontend:
 	cd frontend && $(NPM) run lint
@@ -30,7 +31,7 @@ build-frontend:
 check: lint-backend typecheck-backend test-backend lint-frontend build-frontend
 
 run-backend:
-	uvicorn app.api.server:app --app-dir backend --reload --port 8000
+	uvicorn backend.app.api.server:app --reload --port 8000
 
 run-frontend:
 	cd frontend && $(NPM) run dev
