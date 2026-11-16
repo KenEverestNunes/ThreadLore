@@ -20,13 +20,13 @@ ThreadLore is an **AI-assisted, human-verified weave reconstruction tool** that 
     - $2/2$ Balanced Twill (S and Z): $4\times4$ repeat (4 shafts, 4 treadles)
     - $3/1$ Warp-Faced Twill (S and Z): $4\times4$ repeat (4 shafts, 4 treadles)
   - Satin is strictly excluded ($\ge 5$ shafts).
-- **Export Standards:** Standards-compliant WIF 1.1 with 1-based indexing, mandatory `[WEAVING]` section (`Shafts=`, `Treadles=`, `Rising shed=1`), dual-color palettes, and user-configurable project repeat dimensions (e.g. $40\times40$). PDF export is excluded for MVP (in-browser visual 4-part draft card provided).
-- **AI Operational Role:** Gemini Flash (configurable via `GEMINI_MODEL`, defaulting to `gemini-2.5-flash` / `gemini-2.0-flash` on Vertex AI) performs macro-swatch weave classification, suggests a candidate template, and provides technical descriptions of weave mechanics. If uncertain, it returns `status: "unavailable"` and prompts manual selection. It **never** fabricates cultural origin narratives or extracts raw pixel crossing matrices directly.
+- **Export Standards:** Standards-compliant WIF 1.1 with 1-based indexing, mandatory `[WEAVING]` section (`Shafts=`, `Treadles=`, `Rising shed=1`), valid physical measurement units (`Inches`, `Centimeters`, `Decipoints`), numbered 1-based `[NOTES]` lines (`1=Title: ...`), dual-color palettes, and user-configurable project repeat dimensions (e.g. $40\times40$). Verified against independent WIF readers. PDF export is excluded for MVP (in-browser visual 4-part draft card provided).
+- **AI Operational Role:** Gemini Flash (targeting `gemini-3.8-flash` on Vertex AI, configurable via `GEMINI_MODEL` with fallback to `gemini-2.5-flash`) performs macro-swatch weave classification, suggests a candidate template, and provides technical descriptions of weave mechanics. Its confidence score is treated as an **uncalibrated heuristic suggestion**, not proof of ground truth. If uncertain, it returns `status: "unavailable"` and prompts manual selection. It **never** fabricates cultural origin narratives or extracts raw pixel crossing matrices directly.
 - **Cultural Provenance:** Cultural origin, maker/artisan, date/period, and historical context are strictly user-supplied metadata fields preserved in project records and WIF remarks.
-- **Computer Vision Role:** OpenCV executes 2D FFT to measure thread spacing ($\Delta x, \Delta y$), calculates skew angle $\theta$, and performs affine rotation deskewing. It does **not** attempt automated over/under crossing classification.
+- **Computer Vision Role:** OpenCV executes 2D FFT to measure thread spacing ($\Delta x, \Delta y$), calculates skew angle $\theta$, and performs affine rotation deskewing. It does **not** attempt automated over/under crossing classification, and **never invents synthetic measurements** when frequency peaks are ambiguous (returns `spacing_detected: false` with manual slider controls).
 - **Editing UX & Canvas Alignment:** User edits a $2\times2$, $3\times3$, or $4\times4$ master repeat tile (max 16 cells). The canvas live-tiles the master block over the photo with draggable $X/Y$ grid origin offsets (`offsetX`, `offsetY`), zoom, angle fine-tuning, and opacity sliders.
 - **Physical Interlacing Check:** Enforces cyclic float run lengths $\le 4$ across periodic boundary wrapping ($2N$) and rejects completely uniform rows/columns (threads that never interlace).
-- **Mathematical Factorization:** Closed-form deterministic tie-up derivation $M[s,t] = D[i_t, j_s]$ from representative row/column intersections.
+- **Mathematical Factorization:** Closed-form deterministic tie-up derivation $M[s,t] = D[i_t, j_s]$ from representative row/column intersections. Tested for $\le 4$ shaft ceilings via an underlying general matrix solver interface (`factor_matrix`).
 
 ---
 
@@ -36,7 +36,7 @@ ThreadLore is an **AI-assisted, human-verified weave reconstruction tool** that 
 - **Phase 1:** Deterministic Weaving Mathematics, Draft Factorization & Structural Validation
 - **Phase 2:** Standards-Compliant WIF 1.1 Serialization & Interoperability Engine
 - **Phase 3:** Fast Fourier Transform (FFT) Geometry Profiler & Optical Rectification Engine
-- **Phase 4:** Vertex AI Gemini Flash Multimodal Technical Curation Client & Schema Gate
+- **Phase 4:** Vertex AI Gemini 3.8 Flash Multimodal Technical Curation Client & Schema Gate
 - **Phase 5:** FastAPI Core Service Architecture, Orchestration Pipelines & Test Harness
 - **Phase 6:** React + TypeScript Frontend Foundation, State Core & Swatch Cropper
 - **Phase 7:** Master Repeat Tile Editor, Interactive Canvas Overlay & Phase Alignment Loop
@@ -50,7 +50,7 @@ ThreadLore is an **AI-assisted, human-verified weave reconstruction tool** that 
 ## Phase 0: Repository Inception, Workspace Topology & Toolchain Baseline
 
 **Goal:**  
-Establish a deterministic, monorepo workspace branching off existing tracked Git history into `develop`, containing isolated Python 3.11 and Node 20 runtime environments, locked dependency trees (including `scipy`), strict code quality tooling (`ruff`, `mypy`, `eslint`, `prettier`), and foundational GitHub Actions CI.
+Establish a deterministic, monorepo workspace branching off existing tracked Git history into `develop`, containing isolated Python 3.11 and Node 20 runtime environments, locked dependency trees (including `scipy` and modern `google-genai==3.3.0`), strict code quality tooling (`ruff`, `mypy`, `eslint`, `prettier`), and foundational GitHub Actions CI.
 
 **Dependencies:**
 - Python 3.11 installed locally.
@@ -61,7 +61,7 @@ Establish a deterministic, monorepo workspace branching off existing tracked Git
 - `.gitignore` — Universal ignore rules for Python, Node, OS, IDE, and Cloud artifacts (already established).
 - `.editorconfig` — Consistent indentation, encoding, and newline rules across IDEs.
 - `pyproject.toml` — Python packaging, tool configurations for Ruff, Mypy, and Pytest.
-- `backend/requirements.txt` — Pinned production dependencies for backend service (includes `scipy`).
+- `backend/requirements.txt` — Pinned production dependencies for backend service (includes `scipy` and `google-genai==3.3.0`).
 - `backend/requirements-dev.txt` — Pinned testing and quality analysis dependencies.
 - `frontend/package.json` — Frontend package definition and build scripts.
 - `frontend/tsconfig.json` — Strict TypeScript compiler configuration.
@@ -73,7 +73,7 @@ Establish a deterministic, monorepo workspace branching off existing tracked Git
 - `Makefile` — Standardized developer workflow shortcuts (`make lint`, `make test`, `make run`).
 
 **Implementation Details & Micro-Tasks:**
-1. Switch to integration branch: `git checkout -b develop`.
+1. Switch to integration branch: `git checkout -b develop` (and feature branch `feat/core-engine`).
 2. Ensure `.gitignore` and `.editorconfig` are active and enforced.
 3. Configure `pyproject.toml` targeting Python 3.11, Ruff line length 100, strict Mypy settings with zero `Any` escapes, and Pytest test paths.
 4. Pin production dependencies in `backend/requirements.txt`:
@@ -84,7 +84,7 @@ Establish a deterministic, monorepo workspace branching off existing tracked Git
    - `numpy==1.26.4`
    - `scipy==1.14.1`
    - `opencv-python-headless==4.10.0.84`
-   - `google-genai==0.1.1`
+   - `google-genai==3.3.0`
    - `google-cloud-storage==2.18.2`
    - `python-multipart==0.0.17`
 5. Pin development dependencies in `backend/requirements-dev.txt`: `pytest==8.3.3`, `pytest-asyncio==0.24.0`, `httpx==0.27.2`, `ruff==0.8.0`, `mypy==1.13.0`.
@@ -126,12 +126,9 @@ Implement the core mathematical compiler that factors arbitrary $2\times2$, $3\t
    - `WeaveFamily` enum supporting all 11 canonical variations: `plain_1_1`, `twill_1_2_s`, `twill_1_2_z`, `twill_2_1_s`, `twill_2_1_z`, `twill_1_3_s`, `twill_1_3_z`, `twill_2_2_s`, `twill_2_2_z`, `twill_3_1_s`, `twill_3_1_z`, and `custom`.
    - `ProvenanceMetadata` model: `title: str`, `origin: str | None`, `maker: str | None`, `date_period: str | None`, `notes: str | None`.
    - `BinaryMatrix` ($list[list[int]]$), `LoomDraft` (with 1-based indexing for threading, treadling, and tie-up), and `ValidationResult`.
-2. Implement `factor_drawdown(drawdown: BinaryMatrix, repeat_warp: int = 1, repeat_weft: int = 1) -> LoomDraft` in `backend/app/core/compiler.py`:
-   - Validates input dimensions ($N \in \{2, 3, 4\}$) and binary values ($0$ or $1$).
-   - Groups unique columns into shafts ($S = |U_C|$) with 1-based threading.
-   - Groups unique rows into treadles ($T = |U_R|$) with 1-based treadling.
-   - Solves Tie-Up Matrix $M \in \{0, 1\}^{S \times T}$: For shaft $s \in [1, S]$ (representative column $j_s$ where $\text{Shaft}[j_s] = s$) and treadle $t \in [1, T]$ (representative row $i_t$ where $\text{Treadle}[i_t] = t$), $M[s,t] = D[i_t, j_s]$.
-   - Optional repeat expansion: repeats master tile to practical project size ($W = N \times repeat\_warp$, $H = N \times repeat\_weft$).
+2. Implement `factor_matrix(matrix: BinaryMatrix) -> LoomDraft` and `factor_drawdown(drawdown: BinaryMatrix, repeat_warp: int = 1, repeat_weft: int = 1) -> LoomDraft` in `backend/app/core/compiler.py`:
+   - `factor_matrix`: General Boolean factorization engine. Groups unique columns into shafts ($S = |U_C|$) and unique rows into treadles ($T = |U_R|$). Derives Tie-Up $M[s,t] = D[i_t, j_s]$. Raises `LoomShaftOverflowError` if $S > 4$ and `LoomTreadleOverflowError` if $T > 4$.
+   - `factor_drawdown`: Public API wrapper validating master repeat dimensions ($N \in \{2, 3, 4\}$) and binary values ($0$ or $1$). Calls `factor_matrix` and executes repeat expansion ($W = N \times repeat\_warp$, $H = N \times repeat\_weft$).
    - Simulates drawdown $D'$ from generated draft and asserts $D' \equiv D$ identically (100% mathematical round-trip proof).
 3. Implement `validate_draft(draft: LoomDraft, matrix: BinaryMatrix, max_float: int = 4) -> ValidationResult` in `backend/app/core/validator.py`:
    - Checks shaft ceiling: $S \le 4$. Rejects if $S > 4$.
@@ -139,11 +136,11 @@ Implement the core mathematical compiler that factors arbitrary $2\times2$, $3\t
    - Interlacing check: Rejects completely uniform rows or columns (yarns that never interlace).
    - Cyclic float check: Checks contiguous identical runs across doubled arrays ($2N$ wrap). Enforces max cyclic float $\le 4$.
    - Clarifies float validation as structural weave stability, distinguishing it from empirical fabric durability.
-4. Configure Pytest fixtures in `backend/tests/conftest.py` covering all 11 canonical weaves, uniform row/col edge cases, and 5-shaft overflow matrices (via direct compiler interface).
-5. Implement unit tests in `test_compiler.py` and `test_validator.py` verifying exact shaft counts, tie-up matrices, cyclic float calculations, and rejection of over-limit drafts.
+4. Configure Pytest fixtures in `backend/tests/conftest.py` covering all 11 canonical weaves, uniform row/col edge cases, and a 5-end satin ($5\times5$) fixture.
+5. Implement unit tests in `test_compiler.py` and `test_validator.py` verifying exact shaft counts, tie-up matrices, cyclic float calculations, and rejection of over-limit drafts (calling `factor_matrix` directly with 5-end satin to verify 5-shaft overflow rejection without conflicting with master tile $N \le 4$ constraints).
 
 **Verification Steps:**
-1. Run `pytest backend/tests/test_compiler.py -v` $\rightarrow$ Expect 100% passing tests.
+1. Run `pytest backend/tests/test_compiler.py -v` $\rightarrow$ Expect 100% passing tests (including 5-shaft overflow test).
 2. Run `pytest backend/tests/test_validator.py -v` $\rightarrow$ Expect 100% passing tests.
 3. Run `mypy backend/app/core/` and `ruff check backend/app/core/`.
 
@@ -156,46 +153,50 @@ Implement the core mathematical compiler that factors arbitrary $2\times2$, $3\t
 ## Phase 2: Standards-Compliant WIF 1.1 Serialization & Interoperability Engine
 
 **Goal:**  
-Develop a zero-dependency WIF 1.1 serializer that converts compiled `LoomDraft` objects, yarn colors, project repeat counts, and user provenance metadata into standards-compliant plain text files using the official `[WEAVING]` specification, accompanied by an independent round-trip parser.
+Develop a zero-dependency WIF 1.1 serializer that converts compiled `LoomDraft` objects, yarn colors, project repeat counts, and user provenance metadata into standards-compliant plain text files using the official `[WEAVING]` specification, valid physical units (`Inches`, `Centimeters`, `Decipoints`), and numbered `[NOTES]` lines, accompanied by an independent round-trip parser and external reader verification.
 
 **Dependencies:**
 - Phase 1 completed (`LoomDraft` active).
 
 **Files Created / Modified:**
 - `backend/app/core/wif.py` — WIF 1.1 serializer and validation parser.
-- `backend/tests/test_wif.py` — Compliance, indexing, color palette, and round-trip verification tests.
+- `backend/tests/test_wif.py` — Compliance, indexing, physical units, color palette, independent reader verification, and round-trip tests.
 
 **Implementation Details & Micro-Tasks:**
 1. Implement strict conformance with official WIF 1.1 specification:
    - Line delimiter: Windows CRLF (`\r\n`).
    - 1-based indexing for ends, picks, shafts, treadles, and colors.
    - Mandatory sections: `[WIF]`, `[CONTENTS]`, `[WEAVING]` (`Shafts=`, `Treadles=`, `Rising shed=1`), `[WARP]`, `[WEFT]`, `[COLOR PALETTE]`, `[COLOR TABLE]`, `[WARP COLORS]`, `[WEFT COLORS]`, `[THREADING]`, `[TIEUP]`, `[TREADLING]`, `[NOTES]`.
+   - Physical units: `Units=Inches`, `Centimeters`, or `Decipoints` exclusively (never `Pixels`).
+   - Numbered `[NOTES]` section: `1=Title: ...`, `2=Origin: ...`, `3=Artisan: ...`, `4=Period: ...`, `5=Remarks: ...`.
 2. Implement dual-color palette serialization mapping hex colors to 8-bit integer RGB tuples (`Range=0,255`).
-3. Embed optional user-supplied provenance metadata in `[NOTES]` section (`Title`, `Origin`, `Artisan`, `Period`, `Remarks`).
+3. Embed optional user-supplied provenance metadata in `[NOTES]` section using standard numbered line formatting.
 4. Implement practical repeat expansion so users can export full-sized projects (e.g. 40 ends $\times$ 40 picks) rather than isolated 4-thread repeats.
-5. Implement `serialize_wif(draft: LoomDraft, warp_hex: str, weft_hex: str, provenance: ProvenanceMetadata | None) -> str`.
+5. Implement `serialize_wif(draft: LoomDraft, warp_hex: str, weft_hex: str, provenance: ProvenanceMetadata | None, units: str = "Centimeters") -> str`.
 6. Implement `parse_wif(wif_text: str) -> LoomDraft` using Python `configparser` to parse sections, re-simulate the drawdown, and prove 100% round-trip fidelity.
 7. Author comprehensive unit tests in `test_wif.py`:
    - Strict `[WEAVING]` section verification (`Rising shed=1`).
+   - Valid physical units check (`Units in {"Inches", "Centimeters", "Decipoints"}`).
+   - Numbered `[NOTES]` line formatting check.
+   - External parser compatibility: validate exported WIF files against an independent WIF reader / parsing grammar (not just ThreadLore's parser).
    - Round-trip identity on all 11 canonical weaves.
    - 1-based indexing verification (assert absence of `0=` keys).
    - CRLF binary line ending verification.
-   - Negative tests for malformed WIF text.
 
 **Verification Steps:**
-1. Run `pytest backend/tests/test_wif.py -v` $\rightarrow$ Confirm all tests pass.
-2. Inspect serialized twill sample output to verify header, `[WEAVING]`, and section formatting.
+1. Run `pytest backend/tests/test_wif.py -v` $\rightarrow$ Confirm all compliance and round-trip tests pass.
+2. Inspect serialized twill sample output to verify header, `[WEAVING]`, valid physical units, and numbered `[NOTES]` formatting.
 
 **Recommended Atomic Git Commits:**
-- `feat(wif): implement WIF 1.1 serializer with WEAVING section and repeat expansion`
-- `test(wif): add compliance parser and drawdown round-trip verification`
+- `feat(wif): implement WIF 1.1 serializer with WEAVING section, physical units, and repeat expansion`
+- `test(wif): add compliance parser and external reader verification tests`
 
 ---
 
 ## Phase 3: Fast Fourier Transform (FFT) Geometry Profiler & Optical Rectification Engine
 
 **Goal:**  
-Build an image preprocessing and frequency-domain analysis engine using OpenCV, NumPy, and SciPy that rectifies textile rotation skew and measures independent horizontal ($\Delta x$) and vertical ($\Delta y$) thread spacing from macro photographic swatches.
+Build an image preprocessing and frequency-domain analysis engine using OpenCV, NumPy, and SciPy that rectifies textile rotation skew and measures independent horizontal ($\Delta x$) and vertical ($\Delta y$) thread spacing from macro photographic swatches, reporting an uncertain status rather than inventing synthetic measurements when peaks are ambiguous.
 
 **Dependencies:**
 - Phase 0 completed.
@@ -218,28 +219,29 @@ Build an image preprocessing and frequency-domain analysis engine using OpenCV, 
 3. Implement `FFTProfiler` in `backend/app/cv/fft_profiler.py`:
    - `compute_spectrum`: Applies 2D Hanning window, runs 2D FFT (`np.fft.fft2`), shifts DC component (`np.fft.fftshift`), computes log magnitude spectrum.
    - `detect_dominant_angle`: Analyzes principal frequency components, extracts skew angle $\theta$ relative to nearest orthogonal axis.
-   - `estimate_thread_spacing`: Integrates 1D orthogonal projection profiles, uses `scipy.signal.find_peaks` with prominence thresholding, extracts fundamental spatial frequencies, and converts to pixel spacing $\Delta x$ and $\Delta y$. Defaults to $20.0$px fallback on low-contrast swatches.
+   - `estimate_thread_spacing`: Integrates 1D orthogonal projection profiles, uses `scipy.signal.find_peaks` with prominence thresholding, and extracts fundamental spatial frequencies.
+   - **Never Invent Measurements:** If peaks are ambiguous or Prominence $< Threshold$, sets `spacing_detected: false`, `dx_px: None`, `dy_px: None` and status `uncertain`. Does **not** invent a synthetic measurement like 20.0px. Prompts weaver to adjust spacing manually via UI sliders.
    - *Phase Ambiguity Handling:* Explicitly document that FFT measures frequency $(\Delta x, \Delta y)$ but cannot establish spatial phase origin $(x_0, y_0)$; spatial phase alignment is delegated to the interactive canvas overlay via draggable origin offsets.
-4. Author unit tests in `test_cv.py` for plain weave, twill, asymmetric density ($EPI \ne PPI$), rotated samples, blank image buffers, and corrupted inputs.
+4. Author unit tests in `test_cv.py` for plain weave, twill, asymmetric density ($EPI \ne PPI$), rotated samples, blank image buffers, low-contrast uncertain fallbacks, and corrupted inputs.
 
 **Verification Steps:**
 1. Run `pytest backend/tests/test_cv.py -v` $\rightarrow$ Confirm all frequency, angle, and edge-case tests pass.
-2. Execute benchmark script validating detected spacing within $\pm 1.5$px of ground truth.
+2. Execute benchmark script validating detected spacing within $\pm 1.5$px of ground truth on clean swatches, and asserting `spacing_detected == False` on low-contrast/noise swatches.
 
 **Recommended Atomic Git Commits:**
 - `feat(cv): implement optical preprocessor with bilateral filtering and deskewing`
-- `feat(cv): implement 2D FFT thread spacing and orientation profiler with scipy peak detection`
+- `feat(cv): implement 2D FFT thread spacing profiler with scipy peak detection and uncertain fallback`
 
 ---
 
-## Phase 4: Vertex AI Gemini Flash Multimodal Technical Curation Client & Schema Gate
+## Phase 4: Vertex AI Gemini 3.8 Flash Multimodal Technical Curation Client & Schema Gate
 
 **Goal:**  
-Integrate the Google GenAI SDK to call Gemini Flash on Vertex AI (with configurable model and endpoint location), classifying textile weave structures from macro swatch images, suggesting canonical template presets, explaining technical weave mechanics, and providing graceful fallback to manual pattern selection if confidence is low.
+Integrate the Google GenAI SDK (`google-genai==3.3.0`) to call `gemini-3.8-flash` on Vertex AI (with configurable model and endpoint location), classifying textile weave structures from macro swatch images, suggesting canonical template presets, explaining technical weave mechanics, and treating confidence as an uncalibrated heuristic suggestion with graceful fallback to manual pattern selection if uncertain.
 
 **Dependencies:**
 - Phase 1 completed (`types.py` active).
-- `google-genai==0.1.1` and `pydantic==2.10.2` installed in `.venv`.
+- `google-genai==3.3.0` and `pydantic==2.10.2` installed in `.venv`.
 - GCP Project ID and Vertex AI API access configured.
 
 **Files Created / Modified:**
@@ -251,8 +253,8 @@ Integrate the Google GenAI SDK to call Gemini Flash on Vertex AI (with configura
 **Implementation Details & Micro-Tasks:**
 1. Implement `Settings` in `backend/app/config.py` reading:
    - `PROJECT_ID: str = "threadlore-prod"`
-   - `LOCATION: str = "us-central1"` (or `global`)
-   - `GEMINI_MODEL: str = "gemini-2.5-flash"` (configurable via environment variable)
+   - `LOCATION: str = "global"` (or `us-central1`, decoupled from Cloud Run region)
+   - `GEMINI_MODEL: str = "gemini-3.8-flash"` (configurable via environment variable)
    - `GCS_BUCKET_NAME: str = "threadlore-swatches-prod"`
    - `MAX_UPLOAD_SIZE_BYTES: int = 2097152`
    - `CORS_ORIGINS: list[str] = ["http://localhost:5173", "http://localhost:8080"]`
@@ -261,17 +263,17 @@ Integrate the Google GenAI SDK to call Gemini Flash on Vertex AI (with configura
    - `weave_family: WeaveFamily`
    - `twill_direction: Literal["S", "Z"] | None`
    - `repeat_size: int` ($N \in \{2, 3, 4\}$)
-   - `confidence: float`
+   - `confidence: float` (treated strictly as an **uncalibrated heuristic score**)
    - `default_matrix: list[list[int]] | None`
    - `technical_description: str`
    - `float_risk_notes: str | None`
 3. Implement `GeminiCurator` in `backend/app/ai/gemini_curator.py`:
-   - Initialize Vertex AI GenAI client.
+   - Initialize Vertex AI GenAI client using `google.genai.Client`.
    - Author prompt focusing strictly on physical weave mechanics, twill float intervals, and diagonal orientation. Explicitly prohibit generating cultural origin or ethnic ancestry narratives.
    - Enforce structured JSON schema output matching `GeminiWeaveSuggestion`.
    - Implement exponential backoff retry (max 2 retries) and timeout management (8-second ceiling).
    - Implement graceful fallback: If confidence $< 0.60$ or API fails, returns `status: "unavailable"` and prompts user to pick from the 11 supported presets or configure manually. **Never invent a pattern with artificial confidence.**
-4. Author unit tests in `test_gemini.py` covering successful schema deserialization, malformed LLM response rejection, timeout handling, unavailable fallback path, and gated live Vertex AI integration tests.
+4. Author unit tests in `test_gemini.py` covering successful schema deserialization, malformed LLM response rejection, timeout handling, unavailable fallback path, and verify a real multimodal structured-output request against Vertex AI when configured.
 
 **Verification Steps:**
 1. Run `pytest backend/tests/test_gemini.py -v -m "not integration"` $\rightarrow$ Verify 100% pass on mocked responses and error handling.
@@ -304,12 +306,13 @@ Assemble the computer vision, AI technical curation, compiler, and WIF serializa
 **Implementation Details & Micro-Tasks:**
 1. Define REST DTO schemas in `backend/app/api/schemas.py`:
    - `ProvenanceMetadata`: `title: str`, `origin: str | None`, `maker: str | None`, `date_period: str | None`, `notes: str | None`.
-   - `SwatchAnalysisResponse`: `status: str`, `weave_family: WeaveFamily`, `twill_direction: str | None`, `repeat_size: int`, `confidence: float`, `default_matrix: list[list[int]] | None`, `technical_description: str`, `float_risk_notes: str | None`, `dx_px: float`, `dy_px: float`, `rotation_degrees: float`.
+   - `SwatchAnalysisResponse`: `status: str`, `weave_family: WeaveFamily`, `twill_direction: str | None`, `repeat_size: int`, `confidence: float` (uncalibrated heuristic indicator), `default_matrix: list[list[int]] | None`, `technical_description: str`, `float_risk_notes: str | None`, `dx_px: float | None`, `dy_px: float | None`, `spacing_detected: bool`, `rotation_degrees: float`.
    - `CompileDraftRequest`: `matrix: list[list[int]]`, `warp_color_hex: str = "#1E293B"`, `weft_color_hex: str = "#E2E8F0"`, `repeat_warp: int = 10`, `repeat_weft: int = 10`, `provenance: ProvenanceMetadata | None = None`.
    - `CompileDraftResponse`: `draft: LoomDraft`, `is_valid: bool`, `validation_errors: list[str]`, `wif_text: str`.
 2. Implement `POST /api/swatch` in `routes_swatch.py`:
    - Validates upload MIME type (`image/jpeg`, `image/png`) and size limit ($\le 2$MB).
    - Executes preprocessor decoding, contrast enhancement, FFT orientation/spacing profiling, and affine rotation deskewing.
+   - If FFT peak detection fails, sets `spacing_detected: false`, `dx_px: null`, `dy_px: null` and returns `status: "uncertain"` without synthetic spacing guesses.
    - Encodes rectified swatch to JPEG in memory and dispatches to `GeminiCurator`.
    - If Gemini confidence $< 0.60$ or API fails, returns `status: "unavailable"` and prompts user manual selection.
 3. Implement `POST /api/compile` in `routes_compile.py`:
@@ -490,15 +493,14 @@ Establish automated GitHub Actions CI workflows for linting, type-checking, unit
 - Phase 0 through Phase 9 completed.
 
 **Files Created / Modified:**
-- `.github/workflows/ci.yml` — GitHub Actions automated build, test, and lint workflow.
+- `.github/workflows/ci.yml` — Extended GitHub Actions workflow with container build and full matrix testing.
 - `backend/tests/test_adversarial.py` — Adversarial stress tests (extreme noise, blank images, invalid WIF payloads).
 - `scripts/verify_wif_handweaving.py` — Automated verification script testing generated WIFs against external parsing rules.
 
 **Implementation Details & Micro-Tasks:**
-1. Author `.github/workflows/ci.yml` executing three parallel/staged jobs:
-   - `backend-quality`: Sets up Python 3.11, runs Ruff lint/format checks, runs Mypy, runs Pytest with coverage.
-   - `frontend-quality`: Sets up Node 20, runs ESLint, runs TypeScript build verification.
-   - `container-verify`: Validates Dockerfile compilation via `docker/build-push-action`.
+1. Extend the baseline `.github/workflows/ci.yml` established in Phase 0 by adding:
+   - `container-verify`: Validates multi-stage Dockerfile compilation via `docker/build-push-action`.
+   - `wif-external-verify`: Executes `python scripts/verify_wif_handweaving.py` to ensure WIF interoperability against independent specification rules.
 2. Implement adversarial stress tests in `backend/tests/test_adversarial.py`:
    - Pure black and pure white image inputs (graceful default handling).
    - High-frequency noise inputs.
