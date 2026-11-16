@@ -1,0 +1,260 @@
+import React, { useState } from "react";
+import {
+  ArrowLeft,
+  Code,
+  Download,
+} from "lucide-react";
+import { useWeave } from "../context/WeaveContext";
+import { downloadWifFile } from "../services/api";
+
+export const LoomDraftCard: React.FC = () => {
+  const {
+    compiledResult,
+    warpColor,
+    weftColor,
+    provenance,
+    units,
+    setStep,
+  } = useWeave();
+
+  const [showWifCode, setShowWifCode] = useState(false);
+
+  if (!compiledResult || !compiledResult.draft) {
+    return (
+      <div className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-800 dark:bg-zinc-900">
+        <p className="text-zinc-500">No compiled draft available.</p>
+        <button
+          onClick={() => setStep("verify")}
+          className="mt-4 rounded-lg bg-zinc-900 px-4 py-2 text-xs font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+        >
+          Return to Verification
+        </button>
+      </div>
+    );
+  }
+
+  const { draft, wif_text } = compiledResult;
+
+  const handleDownload = () => {
+    const filename = provenance.title
+      ? provenance.title.toLowerCase().replace(/[^a-z0-9]+/g, "_")
+      : "threadlore_draft";
+    downloadWifFile(wif_text, `${filename}.wif`);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header action bar */}
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setStep("verify")}
+            className="flex items-center space-x-1 rounded-lg border border-zinc-200 px-3 py-1.5 text-xs text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to Editor</span>
+          </button>
+          <div>
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
+              {provenance.title || "Compiled 4-Shaft Loom Draft"}
+            </h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              Mathematically validated rising-shed loom instructions with verified physical units ({units}).
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setShowWifCode(!showWifCode)}
+            className="flex items-center space-x-1.5 rounded-lg border border-zinc-200 px-3 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            <Code className="h-4 w-4" />
+            <span>{showWifCode ? "Hide WIF Spec" : "View WIF Spec"}</span>
+          </button>
+
+          <button
+            onClick={handleDownload}
+            className="flex items-center space-x-2 rounded-lg bg-zinc-900 px-4 py-2 text-xs font-semibold text-white shadow hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition"
+          >
+            <Download className="h-4 w-4" />
+            <span>Download .WIF File</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Loom Specification Statistics Banner */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+          <span className="block text-xs text-zinc-500">Required Shafts</span>
+          <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            {draft.shafts} <span className="text-xs font-normal text-zinc-400">/ 4 max</span>
+          </span>
+        </div>
+
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+          <span className="block text-xs text-zinc-500">Required Treadles</span>
+          <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            {draft.treadles} <span className="text-xs font-normal text-zinc-400">/ 4 max</span>
+          </span>
+        </div>
+
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+          <span className="block text-xs text-zinc-500">Warp Ends</span>
+          <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            {draft.warp_threads}
+          </span>
+        </div>
+
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+          <span className="block text-xs text-zinc-500">Weft Picks</span>
+          <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            {draft.weft_picks}
+          </span>
+        </div>
+      </div>
+
+      {/* Visual Loom Draft Matrix Layout */}
+      <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 overflow-x-auto">
+        <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+          Loom Draft Diagram: Threading, Tie-up, Treadling & Drawdown
+        </h4>
+
+        <div className="inline-block min-w-full space-y-4">
+          {/* Top Row: Threading + Tieup */}
+          <div className="flex items-end space-x-4">
+            {/* Threading Matrix (Shafts 4..1 down, Warp ends 1..N across) */}
+            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+                Threading (Warp Shaft Assignments 1..4)
+              </span>
+              <div
+                className="grid gap-0.5"
+                style={{
+                  gridTemplateColumns: `repeat(${Math.min(60, draft.warp_threads)}, minmax(8px, 1fr))`,
+                }}
+              >
+                {[4, 3, 2, 1].map((shaftNum) =>
+                  draft.threading.slice(0, 60).map((assignedShaft, endIdx) => (
+                    <div
+                      key={`th-${shaftNum}-${endIdx}`}
+                      className={`h-3 w-3 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
+                        assignedShaft === shaftNum
+                          ? "bg-zinc-900 dark:bg-zinc-100"
+                          : "bg-transparent"
+                      }`}
+                      title={`End ${endIdx + 1}: Shaft ${shaftNum}`}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Tie-up Matrix (Shafts × Treadles) */}
+            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+                Tie-Up ({draft.shafts}×{draft.treadles})
+              </span>
+              <div
+                className="grid gap-0.5"
+                style={{
+                  gridTemplateColumns: `repeat(${draft.treadles}, minmax(14px, 1fr))`,
+                }}
+              >
+                {draft.tieup.map((row, sIdx) =>
+                  row.map((val, tIdx) => (
+                    <div
+                      key={`tu-${sIdx}-${tIdx}`}
+                      className={`h-4 w-4 rounded-[1px] border border-zinc-300 dark:border-zinc-700 flex items-center justify-center text-[9px] font-bold ${
+                        val === 1
+                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                          : "bg-white text-zinc-400 dark:bg-zinc-900"
+                      }`}
+                    >
+                      {val === 1 ? "X" : ""}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Row: Drawdown + Treadling */}
+          <div className="flex items-start space-x-4">
+            {/* Drawdown Simulation */}
+            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+                Drawdown Fabric Simulation (Showing up to 60×60)
+              </span>
+              <div
+                className="grid gap-[0.5px] border border-zinc-300 dark:border-zinc-700 bg-zinc-200 dark:bg-zinc-800"
+                style={{
+                  gridTemplateColumns: `repeat(${Math.min(60, draft.warp_threads)}, minmax(6px, 1fr))`,
+                  width: `${Math.min(60, draft.warp_threads) * 8}px`,
+                }}
+              >
+                {draft.drawdown.slice(0, 60).map((row, pIdx) =>
+                  row.slice(0, 60).map((cell, eIdx) => (
+                    <div
+                      key={`dd-${pIdx}-${eIdx}`}
+                      style={{
+                        backgroundColor: cell === 1 ? warpColor : weftColor,
+                      }}
+                      className="h-2 w-2"
+                      title={`Pick ${pIdx + 1}, End ${eIdx + 1}: ${cell === 1 ? "Warp" : "Weft"}`}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Treadling Sequence */}
+            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+                Treadling
+              </span>
+              <div
+                className="grid gap-0.5"
+                style={{
+                  gridTemplateColumns: `repeat(${draft.treadles}, minmax(14px, 1fr))`,
+                }}
+              >
+                {draft.treadling.slice(0, 40).map((treadleNum, pickIdx) =>
+                  Array.from({ length: draft.treadles }).map((_, colTreadleIdx) => (
+                    <div
+                      key={`tr-${pickIdx}-${colTreadleIdx}`}
+                      className={`h-2.5 w-3.5 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
+                        colTreadleIdx + 1 === treadleNum
+                          ? "bg-zinc-900 dark:bg-zinc-100"
+                          : "bg-transparent"
+                      }`}
+                    />
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Raw WIF Code Drawer */}
+      {showWifCode && (
+        <div className="rounded-xl border border-zinc-200 bg-zinc-950 p-5 text-white dark:border-zinc-800 font-mono text-xs shadow-lg">
+          <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-2">
+            <span className="text-zinc-400">Standard WIF 1.1 Plaintext File</span>
+            <button
+              onClick={handleDownload}
+              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center space-x-1"
+            >
+              <Download className="h-3 w-3" />
+              <span>Download File</span>
+            </button>
+          </div>
+          <pre className="max-h-72 overflow-y-auto whitespace-pre font-mono text-[11px] leading-relaxed text-zinc-300">
+            {wif_text}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+};
