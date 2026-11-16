@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1880 800" width="1880" height="800">
+<rect width="1880" height="800" fill="#000000"/>
+<path d="M 49.3 96.1 Q 940.0 95.3 1831.0 94.9" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 44.3 94.3 Q 940.0 95.7 1834.5 95.5" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<text x="50" y="55" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="28" font-weight="bold" letter-spacing="1.5">THREADLORE — SYSTEM FLOW &amp; STATE MACHINE</text>
+<text x="50" y="82" fill="#aaaaaa" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="15">State Lifecycle · Optical Ingestion ──► AI Curation ──► User Verification Loop ──► Loom Factorization ──► WIF 1.1</text>
+<rect x="50" y="130" width="490" height="620" rx="6" fill="#000000"/>
+<path d="M 48.1 129.0 Q 295.0 128.8 542.3 129.0" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 41.7 129.9 Q 295.0 131.1 547.6 130.3" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 539.3 126.8 Q 540.4 440.0 539.5 752.1" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 540.4 122.4 Q 538.7 440.0 540.9 757.7" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 542.8 749.8 Q 295.0 750.5 47.4 748.8" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 548.1 749.6 Q 295.0 750.1 40.9 750.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 50.2 752.2 Q 48.0 440.0 48.9 126.2" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 49.2 758.4 Q 48.3 440.0 50.5 121.7" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<text x="70" y="165" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="19" font-weight="bold">PHASE 1: INGESTION &amp; GEOMETRY</text>
+<rect x="80" y="200" width="430" height="100" rx="6" fill="#000000"/>
+<path d="M 76.9 200.0 Q 295.0 200.6 513.9 199.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 72.5 200.4 Q 295.0 201.5 516.8 199.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 509.6 198.1 Q 511.9 250.0 510.9 303.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 510.5 194.5 Q 511.5 250.0 510.7 306.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 512.2 300.7 Q 295.0 301.4 77.6 300.9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 518.9 299.1 Q 295.0 300.2 73.1 300.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 79.0 303.1 Q 79.4 250.0 80.5 196.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 79.5 307.0 Q 78.2 250.0 79.0 194.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="100" y="240" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">1. STATE: IMAGE_UPLOADED</text>
+<text x="100" y="270" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Macro close-up photo received from user camera</text>
+<path d="M 294.3 299.1 Q 296.0 335.0 296.2 371.0" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 294.0 298.3 Q 295.7 335.0 295.9 370.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 295.9 369.9 Q 292.6 363.9 289.5 359.0" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 294.6 370.7 Q 291.2 364.6 289.3 358.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 296.0 369.5 Q 297.3 363.9 301.1 359.3" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 293.8 369.7 Q 297.5 364.0 299.8 357.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<rect x="80" y="370" width="430" height="120" rx="6" fill="#000000"/>
+<path d="M 76.6 369.7 Q 295.0 368.5 512.9 370.4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 72.4 369.7 Q 295.0 370.7 518.4 370.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 510.1 366.6 Q 511.5 430.0 510.4 493.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 509.8 363.1 Q 511.0 430.0 509.5 495.7" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 514.2 490.6 Q 295.0 491.8 76.9 490.4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 518.5 491.1 Q 295.0 490.9 72.7 489.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 81.0 491.9 Q 81.9 430.0 79.8 366.9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 80.3 495.9 Q 79.1 430.0 80.6 364.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="100" y="410" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">2. STATE: SWATCH_CROPPED</text>
+<text x="100" y="440" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• User selects square 15×15 thread patch</text>
+<text x="100" y="465" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Client downsamples to ≤ 800px (avoids payload lag)</text>
+<path d="M 295.5 489.4 Q 296.8 525.0 295.3 560.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 295.7 487.5 Q 293.1 525.0 295.6 561.3" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 294.8 559.4 Q 292.9 553.8 288.7 547.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 294.2 559.7 Q 293.2 553.6 288.4 547.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 295.2 560.4 Q 298.7 554.6 301.7 548.2" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 294.1 560.4 Q 296.2 553.3 301.4 549.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<rect x="292.4" y="513.5" width="145.2" height="23.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="365.0" y="529.0" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">POST /api/swatch</text>
+<rect x="80" y="560" width="430" height="150" rx="6" fill="#000000"/>
+<path d="M 76.3 560.2 Q 295.0 560.0 514.0 559.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 73.0 560.2 Q 295.0 561.7 518.0 559.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 508.9 557.3 Q 511.6 635.0 510.5 714.2" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 511.2 552.1 Q 509.6 635.0 509.1 716.6" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 513.1 711.2 Q 295.0 710.8 76.5 709.4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 517.7 710.1 Q 295.0 709.1 71.2 710.8" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 80.6 714.0 Q 81.7 635.0 79.6 555.9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 81.0 717.6 Q 79.2 635.0 79.3 551.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="100" y="595" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">3. STATE: GEOMETRY_PROFILED</text>
+<text x="100" y="625" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• 2D FFT extracts warp (dX) &amp; weft (dY) spacing</text>
+<text x="100" y="650" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Skew angle θ detected; affine deskew applied</text>
+<text x="100" y="680" fill="#55ff55" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13" font-weight="bold">✓ Orthogonal swatch prepared</text>
+<rect x="640" y="130" width="540" height="620" rx="6" fill="#000000"/>
+<path d="M 636.9 131.0 Q 910.0 128.7 1183.9 130.6" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 631.3 130.7 Q 910.0 131.0 1187.3 130.1" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1180.9 126.1 Q 1181.9 440.0 1180.2 753.4" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1180.4 121.7 Q 1179.4 440.0 1180.7 759.1" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1184.2 750.8 Q 910.0 749.5 635.9 750.4" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1188.4 749.7 Q 910.0 751.6 632.9 748.9" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 638.9 751.9 Q 641.8 440.0 638.8 126.1" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 640.8 759.0 Q 641.9 440.0 639.2 122.5" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<text x="660" y="165" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="19" font-weight="bold">PHASE 2: AI CURATION &amp; VERIFICATION</text>
+<rect x="670" y="200" width="480" height="120" rx="6" fill="#000000"/>
+<path d="M 667.5 199.4 Q 910.0 201.2 1154.1 200.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 661.5 199.8 Q 910.0 200.7 1158.6 200.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1151.0 196.8 Q 1150.0 260.0 1150.9 321.9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1150.5 192.0 Q 1149.9 260.0 1150.5 326.3" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1153.3 319.1 Q 910.0 319.5 668.1 319.4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1157.9 319.0 Q 910.0 321.5 661.0 320.6" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 670.1 323.9 Q 668.4 260.0 669.9 197.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 669.2 325.8 Q 671.3 260.0 670.7 194.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="690" y="240" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">4. STATE: PATTERN_CLASSIFIED</text>
+<text x="690" y="270" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Gemini 2.0 Flash classifies weave family (e.g. 2/2 Twill)</text>
+<text x="690" y="295" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Recommends repeat size N ∈ (2, 3, 4) &amp; cultural note</text>
+<path d="M 510.5 635.0 Q 545.0 636.4 581.1 635.6" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 508.9 633.9 Q 545.0 636.1 582.7 635.2" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 579.4 635.5 Q 578.1 447.5 580.1 260.1" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 580.2 640.9 Q 579.1 447.5 581.2 255.1" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 579.0 259.1 Q 625.0 260.9 670.1 260.8" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 576.5 260.0 Q 625.0 258.5 672.2 259.1" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 669.8 260.7 Q 664.8 264.1 657.5 266.4" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 669.8 260.2 Q 664.9 264.4 656.8 265.4" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 669.4 260.9 Q 663.6 258.4 657.5 254.8" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 669.7 261.0 Q 664.9 255.7 657.5 254.8" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<rect x="511.5" y="428.5" width="137.0" height="23.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="580.0" y="444.0" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Deskewed Swatch</text>
+<path d="M 909.6 320.9 Q 909.7 355.0 910.5 389.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 909.5 317.4 Q 909.7 355.0 911.1 393.2" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 911.0 390.5 Q 905.9 384.8 903.1 377.4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 911.1 391.2 Q 906.9 384.3 903.5 377.8" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 909.3 389.1 Q 914.4 384.9 915.5 378.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 910.7 389.2 Q 914.2 384.8 915.1 377.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<rect x="898.3" y="343.5" width="153.4" height="23.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="975.0" y="359.0" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Pre-fill Template</text>
+<rect x="670" y="390" width="480" height="130" rx="6" fill="#000000"/>
+<path d="M 666.8 391.0 Q 910.0 390.4 1153.3 390.3" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 661.3 390.9 Q 910.0 390.7 1158.9 390.8" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1149.2 385.9 Q 1148.9 455.0 1149.7 523.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1150.9 383.8 Q 1151.2 455.0 1150.5 527.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1153.7 519.2 Q 910.0 521.4 667.0 520.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1157.4 520.9 Q 910.0 519.5 661.6 519.8" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 670.5 521.9 Q 669.8 455.0 670.3 387.0" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 669.7 527.3 Q 671.2 455.0 671.1 381.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="690" y="425" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">5. STATE: MASTER_TILE_INITIALIZED</text>
+<text x="690" y="455" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Editor loads N×N master tile (2x2, 3x3, or 4x4)</text>
+<text x="690" y="480" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• User edits max 16 cells (guarantees mathematical symmetry)</text>
+<path d="M 859.9 519.5 Q 858.8 550.0 859.5 579.3" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 859.3 519.3 Q 858.6 550.0 860.0 581.3" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 860.2 580.9 Q 858.2 573.7 853.4 568.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 859.4 580.1 Q 855.5 575.0 853.7 567.4" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 860.6 579.8 Q 863.1 574.3 865.7 569.0" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 861.0 579.2 Q 861.9 573.7 865.6 568.7" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 959.6 579.2 Q 958.9 550.0 961.1 520.9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 960.1 581.0 Q 958.3 550.0 958.8 517.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 960.1 519.5 Q 962.1 526.2 965.9 530.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 958.9 520.4 Q 963.4 525.6 965.6 532.6" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 959.8 520.2 Q 957.7 526.1 953.7 531.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 959.1 518.9 Q 956.2 525.4 953.0 532.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<rect x="963.8" y="538.5" width="112.4" height="23.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="1020.0" y="554.0" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Optical Sync</text>
+<rect x="670" y="580" width="480" height="130" rx="6" fill="#000000"/>
+<path d="M 667.0 579.2 Q 910.0 578.4 1153.1 579.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 662.8 581.1 Q 910.0 581.0 1157.9 580.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1149.6 578.2 Q 1148.6 645.0 1151.1 712.2" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1150.4 573.2 Q 1149.0 645.0 1150.5 716.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1153.5 709.2 Q 910.0 708.7 668.1 710.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1156.9 709.2 Q 910.0 711.8 662.4 710.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 670.9 712.3 Q 671.7 645.0 669.3 576.0" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 669.8 716.8 Q 669.6 645.0 670.8 573.2" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="690" y="615" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">6. STATE: USER_VERIFIED</text>
+<text x="690" y="645" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Live canvas tiles master block over photo</text>
+<text x="690" y="670" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• User matches dX/dY sliders to achieve optical lock</text>
+<rect x="1280" y="130" width="550" height="620" rx="6" fill="#000000"/>
+<path d="M 1277.9 130.6 Q 1555.0 131.2 1833.0 129.8" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1271.9 130.4 Q 1555.0 130.1 1838.8 130.4" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1830.2 126.9 Q 1831.0 440.0 1829.1 752.1" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1831.1 122.5 Q 1830.2 440.0 1828.9 759.0" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1833.2 748.8 Q 1555.0 749.1 1276.5 749.6" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1837.1 750.3 Q 1555.0 750.1 1272.3 750.3" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1280.1 752.1 Q 1280.0 440.0 1280.8 127.9" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1280.6 757.4 Q 1281.4 440.0 1279.5 120.9" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>
+<text x="1300" y="165" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="19" font-weight="bold">PHASE 3: COMPILATION &amp; WIF EXPORT</text>
+<rect x="1310" y="200" width="490" height="115" rx="6" fill="#000000"/>
+<path d="M 1307.9 201.0 Q 1555.0 201.1 1803.2 200.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1301.1 199.0 Q 1555.0 201.4 1808.9 201.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1800.3 196.8 Q 1799.1 257.5 1800.9 317.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1800.7 192.3 Q 1801.8 257.5 1800.5 322.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1802.8 314.5 Q 1555.0 316.6 1307.7 315.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1807.2 314.6 Q 1555.0 315.7 1301.9 315.3" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1309.6 317.2 Q 1311.8 257.5 1310.3 196.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1310.4 321.7 Q 1311.0 257.5 1310.8 192.6" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="1330" y="235" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">7. STATE: CYCLIC_FLOAT_CHECK</text>
+<text x="1330" y="265" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Evaluates 2N toroidal wrapping for warp/weft runs</text>
+<text x="1330" y="290" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Enforces run ≤ 4 threads (prevents snagging)</text>
+<path d="M 1149.2 645.0 Q 1190.0 646.1 1230.1 645.1" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1147.5 644.5 Q 1190.0 643.4 1231.9 644.8" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1229.3 645.4 Q 1229.7 450.0 1231.0 256.1" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1229.4 649.8 Q 1228.7 450.0 1230.2 250.5" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1230.0 256.2 Q 1270.0 255.4 1311.1 255.7" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1228.2 253.9 Q 1270.0 254.0 1313.5 255.5" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1309.8 255.5 Q 1303.4 256.3 1297.7 261.7" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1309.2 254.3 Q 1304.7 259.0 1298.4 261.0" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1310.4 255.7 Q 1304.7 251.0 1299.4 248.3" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1309.8 254.3 Q 1303.5 253.6 1298.1 249.7" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<rect x="1153.3" y="430.0" width="153.4" height="40.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="1230.0" y="445.5" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">POST /api/compile</text>
+<text x="1230.0" y="462.5" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">(Master Matrix)</text>
+<path d="M 1555.0 314.4 Q 1556.3 350.0 1553.8 384.4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1555.5 314.0 Q 1555.9 350.0 1554.0 387.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1555.3 384.2 Q 1552.0 379.2 1550.4 372.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1555.0 385.5 Q 1552.4 379.0 1550.0 373.2" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1556.1 384.2 Q 1557.3 378.9 1561.8 373.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1556.0 386.2 Q 1556.9 378.7 1560.9 373.7" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<rect x="1554.2" y="338.5" width="161.6" height="23.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="1635.0" y="354.0" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Floats Valid (&lt;=4)</text>
+<rect x="1310" y="385" width="490" height="125" rx="6" fill="#000000"/>
+<path d="M 1306.5 384.9 Q 1555.0 383.4 1804.1 384.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1302.2 385.5 Q 1555.0 387.0 1808.7 384.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1800.2 381.1 Q 1798.3 447.5 1799.2 513.7" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1801.0 378.9 Q 1799.8 447.5 1800.1 516.7" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1804.1 509.5 Q 1555.0 509.0 1307.0 509.1" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1806.9 509.7 Q 1555.0 511.8 1302.3 510.9" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1311.1 512.4 Q 1311.0 447.5 1310.8 381.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1310.1 518.1 Q 1309.5 447.5 1309.9 377.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<text x="1330" y="420" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">8. STATE: SHAFT_FACTORIZATION</text>
+<text x="1330" y="450" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Boolean matrix factoring: columns → shafts, rows → treadles</text>
+<text x="1330" y="475" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Enforces ceiling: Shafts ≤ 4 &amp; Treadles ≤ 4</text>
+<path d="M 1555.2 510.4 Q 1555.5 542.5 1554.2 574.5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1555.0 507.8 Q 1556.3 542.5 1554.6 577.0" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1555.3 575.6 Q 1553.1 568.7 1549.1 564.3" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1554.1 574.4 Q 1550.8 569.8 1549.1 562.5" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<path d="M 1553.8 575.7 Q 1556.8 568.6 1559.6 563.6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M 1554.2 575.6 Q 1559.5 570.0 1561.8 562.8" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
+<rect x="1554.2" y="530.5" width="161.6" height="23.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="1635.0" y="546.0" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Shafts Valid (&lt;=4)</text>
+<rect x="1310" y="575" width="490" height="140" rx="6" fill="#000000"/>
+<path d="M 1305.9 575.2 Q 1555.0 576.7 1803.7 575.0" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1303.2 575.8 Q 1555.0 576.3 1807.9 575.5" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1800.3 570.9 Q 1798.5 645.0 1799.3 718.3" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1799.2 568.8 Q 1801.5 645.0 1800.0 723.6" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1803.7 714.8 Q 1555.0 713.6 1306.4 714.0" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1808.0 715.3 Q 1555.0 716.1 1301.2 714.9" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<path d="M 1310.9 717.5 Q 1309.5 645.0 1310.8 572.3" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 1309.5 721.8 Q 1311.7 645.0 1310.0 567.0" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
+<text x="1330" y="610" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="18" font-weight="bold">9. STATE: DRAFT_GENERATED &amp; WIF_EXPORT</text>
+<text x="1330" y="640" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• WIF 1.1 file generated with 1-based indexing &amp; colors</text>
+<text x="1330" y="665" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• 4-part visual draft (Threading, Tie-Up, Treadling, Drawdown)</text>
+<text x="1330" y="695" fill="#55ff55" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5" font-weight="bold">✓ Ready for loom setup &amp; download</text>
+<path d="M 1311.1 275.1 Q 1255.0 274.6 1199.3 273.9" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1313.2 273.8 Q 1255.0 274.5 1196.4 275.7" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1199.6 276.1 Q 1199.5 362.5 1201.2 448.9" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1200.3 269.6 Q 1201.1 362.5 1199.3 455.7" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1200.0 451.1 Q 1175.0 448.4 1150.2 450.3" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1202.2 451.0 Q 1175.0 449.9 1148.5 449.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1150.8 450.4 Q 1156.4 448.2 1160.9 443.4" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round"/>
+<path d="M 1148.6 449.8 Q 1155.6 446.7 1161.7 443.2" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M 1150.3 450.9 Q 1156.5 451.6 1161.0 456.2" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round"/>
+<path d="M 1148.5 450.9 Q 1156.0 452.5 1161.1 455.8" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="1147.9" y="340.0" width="104.2" height="40.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="1200.0" y="355.5" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Floats &gt; 4</text>
+<text x="1200.0" y="372.5" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">(Rejection)</text>
+<path d="M 1309.5 464.6 Q 1255.0 466.9 1199.7 465.1" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1313.6 464.9 Q 1255.0 463.1 1197.5 464.9" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1199.9 465.6 Q 1175.0 464.2 1149.0 464.2" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1202.1 464.7 Q 1175.0 464.2 1147.4 465.3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="6,5"/>
+<path d="M 1149.7 465.7 Q 1155.1 460.7 1162.4 460.1" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round"/>
+<path d="M 1150.2 464.0 Q 1155.1 460.7 1163.2 459.7" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M 1150.9 465.8 Q 1155.4 468.8 1162.3 471.7" fill="none" stroke="#ffffff" stroke-width="2.0" stroke-linecap="round"/>
+<path d="M 1148.6 465.3 Q 1156.6 466.3 1161.1 471.6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+<rect x="1172.9" y="475.0" width="104.2" height="40.0" rx="4" fill="#000000" stroke="#444444" stroke-width="1"/>
+<text x="1225.0" y="490.5" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">Shafts &gt; 4</text>
+<text x="1225.0" y="507.5" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="12" font-style="italic" text-anchor="middle">(Rejection)</text>
+</svg>
