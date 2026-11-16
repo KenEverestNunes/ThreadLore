@@ -25,6 +25,21 @@ class WeaveFamily(str, Enum):
 BinaryMatrix = list[list[int]]
 
 
+CANONICAL_WEAVE_PRESETS: dict[WeaveFamily, BinaryMatrix] = {
+    WeaveFamily.PLAIN_1_1: [[1, 0], [0, 1]],
+    WeaveFamily.TWILL_1_2_S: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+    WeaveFamily.TWILL_1_2_Z: [[1, 0, 0], [0, 0, 1], [0, 1, 0]],
+    WeaveFamily.TWILL_2_1_S: [[1, 1, 0], [0, 1, 1], [1, 0, 1]],
+    WeaveFamily.TWILL_2_1_Z: [[1, 1, 0], [1, 0, 1], [0, 1, 1]],
+    WeaveFamily.TWILL_1_3_S: [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+    WeaveFamily.TWILL_1_3_Z: [[1, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0]],
+    WeaveFamily.TWILL_2_2_S: [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1]],
+    WeaveFamily.TWILL_2_2_Z: [[1, 1, 0, 0], [1, 0, 0, 1], [0, 0, 1, 1], [0, 1, 1, 0]],
+    WeaveFamily.TWILL_3_1_S: [[1, 1, 1, 0], [0, 1, 1, 1], [1, 0, 1, 1], [1, 1, 0, 1]],
+    WeaveFamily.TWILL_3_1_Z: [[1, 1, 1, 0], [1, 1, 0, 1], [1, 0, 1, 1], [0, 1, 1, 1]],
+}
+
+
 class ProvenanceMetadata(BaseModel):
     """User-supplied cultural and historical provenance metadata."""
 
