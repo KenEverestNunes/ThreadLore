@@ -1,0 +1,15 @@
+services:
+  threadlore:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: threadlore:local
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PROJECT_ID=threadlore-prod
+      - LOCATION=global
+      - GEMINI_MODEL=gemini-3.8-flash
+      - GCS_BUCKET_NAME=threadlore-swatches-prod
+    restart: unless-stopped
