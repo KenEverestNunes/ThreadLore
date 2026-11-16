@@ -84,8 +84,8 @@
 <path d="M 670.1 323.9 Q 668.4 260.0 669.9 197.8" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
 <path d="M 669.2 325.8 Q 671.3 260.0 670.7 194.1" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
 <text x="690" y="240" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">4. STATE: PATTERN_CLASSIFIED</text>
-<text x="690" y="270" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Gemini 2.0 Flash classifies weave family (e.g. 2/2 Twill)</text>
-<text x="690" y="295" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Recommends repeat size N ∈ (2, 3, 4) &amp; cultural note</text>
+<text x="690" y="270" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Gemini Flash suggests candidate weave (11 twills/plain)</text>
+<text x="690" y="295" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Fallback to manual preset selector if confidence &lt; 0.60</text>
 <path d="M 510.5 635.0 Q 545.0 636.4 581.1 635.6" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
 <path d="M 508.9 633.9 Q 545.0 636.1 582.7 635.2" fill="none" stroke="#ffffff" stroke-width="1.9" stroke-linecap="round"/>
 <path d="M 579.4 635.5 Q 578.1 447.5 580.1 260.1" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
@@ -143,7 +143,7 @@
 <path d="M 669.8 716.8 Q 669.6 645.0 670.8 573.2" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round"/>
 <text x="690" y="615" fill="#ffffff" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="17" font-weight="bold">6. STATE: USER_VERIFIED</text>
 <text x="690" y="645" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Live canvas tiles master block over photo</text>
-<text x="690" y="670" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• User matches dX/dY sliders to achieve optical lock</text>
+<text x="690" y="670" fill="#dddddd" font-family="system-ui, 'Segoe Print', 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif" font-size="13.5">• Draggable X/Y phase offsets align grid directly to yarn crossings</text>
 <rect x="1280" y="130" width="550" height="620" rx="6" fill="#000000"/>
 <path d="M 1277.9 130.6 Q 1555.0 131.2 1833.0 129.8" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="6,5"/>
 <path d="M 1271.9 130.4 Q 1555.0 130.1 1838.8 130.4" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="6,5"/>

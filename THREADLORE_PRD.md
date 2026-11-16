@@ -16,13 +16,21 @@ Traditional woven textiles encode generations of cultural heritage, ancestral ma
 
 Reconstructing a weaving draft manually from physical cloth requires rare master-weaver expertise, optical magnification, and tedious grid plotting. Existing digital weaving software (e.g., WeavePoint, Handweaving.net) functions only as manual design editors—they cannot ingest physical textile photographs and translate them into verified mechanical loom instructions.
 
-### 1.2 Product Vision
-**ThreadLore** is an open-access, web-based preservation tool deployed on **Google Cloud Run**. It allows cultural archivists, museum conservators, and hobbyist weavers to photograph a piece of heritage fabric and convert it into a standards-compliant **WIF 1.1 (Weaving Information File)** and a printable 4-part loom draft guide (Threading, Tie-Up, Treadling, and Drawdown).
+### 1.2 Product Vision & Positioning
+**"Preserve the weave, not just the photograph."**
+
+**ThreadLore** is an open-access, web-based textile reconstruction tool deployed on **Google Cloud Run**. It serves as an **AI-assisted, human-verified reconstruction assistant** that allows cultural archivists, museum conservators, and heritage weavers to photograph a woven textile and convert it into a standards-compliant **WIF 1.1 (Weaving Information File)** and an in-browser 4-part loom draft card (Threading, Tie-Up, Treadling, and Drawdown).
+
+ThreadLore does not attempt unverified automated archaeological identification or speculative cultural storytelling from a photograph alone. Instead:
+1. **Computer Vision & Gemini AI** estimate thread density, deskew geometry, and suggest a candidate weave structure.
+2. **The User Verifies or Corrects** the structure using an interactive master repeat tile editor and a live photo overlay with draggable grid alignment controls.
+3. **The Deterministic Compiler** guarantees that the confirmed pattern mathematically reproduces the generated loom draft under physical 4-shaft/4-treadle rising-shed constraints.
+4. **Cultural Provenance** (origin, maker, date/period, historical notes) is user-supplied metadata preserved directly alongside the technical weave draft.
 
 ### 1.3 Hackathon "Build for Good" Alignment
-- **Cultural Preservation:** Democratizes textile archaeology by preserving fragile physical artifacts into immortal, open digital formats.
-- **Empowering Artisans:** Enables modern weavers to resurrect lost ancestral patterns on standard 4-shaft floor or table looms.
-- **Google Cloud Native:** Showcases Cloud Run's serverless container performance (OpenCV image geometry processing) coupled with Vertex AI (Gemini 2.0 Flash multimodal semantic curation).
+- **Cultural Preservation:** Democratizes textile archaeology by preserving fragile physical artifacts into immortal, open digital formats without making speculative historical claims.
+- **Empowering Artisans:** Enables modern weavers to reproduce authentic historical patterns on standard 4-shaft floor or table looms.
+- **Google Cloud Native:** Showcases Cloud Run's serverless container performance (OpenCV image geometry processing) coupled with Vertex AI (Gemini Flash multimodal technical analysis).
 
 ---
 
@@ -31,22 +39,27 @@ Reconstructing a weaving draft manually from physical cloth requires rare master
 To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundaries are enforced.
 
 ### 2.1 In-Scope (MVP)
-1. **Supported Weave Structures:**
-   - Plain Weave (Tabby): $2\times2$ repeat (2 shafts, 2 treadles)
-   - $2/1$ Twill: $3\times3$ repeat (3 shafts, 3 treadles)
-   - $2/2$ Balanced Twill: $4\times4$ repeat (4 shafts, 4 treadles)
-   - $3/1$ Warp-Faced Twill: $4\times4$ repeat (4 shafts, 4 treadles)
+1. **Supported Weave Structures (11 Canonical Variations):**
+   - **Plain Weave (Tabby):** $1/1$ ($2\times2$ repeat, 2 shafts, 2 treadles)
+   - **Straight Twills (all 5 basic ratios in both S-twill and Z-twill diagonal directions):**
+     - $1/2$ Twill (S and Z directions): $3\times3$ repeat (3 shafts, 3 treadles)
+     - $2/1$ Twill (S and Z directions): $3\times3$ repeat (3 shafts, 3 treadles)
+     - $1/3$ Twill (S and Z directions): $4\times4$ repeat (4 shafts, 4 treadles)
+     - $2/2$ Balanced Twill (S and Z directions): $4\times4$ repeat (4 shafts, 4 treadles)
+     - $3/1$ Warp-Faced Twill (S and Z directions): $4\times4$ repeat (4 shafts, 4 treadles)
 2. **Loom Constraints:** Strictly limited to single-layer rising-shed looms with **maximum 4 shafts and 4 treadles**.
 3. **Yarn Color Support:** Dual-color contrast (independent warp yarn color and weft yarn color).
 4. **Input Medium:** Macro-photograph swatches (tightly cropped patch of $\approx 15 \times 15$ threads) taken on standard smartphone cameras.
-5. **Output Standard:** WIF 1.1 specification files (1-based indexing) with verified round-trip compatibility in external tools (Handweaving.net, Asunder, Fiberworks).
+5. **Output Standard:** WIF 1.1 specification files (1-based indexing, `[WEAVING]` section, configurable project repeat dimensions e.g. $40 \times 40$) with verified round-trip compatibility in external tools (Handweaving.net, Asunder, Fiberworks).
+6. **Provenance Metadata:** Optional user-supplied fields for textile title, geographic origin, artisan/maker, date or period, and conservation notes.
 
 ### 2.2 Explicitly Out-of-Scope (Non-Goals)
 - **Satin Weaves:** Regular satins require $\ge 5$ shafts (5-end satin minimum) and are excluded to protect the 4-shaft limit.
 - **Complex Structures:** Jacquard patterns, double-weave, pile rugs, knitting, crochet, and embroidery.
-- **Blind Computer Vision:** No fully automated pixel-by-pixel intersection extraction across uncalibrated photos.
+- **Speculative Cultural AI:** No automated historical, ethnic, or tribal attribution claims inferred solely from fabric pixels. Provenance is user-supplied.
+- **Unverified Vision Guesses:** No automated pixel-by-pixel intersection extraction across uncalibrated photos.
 - **3D Physics Simulations:** Procedural cloth drape or yarn mechanics in Three.js (2D canvas preview only).
-- **Automated Historical Certification:** ThreadLore assists reconstruction; it does not legally certify tribal or historical authenticity.
+- **PDF Export:** Printable PDF loom cards are excluded from MVP (in-browser 4-part visual draft card provided).
 
 ---
 
@@ -65,24 +78,24 @@ To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundari
 [ Step 2: OpenCV Geometry ] ──(Perspective Deskew & FFT Spacing)
        │
        ▼
-[ Step 3: Gemini Curation ] ──(Weave Family Classification & Template Pre-Fill)
+[ Step 3: Gemini Curation ] ──(Weave Structure Suggestion OR Manual Fallback)
        │
        ▼
-[ Step 4: Master Tile Editor ] ◄──► [ Live Tiled Overlay ] (User Verification Loop)
+[ Step 4: Master Tile Editor ] ◄──► [ Live Tiled Overlay ] (Draggable Grid Alignment & Verification Loop)
        │
        ▼
-[ Step 5: Python Compiler ] ──(Boolean Factorization: Shafts, Treadles, Tie-Up)
+[ Step 5: Python Compiler ] ──(Boolean Factorization: Shafts, Treadles, Tie-Up M[s,t]=D[it,js])
        │
        ▼
-[ Step 6: Validation & Export ] ──(Cyclic Floats ≤ 4, Shafts ≤ 4 → WIF 1.1 Download)
+[ Step 6: Validation & Export ] ──(Cyclic Floats ≤ 4, Shafts ≤ 4 → WIF 1.1 Download & Draft Card)
 ```
 
 1. **Upload & Crop:** User uploads a macro photo of the textile. Using a bounding box cropper, the user selects a flat, clean square patch ($\approx 15 \times 15$ threads).
-2. **Optical Geometry (Cloud Run):** The backend executes 2D FFT to measure horizontal thread spacing ($\Delta x$) and vertical thread spacing ($\Delta y$), computes skew angle $\theta$, and rectifies perspective.
-3. **AI Curation (Vertex AI):** Gemini 2.0 Flash evaluates the deskewed swatch, classifies the weave structure (e.g., "$2/2$ Z-Twill"), auto-selects the $4\times4$ master repeat tile, and drafts a cultural narrative.
-4. **Master Tile Verification (React Frontend):** The UI pre-populates the $N \times N$ master tile ($N \in \{2, 3, 4\}$). The user only edits these 4 to 16 cells. The canvas live-tiles the master block directly over the photograph. The user adjusts $\Delta x$ and $\Delta y$ sliders to achieve optical lock.
-5. **Deterministic Compilation (Cloud Run):** The user clicks "Compile Draft". The Python backend executes Boolean matrix factorization, resolving column sequences into shafts and row sequences into treadles.
-6. **Integrity Validation & Export:** The backend verifies that shafts $\le 4$, treadles $\le 4$, and cyclic floats $\le 4$. Upon validation, the user downloads the standard `.wif` file and views the 4-part loom draft guide.
+2. **Optical Geometry (Cloud Run):** The backend executes 2D FFT to measure horizontal thread spacing ($\Delta x$) and vertical thread spacing ($\Delta y$), computes skew angle $\theta$, and rectifies rotation.
+3. **AI Curation & Manual Fallback (Vertex AI):** Gemini evaluates the deskewed swatch and suggests a candidate weave structure (e.g., "$2/2$ Z-Twill"). If confidence is low or the API is unavailable, the system returns `unavailable` and prompts the user to select from the 11 supported canonical weaves or start blank.
+4. **Master Tile Verification & Alignment (React Frontend):** The UI pre-populates the $N \times N$ master tile ($N \in \{2, 3, 4\}$). The user can toggle cells or pick a preset. The canvas live-tiles the master block directly over the photograph. The user drags to adjust the grid phase origin ($X, Y$ offsets), fine-tunes thread spacing ($\Delta x, \Delta y$), adjusts angle, and alters opacity to achieve visual alignment.
+5. **Deterministic Compilation (Cloud Run):** The user clicks "Compile Draft". The Python backend executes Boolean matrix factorization, resolving column sequences into shafts, row sequences into treadles, and deriving the exact tie-up matrix $M[s,t] = D[i_t, j_s]$.
+6. **Integrity Validation & Export:** The backend verifies that shafts $\le 4$, treadles $\le 4$, and cyclic floats $\le 4$ without uniform rows/columns. Upon validation, the user enters project repeat counts (e.g., $40 \times 40$) and downloads the standard `.wif` file alongside an in-browser 4-part loom draft card.
 
 ---
 
@@ -92,14 +105,14 @@ To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundari
 |---|---|---|---|
 | **FR-1** | Swatch Cropper | Interactive browser-based image cropper restricting aspect ratio to 1:1. | User can zoom, pan, and crop a square swatch resized client-side to $\le 800\times800$px before upload. |
 | **FR-2** | Optical Deskewing | OpenCV backend detects thread angle and straightens the image. | Returns deskewed image, estimated warp spacing $\Delta x$, weft spacing $\Delta y$, and rotation angle $\theta$. |
-| **FR-3** | Zero-Shot AI Curation | Gemini 2.0 Flash classifies the weave structure from the deskewed swatch. | Returns structured JSON containing weave family (`plain`, `twill_2_1`, `twill_2_2`, `twill_3_1`), repeat size $N$, and cultural explanation. |
-| **FR-4** | Master Tile Editor | $N \times N$ interactive binary toggle matrix ($N \in \{2, 3, 4\}$). | Clicking a cell toggles binary state (1 = Warp over Weft, 0 = Weft over Warp). Cell count capped at 16 cells max. |
-| **FR-5** | Live Tiled Overlay | Semi-transparent rendering of the tiled master matrix directly on top of the original fabric photo. | Master tile replicates across the viewport. Independent sliders for $\Delta x$ (EPI), $\Delta y$ (PPI), and opacity (0–100%). |
-| **FR-6** | Color Assignment | User selects primary yarn colors via standard HTML color pickers. | Allows setting `warp_color` and `weft_color` hex values. Maps colors to WIF color palette. |
-| **FR-7** | Loom Factorization | Deterministic factorization of binary repeat matrix into loom instructions. | Factoring produces 3 sub-matrices: Threading ($S \times N$), Treadling ($T \times N$), and Tie-Up ($S \times T$). |
-| **FR-8** | Constraint Engine | Validates physical loom boundaries and thread float stability. | Rejects matrices requiring $> 4$ shafts or $> 4$ treadles. Rejects matrices with cyclic floats $> 4$. |
-| **FR-9** | WIF 1.1 Serialization | Generates standard-compliant `.wif` plain-text file. | Contains sections `[TEXTILE]`, `[WARP]`, `[WEFT]`, `[COLOR TABLE]`, `[WARP COLORS]`, `[WEFT COLORS]`, `[THREADING]`, `[TIEUP]`, `[TREADLING]`. 1-based indexing. Opens in Handweaving.net without errors. |
-| **FR-10** | Printable Draft Card | Visual rendering of the 4-part weaving draft. | Displays Threading chart, Tie-Up grid, Treadling sequence, and Drawdown simulation. |
+| **FR-3** | AI Curation & Manual Fallback | Gemini suggests candidate weave; graceful manual fallback. | Returns structured JSON with suggested weave family, twill direction, confidence, and technical description. If uncertain or offline, returns `unavailable` and presents manual weave selector. |
+| **FR-4** | Master Tile Editor | $N \times N$ interactive binary toggle matrix ($N \in \{2, 3, 4\}$). | Clicking a cell toggles binary state (1 = Warp over Weft, 0 = Weft over Warp). Capped at 16 cells max. Presets available for all 11 supported weaves. |
+| **FR-5** | Live Tiled Overlay & Grid Alignment | Semi-transparent rendering of the tiled master matrix over the fabric photo with phase alignment. | Master tile replicates across the viewport. Includes draggable $X/Y$ grid origin offsets, $\Delta x$ (EPI), $\Delta y$ (PPI), rotation fine-tuning, and opacity slider (0–100%). |
+| **FR-6** | Color & Provenance Metadata | User sets yarn colors and optional historical documentation. | Allows setting `warp_color` and `weft_color` hex values. Captures optional provenance metadata (`title`, `origin`, `maker`, `date_period`, `notes`) embedded in WIF remarks. |
+| **FR-7** | Loom Factorization | Deterministic factorization of binary repeat matrix into loom instructions. | Factoring produces: Threading ($S \times N$), Treadling ($T \times N$), and Tie-Up ($M[s,t] = D[i_t, j_s]$). Re-simulated drawdown matches input 100%. |
+| **FR-8** | Constraint & Float Engine | Validates physical loom boundaries and thread float stability. | Rejects matrices requiring $> 4$ shafts or $> 4$ treadles. Rejects unbroken floats $> 4$ threads and uniform rows/columns across cyclic boundaries. |
+| **FR-9** | WIF 1.1 Serialization | Generates standard-compliant `.wif` plain-text file. | Mandatory sections: `[WIF]`, `[CONTENTS]`, `[WEAVING]` (`Shafts=`, `Treadles=`, `Rising shed=1`), `[WARP]`, `[WEFT]`, `[COLOR PALETTE]`, `[COLOR TABLE]`, `[WARP COLORS]`, `[WEFT COLORS]`, `[THREADING]`, `[TIEUP]`, `[TREADLING]`. 1-based indexing. User-configurable repeat expansion. |
+| **FR-10** | Visual Draft Card | Interactive in-browser rendering of the 4-part weaving draft. | Displays Threading chart, Tie-Up grid, Treadling sequence, and Drawdown simulation with active yarn colors. |
 
 ---
 
@@ -145,12 +158,15 @@ To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundari
 - **Health Check Endpoint:** `GET /healthz` returning `{"status": "healthy", "service": "threadlore-core"}`.
 
 ### 5.3 AI Service (Google Cloud Vertex AI)
-- **Model:** `gemini-2.0-flash`
-- **Invocation:** Asynchronous REST call via Google GenAI SDK.
-- **Structured Output:** Pydantic schema enforcing JSON response:
+- **Model:** Configurable via `GEMINI_MODEL` (default: `gemini-2.5-flash`, with support for `gemini-2.0-flash` or `gemini-1.5-flash`).
+- **Endpoint Location:** Configurable via `LOCATION` (e.g. `global` or `us-central1`).
+- **Invocation:** Asynchronous REST call via official Google GenAI SDK (`google-genai`).
+- **Structured Output Schema:** Pydantic model enforcing:
   ```json
   {
+    "status": "success",
     "weave_family": "twill_2_2",
+    "twill_direction": "Z",
     "repeat_size": 4,
     "confidence": 0.94,
     "default_matrix": [
@@ -159,10 +175,11 @@ To guarantee delivery within the 5-day sprint (Nov 16–Nov 20), strict boundari
       [0, 0, 1, 1],
       [1, 0, 0, 1]
     ],
-    "cultural_description": "2/2 Balanced Twill exhibiting characteristic 45-degree diagonal wales. Universally used in Scottish tartans and historical Scandinavian woolens for warmth and durability.",
-    "float_risk_notes": "All floats are length 2, well within structural integrity thresholds."
+    "technical_description": "2/2 Balanced Z-direction twill with diagonal float interlacing every 2 picks/ends. Requires 4 shafts and 4 treadles.",
+    "float_risk_notes": "Symmetric float length of 2 threads on both faces, stable structural interlacing."
   }
   ```
+  *Fallback Guarantee:* If API confidence is $< 0.60$, or network/quota error occurs, the service **never hallucinates a pattern with artificial confidence**. It returns `status: "unavailable"` and prompts the user to select from the 11 supported canonical weaves or configure the tile manually.
 
 ### 5.4 Storage (Google Cloud Storage)
 - **Bucket:** `gs://threadlore-swatches-prod`
@@ -182,60 +199,82 @@ where $1$ denotes a warp thread over a weft thread, and $0$ denotes weft over wa
    - Scan columns $C_j = D_{*,j}$ for $j \in [0, N-1]$.
    - Identify unique column patterns $U_C = \{u_1, u_2, \dots, u_S\}$.
    - The number of shafts required is $S = |U_C|$.
-   - Assign shaft index to each column: $\text{Shaft}(j) = \text{index of } C_j \text{ in } U_C$.
+   - Assign 1-based shaft index to each column: $\text{Shaft}(j) = \text{index of } C_j \text{ in } U_C + 1$.
    - **Constraint:** If $S > 4$, raise `LoomShaftOverflowError`.
 
 2. **Treadle (Treadling) Allocation:**
    - Scan rows $R_i = D_{i,*}$ for $i \in [0, N-1]$.
    - Identify unique row patterns $U_R = \{v_1, v_2, \dots, v_T\}$.
    - The number of treadles required is $T = |U_R|$.
-   - Assign treadle index to each pick: $\text{Treadle}(i) = \text{index of } R_i \text{ in } U_R$.
+   - Assign 1-based treadle index to each pick: $\text{Treadle}(i) = \text{index of } R_i \text{ in } U_R + 1$.
    - **Constraint:** If $T > 4$, raise `LoomTreadleOverflowError`.
 
-3. **Tie-Up Matrix Generation:**
-   - Construct tie-up matrix $M \in \{0, 1\}^{S \times T}$.
-   - For shaft $s \in [0, S-1]$ and treadle $t \in [0, T-1]$:
-     $$M_{s,t} = U_C[s] \odot U_R[t]$$
-     where $M_{s,t} = 1$ indicates that pressing treadle $t$ raises shaft $s$.
+3. **Tie-Up Matrix Generation ($M \in \{0, 1\}^{S \times T}$):**
+   - For each shaft $s \in [1, S]$, select a representative column index $j_s \in [0, N-1]$ where $\text{Shaft}(j_s) = s$.
+   - For each treadle $t \in [1, T]$, select a representative row index $i_t \in [0, N-1]$ where $\text{Treadle}(i_t) = t$.
+   - The tie-up matrix entry is derived directly from the drawdown intersection:
+     $$M_{s,t} = D_{i_t, j_s}$$
+   - *Mathematical Correctness Proof:* On pick $i$, pressing treadle $t = \text{Treadle}(i)$ raises all shafts $s$ for which $M_{s,t} = 1$. For warp end $j$ assigned to shaft $s = \text{Shaft}(j)$, the end rises if and only if $M_{s,t} = 1$. Since $M_{s,t} = D_{i_t, j_s}$ and by definition of column/row equivalence $D_{i,j} = D_{i_t, j_s}$, the simulated drawdown $D'_{i,j} \equiv D_{i,j}$ for all $(i,j)$. Factorization is closed-form, deterministic, and $O(N^2)$.
 
-### 6.2 Cyclic Float Validation Algorithm
-Fabric is periodic; thread $N-1$ wraps into thread $0$. A float of length $> 4$ creates loose loops that snag and unravel.
+### 6.2 Cyclic Float & Interlacing Validation Algorithm
+Woven fabric repeats periodically in both warp and weft dimensions. A thread at index $N-1$ wraps cyclically into index $0$. Excessive un-interlaced floats cause snags and structural instability.
 
 **Algorithm:**
 ```python
-def check_cyclic_floats(matrix: list[list[int]], max_allowed: int = 4) -> bool:
+def validate_weave_structure(matrix: list[list[int]], max_allowed_float: int = 4) -> tuple[bool, str]:
     N = len(matrix)
-    # Check horizontal weft floats (consecutive 0s) and warp floats (consecutive 1s)
-    for row in matrix:
-        doubled = row + row  # Simulates circular boundary
-        # Count consecutive identical values up to N
-        for val in (0, 1):
-            run = 0
-            for cell in doubled:
-                if cell == val:
-                    run += 1
-                    if run > max_allowed and run <= N:
-                        return False
-                else:
-                    run = 0
-    # Repeat for columns (transposed matrix)
-    ...
+    # Check 1: Uniform row or column rejection (threads that never interlace)
+    for i, row in enumerate(matrix):
+        if all(cell == 0 for cell in row) or all(cell == 1 for cell in row):
+            return False, f"Row {i} is completely uniform; weft yarn never interlaces."
+    
+    for j in range(N):
+        col = [matrix[i][j] for i in range(N)]
+        if all(cell == 0 for cell in col) or all(cell == 1 for cell in col):
+            return False, f"Column {j} is completely uniform; warp yarn never interlaces."
+
+    # Check 2: Cyclic float run length on periodic expansion (2N wrap)
+    for axis_name, sequences in [("Weft", matrix), ("Warp", list(zip(*matrix)))]:
+        for idx, seq in enumerate(sequences):
+            doubled = list(seq) + list(seq)
+            for val, thread_type in [(1, "warp float"), (0, "weft float")]:
+                current_run = 0
+                max_run = 0
+                for cell in doubled:
+                    if cell == val:
+                        current_run += 1
+                        if current_run > max_run:
+                            max_run = current_run
+                    else:
+                        current_run = 0
+                # Float run cannot exceed the length of the repeat N
+                effective_run = min(max_run, N)
+                if effective_run > max_allowed_float:
+                    return False, f"{axis_name} sequence {idx} has excessive cyclic {thread_type} of length {effective_run}."
+                    
+    return True, "Valid structural interlacing."
 ```
+*Note:* This validation enforces structural interlacing integrity for rising-shed looms; it does not substitute for empirical yarn friction or tensile wear testing.
 
 ### 6.3 WIF 1.1 Specification Mapping Rules
 - File extension: `.wif`
 - Syntax: Standard INI formatting (`[SectionName]` followed by `Key=Value` pairs).
 - **Indexing Rule:** WIF specifies **1-based indexing** for shafts, treadles, warp ends, and weft picks.
 - Colors: Formatted as comma-separated RGB values ($0 \dots 255$).
-- Required sections:
-  - `[WIF]` (Version=1.1, Date, Developers)
-  - `[CONTENTS]` (Lists presence of required sections)
-  - `[COLOR TABLE]` (Defines symbol-to-RGB map)
-  - `[WARP]` and `[WEFT]` (Thread count, default colors, thickness)
+- **Mandatory WIF 1.1 Sections:**
+  - `[WIF]` (Version=1.1, Date, Developers=ThreadLore, Source Program=ThreadLore)
+  - `[CONTENTS]` (Lists presence of active sections)
+  - `[WEAVING]` (Mandatory: `Shafts=S`, `Treadles=T`, `Rising shed=1`)
+  - `[WARP]` (Threads=$W$, Units=Decipoints or Pixels, Thickness=...)
+  - `[WEFT]` (Threads=$H$, Units=Decipoints or Pixels, Thickness=...)
+  - `[COLOR PALETTE]` (Entries=2, Range=0,255)
+  - `[COLOR TABLE]` (1=Warp RGB, 2=Weft RGB)
   - `[WARP COLORS]` and `[WEFT COLORS]` (Per-thread color references)
   - `[THREADING]` (End $j \rightarrow$ Shaft $s$)
-  - `[TIEUP]` (Treadle $t \rightarrow$ list of raised shafts)
+  - `[TIEUP]` (Treadle $t \rightarrow$ comma-separated list of raised shafts)
   - `[TREADLING]` (Pick $i \rightarrow$ Treadle $t$)
+  - `[NOTES]` (Optional user-supplied provenance metadata: title, origin, maker, period, notes)
+- **Practical Repeat Expansion:** User can configure repeat count $K$ (e.g. expand a $4\times4$ master repeat into a $40 \times 40$ thread project draft) so the exported file is directly mountable on a physical loom.
 
 ---
 
