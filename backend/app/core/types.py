@@ -25,6 +25,21 @@ class WeaveFamily(str, Enum):
 BinaryMatrix = list[list[int]]
 
 
+CANONICAL_WEAVE_PRESETS: dict[WeaveFamily, BinaryMatrix] = {
+    WeaveFamily.PLAIN_1_1: [[1, 0], [0, 1]],
+    WeaveFamily.TWILL_1_2_S: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+    WeaveFamily.TWILL_1_2_Z: [[1, 0, 0], [0, 0, 1], [0, 1, 0]],
+    WeaveFamily.TWILL_2_1_S: [[1, 1, 0], [0, 1, 1], [1, 0, 1]],
+    WeaveFamily.TWILL_2_1_Z: [[1, 1, 0], [1, 0, 1], [0, 1, 1]],
+    WeaveFamily.TWILL_1_3_S: [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+    WeaveFamily.TWILL_1_3_Z: [[1, 0, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0]],
+    WeaveFamily.TWILL_2_2_S: [[1, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 1], [1, 0, 0, 1]],
+    WeaveFamily.TWILL_2_2_Z: [[1, 1, 0, 0], [1, 0, 0, 1], [0, 0, 1, 1], [0, 1, 1, 0]],
+    WeaveFamily.TWILL_3_1_S: [[1, 1, 1, 0], [0, 1, 1, 1], [1, 0, 1, 1], [1, 1, 0, 1]],
+    WeaveFamily.TWILL_3_1_Z: [[1, 1, 1, 0], [1, 1, 0, 1], [1, 0, 1, 1], [0, 1, 1, 1]],
+}
+
+
 class ProvenanceMetadata(BaseModel):
     """User-supplied cultural and historical provenance metadata."""
 
@@ -53,6 +68,7 @@ class ValidationResult(BaseModel):
 
     is_valid: bool
     errors: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
     max_warp_float: int = 0
     max_weft_float: int = 0
     shafts_used: int = 0
@@ -66,13 +82,19 @@ class WeaveError(Exception):
     pass
 
 
-class LoomShaftOverflowError(WeaveError):
+class LoomConstraintError(WeaveError):
+    """Raised when pattern violates physical 4-shaft / 4-treadle loom constraints."""
+
+    pass
+
+
+class LoomShaftOverflowError(LoomConstraintError):
     """Raised when pattern requires more than 4 shafts."""
 
     pass
 
 
-class LoomTreadleOverflowError(WeaveError):
+class LoomTreadleOverflowError(LoomConstraintError):
     """Raised when pattern requires more than 4 treadles."""
 
     pass
