@@ -13,6 +13,7 @@ import { PhotoUploader } from "./components/PhotoUploader";
 import { SwatchCropper } from "./components/SwatchCropper";
 import { VerificationPanel } from "./components/VerificationPanel";
 import { LoomDraftCard } from "./components/LoomDraftCard";
+import { ThreadLoreIcon } from "./components/ThreadLoreIcon";
 import { WorkflowStep } from "./types/weave";
 
 const STEPS: { id: WorkflowStep; label: string; icon: React.FC<{ className?: string }> }[] = [
@@ -105,9 +106,7 @@ export const App: React.FC = () => {
         <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 text-white font-bold text-xs dark:bg-zinc-100 dark:text-zinc-900 shadow-sm">
-                TL
-              </div>
+              <ThreadLoreIcon className="h-8 w-8 shadow-sm flex-shrink-0" />
               <div>
                 <span className="text-sm font-bold tracking-tight">ThreadLore</span>
                 <span className="hidden sm:inline-block ml-2 text-[11px] text-zinc-400 font-normal">
