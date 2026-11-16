@@ -25,7 +25,11 @@ def test_health_check() -> None:
 
     res_root = client.get("/")
     assert res_root.status_code == 200
-    assert res_root.json()["status"] == "running"
+    # In production/build mode, root serves the React SPA HTML; otherwise JSON
+    if "text/html" in res_root.headers.get("content-type", ""):
+        assert "<!doctype html>" in res_root.text.lower()
+    else:
+        assert res_root.json()["status"] == "running"
 
 
 def test_compile_plain_weave() -> None:

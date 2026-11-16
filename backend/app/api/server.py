@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from backend.app.api.routes_compile import router as compile_router
 from backend.app.api.routes_swatch import router as swatch_router
@@ -71,13 +74,45 @@ def create_app() -> FastAPI:
             "model": settings.GEMINI_MODEL,
         }
 
-    @app.get("/", tags=["System"])
-    async def root() -> dict[str, str]:
-        return {
-            "service": "ThreadLore API",
-            "status": "running",
-            "documentation": "/docs",
-        }
+    # Static file mounting for Single Page Application (SPA)
+    # Checks production container path (/app/static) or local build (frontend/dist)
+    static_dirs = [
+        Path("/app/static"),
+        Path(os.path.join(os.path.dirname(__file__), "../../../frontend/dist")),
+    ]
+    spa_dir: Path | None = None
+    for candidate in static_dirs:
+        if candidate.exists() and (candidate / "index.html").exists():
+            spa_dir = candidate
+            break
+
+    if spa_dir is not None:
+        assets_dir = spa_dir / "assets"
+        if assets_dir.exists():
+            app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+        @app.get("/", tags=["UI"])
+        async def serve_spa_root() -> FileResponse:
+            assert spa_dir is not None
+            return FileResponse(str(spa_dir / "index.html"))
+
+        @app.get("/{full_path:path}", tags=["UI"])
+        async def serve_spa_fallback(full_path: str) -> Any:
+            assert spa_dir is not None
+            # If path points to an actual file (e.g. favicon, vite.svg)
+            target = spa_dir / full_path
+            if target.exists() and target.is_file():
+                return FileResponse(str(target))
+            return FileResponse(str(spa_dir / "index.html"))
+
+    else:
+        @app.get("/", tags=["System"])
+        async def root() -> dict[str, str]:
+            return {
+                "service": "ThreadLore API",
+                "status": "running",
+                "documentation": "/docs",
+            }
 
     return app
 
