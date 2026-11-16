@@ -68,6 +68,7 @@ class ValidationResult(BaseModel):
 
     is_valid: bool
     errors: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
     max_warp_float: int = 0
     max_weft_float: int = 0
     shafts_used: int = 0
@@ -81,13 +82,19 @@ class WeaveError(Exception):
     pass
 
 
-class LoomShaftOverflowError(WeaveError):
+class LoomConstraintError(WeaveError):
+    """Raised when pattern violates physical 4-shaft / 4-treadle loom constraints."""
+
+    pass
+
+
+class LoomShaftOverflowError(LoomConstraintError):
     """Raised when pattern requires more than 4 shafts."""
 
     pass
 
 
-class LoomTreadleOverflowError(WeaveError):
+class LoomTreadleOverflowError(LoomConstraintError):
     """Raised when pattern requires more than 4 treadles."""
 
     pass

@@ -1,6 +1,8 @@
 """Structural interlacing and loom constraint validation for rising-shed drafts."""
 
-from backend.app.core.types import LoomDraft, ValidationResult
+from __future__ import annotations
+
+from backend.app.core.types import BinaryMatrix, LoomDraft, ValidationResult
 
 
 def calculate_max_cyclic_run(sequence: list[int], target_val: int) -> int:
@@ -27,8 +29,12 @@ def calculate_max_cyclic_run(sequence: list[int], target_val: int) -> int:
     return min(max_run, n)
 
 
-def validate_draft(draft: LoomDraft, max_allowed_float: int = 4) -> ValidationResult:
+def validate_draft(
+    draft_or_matrix: LoomDraft | BinaryMatrix, max_allowed_float: int = 4
+) -> ValidationResult:
     """Validate physical loom boundaries, uniform thread interlacing, and cyclic floats.
+
+    Accepts either a compiled LoomDraft or a raw BinaryMatrix drawdown.
 
     Enforces:
     1. Shafts ceiling: ≤ 4 shafts.
@@ -40,18 +46,29 @@ def validate_draft(draft: LoomDraft, max_allowed_float: int = 4) -> ValidationRe
     it does not substitute for empirical yarn friction or tensile wear testing.
     """
     errors: list[str] = []
+    warnings: list[str] = []
+
+    if isinstance(draft_or_matrix, LoomDraft):
+        shafts_count = draft_or_matrix.shafts
+        treadles_count = draft_or_matrix.treadles
+        drawdown = draft_or_matrix.drawdown
+    else:
+        drawdown = draft_or_matrix
+        # Compute required shafts and treadles from matrix uniqueness
+        h = len(drawdown)
+        w = len(drawdown[0]) if h > 0 else 0
+        shafts_count = len({tuple(drawdown[i][j] for i in range(h)) for j in range(w)}) if w > 0 else 0
+        treadles_count = len({tuple(row) for row in drawdown}) if h > 0 else 0
 
     # 1. Loom ceiling checks
-    if draft.shafts > 4:
+    if shafts_count > 4:
         errors.append(
-            f"Requires {draft.shafts} shafts, exceeding the physical 4-shaft loom ceiling."
+            f"Requires {shafts_count} shafts, exceeding the physical 4-shaft loom ceiling."
         )
-    if draft.treadles > 4:
+    if treadles_count > 4:
         errors.append(
-            f"Requires {draft.treadles} treadles, exceeding the physical 4-treadle loom ceiling."
+            f"Requires {treadles_count} treadles, exceeding the physical 4-treadle loom ceiling."
         )
-
-    drawdown = draft.drawdown
     h = len(drawdown)
     w = len(drawdown[0]) if h > 0 else 0
 
@@ -59,8 +76,9 @@ def validate_draft(draft: LoomDraft, max_allowed_float: int = 4) -> ValidationRe
         return ValidationResult(
             is_valid=False,
             errors=["Drawdown matrix is empty."],
-            shafts_used=draft.shafts,
-            treadles_used=draft.treadles,
+            warnings=[],
+            shafts_used=shafts_count,
+            treadles_used=treadles_count,
         )
 
     # 2. Interlacing check: Reject completely uniform rows (weft) and columns (warp)
@@ -125,8 +143,9 @@ def validate_draft(draft: LoomDraft, max_allowed_float: int = 4) -> ValidationRe
     return ValidationResult(
         is_valid=is_valid,
         errors=errors,
+        warnings=warnings,
         max_warp_float=overall_max_warp_float,
         max_weft_float=overall_max_weft_float,
-        shafts_used=draft.shafts,
-        treadles_used=draft.treadles,
+        shafts_used=shafts_count,
+        treadles_used=treadles_count,
     )
