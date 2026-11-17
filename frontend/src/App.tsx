@@ -237,7 +237,7 @@ export const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-200 bg-white py-6 dark:border-zinc-800 dark:bg-zinc-950 text-xs text-zinc-500 text-center space-y-1">
+        <footer className="border-t border-zinc-200 bg-white py-6 dark:border-zinc-800 dark:bg-zinc-950 text-xs text-zinc-500 text-center space-y-1 print:hidden">
           <p>
             ThreadLore • AI-Assisted, Human-Verified Textile Reconstruction • Powered by Gemini 3.8 Flash & WIF 1.1 Specification
           </p>

@@ -24,8 +24,52 @@ body {
     color-adjust: exact !important;
   }
 
-  body {
+  html,
+  body,
+  #root,
+  #root * {
     background-color: #ffffff !important;
+    background: #ffffff !important;
     color: #000000 !important;
+  }
+
+  #root [data-testid="printable-bench-sheet"],
+  #root [data-testid="printable-bench-sheet"] * {
+    color: #000000 !important;
+  }
+
+  #root .print\:bg-black,
+  #root .print\:\!bg-black,
+  .print\:bg-black,
+  .print\:\!bg-black {
+    background-color: #000000 !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+
+  #root .print\:bg-white,
+  #root .print\:\!bg-white,
+  .print\:bg-white,
+  .print\:\!bg-white {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  #root .print\:text-transparent,
+  .print\:text-transparent {
+    color: transparent !important;
+  }
+
+  header,
+  footer,
+  nav,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  @page {
+    margin: 1cm;
+    size: auto;
   }
 }
