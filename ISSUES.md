@@ -134,7 +134,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #007: Swatch Analysis Error Handler Swallows Server Error Details
 - **GitHub Issue:** [#7](https://github.com/KenEverestNunes/ThreadLore/issues/7)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (Error Handling / Diagnostics)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`
@@ -148,7 +148,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   The specific error reason returned by the server (e.g., "Image resolution 80x80 px is below minimum 100x100 px") should be displayed in the error banner.
 - **Actual Behavior:**
-  The server's specific diagnostic error message is completely masked.
+  The server's specific diagnostic error message was completely masked.
+- **Resolution:**
+  - Updated `handleCropComplete` in `frontend/src/context/WeaveContext.tsx` to inspect `err instanceof Error ? err.message : null` and display `Analysis failed: ${detail}` when available, preserving server error diagnostic reasons.
+  - Added automated regression tests in `frontend/src/test/swatch_error_details.test.tsx` verifying that HTTP 400 error reasons (e.g. resolution below minimum) are rendered in the verification panel error banner.
 
 ---
 
