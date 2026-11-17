@@ -84,8 +84,22 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const selectPreset = useCallback((preset: WeaveFamily) => {
+    setActivePreset(preset);
+    const info = CANONICAL_PRESETS[preset];
+    if (info) {
+      setRepeatSize(info.repeatSize);
+      setMasterMatrix(info.matrix.map((row) => [...row]));
+    }
+  }, []);
+
   const handleFileSelect = useCallback((file: File) => {
     setError(null);
+    setCroppedBlob(null);
+    setCroppedImageUrl(null);
+    setAnalysisResult(null);
+    setCompiledResult(null);
+    selectPreset("plain_1_1");
     const reader = new FileReader();
     reader.onload = (e) => {
       setRawImage(e.target?.result as string);
@@ -95,7 +109,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       setError("Failed to read image file.");
     };
     reader.readAsDataURL(file);
-  }, []);
+  }, [selectPreset]);
 
   const handleCropComplete = useCallback(async (blob: Blob, dataUrl: string) => {
     setCroppedBlob(blob);
@@ -131,14 +145,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   }, []);
 
-  const selectPreset = useCallback((preset: WeaveFamily) => {
-    setActivePreset(preset);
-    const info = CANONICAL_PRESETS[preset];
-    if (info) {
-      setRepeatSize(info.repeatSize);
-      setMasterMatrix(info.matrix.map((row) => [...row]));
-    }
-  }, []);
+
 
   const setCustomRepeatSize = useCallback((size: number) => {
     setRepeatSize(size);

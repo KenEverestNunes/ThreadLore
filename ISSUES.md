@@ -286,9 +286,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #015: Ingestion of New Swatch Does Not Clear Prior Analysis or Draft Results (TL-QA-004)
 - **GitHub Issue:** [#15](https://github.com/KenEverestNunes/ThreadLore/issues/15)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Workflow Integrity)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/context/WeaveContext.tsx`
 - **Description:**
   When a user returns to the Upload step and selects or drops a new image, `handleFileSelect` sets `rawImage` and moves to `crop`, but does not reset `analysisResult`, `compiledResult`, or `masterMatrix`. If the new image's analysis fails or is cancelled, prior analysis data and stale draft state persist.
@@ -300,6 +301,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Selecting a new photo should completely clear prior analysis results, compiled drafts, and active matrices.
 - **Actual Behavior:**
   Prior photo analysis and draft persist in state.
+- **Resolution:**
+  Updated `handleFileSelect` in `WeaveContext.tsx` to explicitly clear `croppedBlob`, `croppedImageUrl`, `analysisResult`, `compiledResult`, and reset the weave preset and matrix to canonical `plain_1_1` upon new image ingestion. Added automated unit regression test `frontend/src/test/swatch_ingestion_reset.test.tsx`.
 
 ---
 
