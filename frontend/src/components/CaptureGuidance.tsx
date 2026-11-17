@@ -59,7 +59,7 @@ export const CaptureGuidance: React.FC<CaptureGuidanceProps> = ({ isOpen, onClos
             <div>
               <p className="font-medium text-zinc-900 dark:text-zinc-100">AI-Assisted, Human-Verified</p>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Gemini suggests the most likely weave family based on float physics, while you inspect and confirm the pattern with the interactive overlay.
+                Automated optical analysis suggests the most likely weave family based on float physics, while you inspect and confirm the pattern with the interactive overlay.
               </p>
             </div>
           </div>

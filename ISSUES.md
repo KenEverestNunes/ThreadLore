@@ -467,6 +467,36 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ---
 
+### Issue #023: Automatic Dominant Yarn Color Extraction via OpenCV K-Means Clustering
+- **GitHub Issue:** [#45](https://github.com/KenEverestNunes/ThreadLore/issues/45)
+- **Status:** 🔴 Open (Planned)
+- **Severity:** Medium (UX / Visual Polish)
+- **Reported Date:** 2026-11-17
+- **Component:** `backend/app/cv/preprocessor.py`, `backend/app/api/routes_swatch.py`, `frontend/src/context/WeaveContext.tsx`
+- **Description:**
+  When a user crops and analyzes a fabric swatch, the warp and weft yarn colors in Screen 3 default to hardcoded navy (`#1E293B`) and off-white (`#E2E8F0`). If the user uploads a red, green, or yellow fabric, the draft colors look disconnected from the source photograph until manually adjusted with the color pickers.
+- **Expected Behavior:**
+  The backend swatch analysis pipeline should use OpenCV K-Means clustering (k=2) on the cropped swatch image to extract the two dominant yarn color hex codes (`dominant_warp_hex` and `dominant_weft_hex`). The frontend should automatically initialize the warp and weft palette to these extracted colors while still allowing full user override via the color pickers and preset buttons.
+- **Resolution / Notes:**
+  Planned: Implement 5ms OpenCV K-Means clustering in `ImagePreprocessor`, expose detected hex colors in `SwatchAnalysisResponse`, and initialize `warpColor`/`weftColor` in `WeaveContext`.
+
+---
+
+### Issue #024: Non-Textile Image Ingestion Guard and Semantic Validation
+- **GitHub Issue:** [#46](https://github.com/KenEverestNunes/ThreadLore/issues/46)
+- **Status:** 🔴 Open (Planned)
+- **Severity:** Medium (AI Robustness / Error Handling)
+- **Reported Date:** 2026-11-17
+- **Component:** `backend/app/ai/gemini_curator.py`, `backend/app/api/schemas.py`, `frontend/src/components/VerificationPanel.tsx`
+- **Description:**
+  If a user uploads a non-textile image (e.g. an apple, a face, or a landscape), OpenCV FFT fails to find repeating frequency peaks and Gemini assigns 0.0 confidence, which currently drops the user into manual master tile editing. Users could be confused as to why a grid overlay appears over an unrelated object.
+- **Expected Behavior:**
+  Gemini curation schema should include an explicit `is_woven_textile: bool` flag. If a non-textile object is uploaded, the app should reject the swatch with a clear user banner: "Not a Woven Textile: The uploaded photograph does not appear to be woven fabric. Please upload a macro fabric swatch."
+- **Resolution / Notes:**
+  Planned: Extend `GeminiWeaveSuggestion` schema with `is_woven_textile`, update prompt instructions, and display a prominent warning banner when `is_woven_textile` is false.
+
+---
+
 ## Issue Log Template (For Adding Future Issues)
 
 ```markdown

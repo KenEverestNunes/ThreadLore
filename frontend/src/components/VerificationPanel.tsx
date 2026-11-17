@@ -39,7 +39,7 @@ export const VerificationPanel: React.FC = () => {
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 {isAnalyzing
-                  ? "Analyzing optical thread periodicity and querying Gemini 3.8 Flash..."
+                  ? "Analyzing optical thread density and reconstructing weave interlacing..."
                   : analysisResult?.technical_description ||
                     "Verify the suggested pattern against your photograph or adjust the master tile cells."}
               </p>
