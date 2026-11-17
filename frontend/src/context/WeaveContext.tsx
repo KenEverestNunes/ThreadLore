@@ -130,10 +130,14 @@ export const WeaveProvider: React.FC<{
         // Fallback: keep plain weave default
         setActivePreset("custom");
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.warn("CV/AI Analysis warning:", err);
-      // Even if AI call fails, weaver can verify/draw manually
-      setError("Automated weave suggestion was unavailable. Please select a preset or configure the matrix manually.");
+      const detail = err instanceof Error && err.message ? err.message : null;
+      setError(
+        detail
+          ? `Analysis failed: ${detail}`
+          : "Automated weave suggestion was unavailable. Please select a preset or configure the matrix manually."
+      );
       setActivePreset("plain_1_1");
     } finally {
       setIsAnalyzing(false);
