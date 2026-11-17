@@ -51,7 +51,10 @@ interface WeaveContextType {
 
 const WeaveContext = createContext<WeaveContextType | undefined>(undefined);
 
-export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const WeaveProvider: React.FC<{
+  children: ReactNode;
+  initialCompiledResult?: CompileDraftResponse | null;
+}> = ({ children, initialCompiledResult = null }) => {
   const [step, setStep] = useState<WorkflowStep>("upload");
   const [rawImage, setRawImage] = useState<string | null>(null);
   const [croppedBlob, setCroppedBlob] = useState<Blob | null>(null);
@@ -81,25 +84,45 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   });
 
   const [isCompiling, setIsCompiling] = useState(false);
-  const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(null);
+  const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(initialCompiledResult);
   const [error, setError] = useState<string | null>(null);
+
+  const selectPreset = useCallback((preset: WeaveFamily) => {
+    setActivePreset(preset);
+    setCompiledResult(null);
+    const info = CANONICAL_PRESETS[preset];
+    if (info) {
+      setRepeatSize(info.repeatSize);
+      setMasterMatrix(info.matrix.map((row) => [...row]));
+    }
+  }, []);
 
   const handleFileSelect = useCallback((file: File) => {
     setError(null);
+    setCroppedBlob(null);
+    setCroppedImageUrl(null);
+    setAnalysisResult(null);
+    setCompiledResult(null);
+    if (!file.type.startsWith("image/")) {
+      setError("Invalid file format. Please upload a valid image (JPEG, PNG, or WebP).");
+      return;
+    }
+    selectPreset("plain_1_1");
     const reader = new FileReader();
     reader.onload = (e) => {
       setRawImage(e.target?.result as string);
       setStep("crop");
     };
     reader.onerror = () => {
-      setError("Failed to read image file.");
+      setError("Failed to read image file. Please try another image.");
     };
     reader.readAsDataURL(file);
-  }, []);
+  }, [selectPreset]);
 
   const handleCropComplete = useCallback(async (blob: Blob, dataUrl: string) => {
     setCroppedBlob(blob);
     setCroppedImageUrl(dataUrl);
+    setCompiledResult(null);
     setIsAnalyzing(true);
     setError(null);
     setStep("verify");
@@ -121,34 +144,32 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         // Fallback: keep plain weave default
         setActivePreset("custom");
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.warn("CV/AI Analysis warning:", err);
-      // Even if AI call fails, weaver can verify/draw manually
-      setError("Automated weave suggestion was unavailable. Please select a preset or configure the matrix manually.");
+      const detail = err instanceof Error && err.message ? err.message : null;
+      setError(
+        detail
+          ? `Analysis failed: ${detail}`
+          : "Automated weave suggestion was unavailable. Please select a preset or configure the matrix manually."
+      );
       setActivePreset("plain_1_1");
     } finally {
       setIsAnalyzing(false);
     }
   }, []);
 
-  const selectPreset = useCallback((preset: WeaveFamily) => {
-    setActivePreset(preset);
-    const info = CANONICAL_PRESETS[preset];
-    if (info) {
-      setRepeatSize(info.repeatSize);
-      setMasterMatrix(info.matrix.map((row) => [...row]));
-    }
-  }, []);
-
   const setCustomRepeatSize = useCallback((size: number) => {
     setRepeatSize(size);
     setActivePreset("custom");
+    setCompiledResult(null);
     setMasterMatrix((prev) => {
+      const prevH = prev.length || 1;
+      const prevW = prev[0]?.length || 1;
       const newMatrix: BinaryMatrix = [];
       for (let r = 0; r < size; r++) {
         const row: number[] = [];
         for (let c = 0; c < size; c++) {
-          row.push((r < prev.length && c < (prev[0]?.length || 0)) ? prev[r][c] : 0);
+          row.push(prev[r % prevH][c % prevW] ?? 0);
         }
         newMatrix.push(row);
       }
@@ -158,12 +179,43 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const toggleMatrixCell = useCallback((row: number, col: number) => {
     setActivePreset("custom");
+    setCompiledResult(null);
     setMasterMatrix((prev) => {
       const next = prev.map((r, rIdx) =>
         r.map((val, cIdx) => (rIdx === row && cIdx === col ? (val === 1 ? 0 : 1) : val))
       );
       return next;
     });
+  }, []);
+
+  const handleSetWarpColor = useCallback((color: string) => {
+    setWarpColor(color);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetWeftColor = useCallback((color: string) => {
+    setWeftColor(color);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetRepeatWarp = useCallback((repeats: number) => {
+    setRepeatWarp(repeats);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetRepeatWeft = useCallback((repeats: number) => {
+    setRepeatWeft(repeats);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetUnits = useCallback((newUnits: "Inches" | "Centimeters" | "Decipoints") => {
+    setUnits(newUnits);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetProvenance = useCallback((metadata: ProvenanceMetadata) => {
+    setProvenance(metadata);
+    setCompiledResult(null);
   }, []);
 
   const triggerCompile = useCallback(async () => {
@@ -221,17 +273,17 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         masterMatrix,
         repeatSize,
         warpColor,
-        setWarpColor,
+        setWarpColor: handleSetWarpColor,
         weftColor,
-        setWeftColor,
+        setWeftColor: handleSetWeftColor,
         repeatWarp,
-        setRepeatWarp,
+        setRepeatWarp: handleSetRepeatWarp,
         repeatWeft,
-        setRepeatWeft,
+        setRepeatWeft: handleSetRepeatWeft,
         units,
-        setUnits,
+        setUnits: handleSetUnits,
         provenance,
-        setProvenance,
+        setProvenance: handleSetProvenance,
         isCompiling,
         compiledResult,
         error,

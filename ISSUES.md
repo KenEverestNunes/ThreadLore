@@ -94,9 +94,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #005: Canvas Mouse Drag Drift Due to Coordinate Buffer Resolution Mismatch
 - **GitHub Issue:** [#5](https://github.com/KenEverestNunes/ThreadLore/issues/5)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (UX / Visual Precision)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
   The `<canvas>` element's internal drawing buffer is hardcoded to 450×450 px, while its CSS rendering size is styled to 400×400 px (`h-[400px] w-[400px] max-w-full`). When the user drags the canvas to adjust the grid phase offset, screen pixel deltas are added directly to buffer coordinates without scaling (`offsetX + deltaX`), causing the grid to drift and lag behind the mouse cursor by ~12.5% (and worse on mobile screens).
@@ -107,17 +108,20 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Mouse movement deltas should be scaled by `canvas.width / rect.width` and `canvas.height / rect.height` so dragging is 1:1 with cursor travel.
 - **Actual Behavior:**
   Mouse dragging drifts due to unscaled buffer-to-display pixel ratios.
+- **Resolution:**
+  Updated `handleMouseMove` in `CanvasOverlay.tsx` to dynamically query the canvas bounding rect and scale client screen deltas by `canvas.width / rect.width` and `canvas.height / rect.height` before applying to `offsetX` and `offsetY`, ensuring 1:1 phase alignment with cursor movement across all viewport sizes. Added automated unit regression test `frontend/src/test/canvas_drag_scaling.test.tsx`.
 
 ---
 
 ### Issue #006: Lack of Real-Time Float and Structural Validity Feedback in Master Tile Editor
 - **GitHub Issue:** [#6](https://github.com/KenEverestNunes/ThreadLore/issues/6)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Core Weaving Usability)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/MasterTileEditor.tsx`, `frontend/src/context/WeaveContext.tsx`
 - **Description:**
-  When a user toggles matrix cells or resizes a repeat (e.g. from 2×2 to 3×3, which zero-pads and creates an empty row), there is no live client-side structural validation. If a user accidentally creates a uniform row/column (e.g. all 0s or all 1s) or an excessive float (> 4 threads), no visual warning is shown. The user only finds out when they click "Compile 4-Shaft Loom Draft" and wait for a server roundtrip error.
+  When a user toggles matrix cells or resizes a repeat (e.g. from 2×2 to 3×3, which zero-pads and creates an empty row), there was no live client-side structural validation. If a user accidentally created a uniform row/column (e.g. all 0s or all 1s) or an excessive float (> 4 threads), no visual warning was shown. The user only found out when they clicked "Compile 4-Shaft Loom Draft" and waited for a server roundtrip error.
 - **Reproduction Steps:**
   1. On the "Verify & Align" screen, click the "3×3" repeat button.
   2. Notice the matrix now contains row 3 as all 0s and column 3 as all 0s.
@@ -128,13 +132,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
   - Resizing repeat size should sensibly wrap or modularly repeat existing weave patterns rather than appending empty 0s.
   - The tile editor should highlight invalid rows/columns in real-time with an advisory warning badge before the user clicks Compile.
 - **Actual Behavior:**
-  Zero-padding breaks factorization silently; errors are only caught on backend compilation.
+  Zero-padding broke factorization silently; errors were only caught on backend compilation.
+- **Resolution:**
+  - Updated `setCustomRepeatSize` in `frontend/src/context/WeaveContext.tsx` to modularly wrap existing pattern cells using `prev[r % prevH][c % prevW]` across row and column dimensions.
+  - Implemented real-time client-side structural interlacing and cyclic float validation in `frontend/src/components/MasterTileEditor.tsx` with instant advisory warning banners and ring highlighting on invalid picks/ends.
+  - Added automated unit regression tests in `frontend/src/test/master_tile_validation.test.tsx`.
 
 ---
 
 ### Issue #007: Swatch Analysis Error Handler Swallows Server Error Details
 - **GitHub Issue:** [#7](https://github.com/KenEverestNunes/ThreadLore/issues/7)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (Error Handling / Diagnostics)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`
@@ -148,16 +156,19 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   The specific error reason returned by the server (e.g., "Image resolution 80x80 px is below minimum 100x100 px") should be displayed in the error banner.
 - **Actual Behavior:**
-  The server's specific diagnostic error message is completely masked.
+  The server's specific diagnostic error message was completely masked.
+- **Resolution:**
+  - Updated `handleCropComplete` in `frontend/src/context/WeaveContext.tsx` to inspect `err instanceof Error ? err.message : null` and display `Analysis failed: ${detail}` when available, preserving server error diagnostic reasons.
+  - Added automated regression tests in `frontend/src/test/swatch_error_details.test.tsx` verifying that HTTP 400 error reasons (e.g. resolution below minimum) are rendered in the verification panel error banner.
 
 ---
 
 ### Issue #008: File Upload Errors Not Rendered in PhotoUploader UI
 - **GitHub Issue:** [#8](https://github.com/KenEverestNunes/ThreadLore/issues/8)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (UX Polish)
 - **Reported Date:** 2026-11-16
-- **Component:** `frontend/src/components/PhotoUploader.tsx`
+- **Component:** `frontend/src/components/PhotoUploader.tsx`, `frontend/src/context/WeaveContext.tsx`
 - **Description:**
   `PhotoUploader.tsx` does not consume the `error` state from `WeaveContext`. If `handleFileSelect` encounters an invalid file or `FileReader.onerror` triggers, the error message is placed in context but never rendered anywhere on the upload screen.
 - **Reproduction Steps:**
@@ -166,13 +177,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   An alert banner appears in `PhotoUploader` explaining why the file could not be loaded.
 - **Actual Behavior:**
-  Silent failure with no visual user feedback.
+  Silent failure occurred with no visual user feedback.
+- **Resolution:**
+  - Added mime-type validation in `handleFileSelect` in `frontend/src/context/WeaveContext.tsx` rejecting non-image files with explicit descriptive error messages.
+  - Consumed `error` from `useWeave()` in `frontend/src/components/PhotoUploader.tsx` and rendered an accessible `role="alert"` notification banner.
+  - Added automated unit and integration tests in `frontend/src/test/upload_error_display.test.tsx` verifying error banner rendering for invalid formats and file read failures.
 
 ---
 
 ### Issue #009: Missing Printable Physical Loom Card / Bench Draft Sheet View
 - **GitHub Issue:** [#9](https://github.com/KenEverestNunes/ThreadLore/issues/9)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved (PR opened)
 - **Severity:** Medium (Handweaver Workflow)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -191,7 +206,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #010: WIF 1.1 Plaintext Code Drawer Lacks One-Click "Copy to Clipboard"
 - **GitHub Issue:** [#10](https://github.com/KenEverestNunes/ThreadLore/issues/10)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Ergonomics)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -203,13 +218,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   A "Copy WIF" button with transient checkmark confirmation ("Copied!").
 - **Actual Behavior:**
-  Only a "Download File" button is present.
+  Only a "Download File" button was present.
+- **Resolution:**
+  - Added "Copy WIF" action button to the WIF drawer header with `navigator.clipboard.writeText(wif_text)`.
+  - Added transient 2-second visual confirmation ("Copied!" with green Check mark).
+  - Added automated unit and integration tests in `frontend/src/test/copy_wif_clipboard.test.tsx` verifying clipboard API integration and UI state transitions.
 
 ---
 
 ### Issue #011: Drawdown and Treadling Previews Truncated with No Scale/Zoom Controls
 - **GitHub Issue:** [#11](https://github.com/KenEverestNunes/ThreadLore/issues/11)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved (PR opened)
 - **Severity:** Low (Visualization)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -228,28 +247,34 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #012: Inability to Switch to Light Mode (Hardcoded Dark Theme)
 - **GitHub Issue:** [#12](https://github.com/KenEverestNunes/ThreadLore/issues/12)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Accessibility / User Preference)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/index.html`, `frontend/src/App.tsx`
 - **Description:**
-  Every component contains complete Tailwind light/dark mode pairs (e.g., `bg-white dark:bg-zinc-900`), but `index.html` hardcodes `<html lang="en" class="dark">` and there is no theme toggle button in the header. Weavers working in brightly illuminated studios cannot toggle to light mode.
+  Every component contains complete Tailwind light/dark mode pairs (e.g., `bg-white dark:bg-zinc-900`), but `index.html` hardcoded `<html lang="en" class="dark">` and there was no theme toggle button in the header. Weavers working in brightly illuminated studios could not toggle to light mode.
 - **Reproduction Steps:**
   1. Inspect the header navbar.
   2. Look for a Theme / Dark Mode toggle button.
 - **Expected Behavior:**
   A theme toggle button in the top navigation bar allowing users to switch between Dark, Light, and System themes.
 - **Actual Behavior:**
-  App is permanently locked to dark mode.
+  App was permanently locked to dark mode.
+- **Resolution:**
+  - Added theme switcher control in `frontend/src/App.tsx` header navbar with dedicated buttons for Light, Dark, and System themes.
+  - Implemented client-side theme persistence with `localStorage` and dynamic system color scheme listener.
+  - Updated `frontend/index.html` with theme initialization script and responsive body background classes.
+  - Added automated unit regression tests in `frontend/src/test/theme_toggle.test.tsx`.
 
 ---
 
 ### Issue #013: Network-Dependent WIF File Download When Text Is Held in Memory
 - **GitHub Issue:** [#13](https://github.com/KenEverestNunes/ThreadLore/issues/13)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Reliability / Offline Capability)
 - **Reported Date:** 2026-11-16
-- **Component:** `frontend/src/services/api.ts`, `backend/app/api/server.py`
+- **Component:** `frontend/src/services/api.ts`
 - **Description:**
   When clicking "Download .WIF File", the client sends a POST request over the network to `/api/download-wif` just to receive back the exact same `wif_text` already held in client memory. If the backend server is unreachable or offline, the download fails even though the full WIF file is already rendered on screen.
 - **Reproduction Steps:**
@@ -260,13 +285,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   Generate a client-side `Blob([wifText], { type: "text/plain;charset=utf-8" })` directly in the browser for instant, 100% offline-reliable downloads.
 - **Actual Behavior:**
-  Makes an unnecessary network roundtrip.
+  Made an unnecessary network roundtrip to the backend.
+- **Resolution:**
+  - Refactored `downloadWifFile` in `frontend/src/services/api.ts` to directly construct a browser `Blob([wifText], { type: "text/plain;charset=utf-8" })` and trigger client-side download via an object URL and anchor element.
+  - Eliminated the network roundtrip entirely, making WIF file downloads instant and 100% offline-capable.
+  - Added automated regression tests in `frontend/src/test/offline_wif_download.test.tsx` verifying that no fetch calls are made and client-side download is triggered.
 
 ---
 
 ### Issue #014: Stale Compiled WIF and Draft Accessible After Verification Changes (TL-QA-003)
 - **GitHub Issue:** [#14](https://github.com/KenEverestNunes/ThreadLore/issues/14)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Data Consistency)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`, `frontend/src/App.tsx`, `frontend/src/components/LoomDraftCard.tsx`
@@ -280,15 +309,20 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   Modifying any weave or metadata setting should clear or mark `compiledResult` as stale, disabling direct stepper access to Draft or requiring recompilation.
 - **Actual Behavior:**
-  Stale draft remains displayed and downloadable.
+  Stale draft was displayed and downloadable because `compiledResult` remained cached in context.
+- **Resolution:**
+  - Wrapped parameter setters (`setWarpColor`, `setWeftColor`, `setRepeatWarp`, `setRepeatWeft`, `setUnits`, `setProvenance`) and structure actions (`selectPreset`, `setCustomRepeatSize`, `toggleMatrixCell`, `handleCropComplete`, `handleFileSelect`) in `WeaveContext.tsx` to automatically invalidate `compiledResult` (`setCompiledResult(null)`).
+  - Configured `pool: 'forks'` in `frontend/vitest.config.ts` for deterministic test isolation on Windows.
+  - Added automated regression tests in `frontend/src/test/stale_draft_invalidation.test.tsx` verifying that toggling cells, changing presets, or altering yarn palettes immediately invalidates `compiledResult` and disables direct stepper navigation to Draft.
 
 ---
 
 ### Issue #015: Ingestion of New Swatch Does Not Clear Prior Analysis or Draft Results (TL-QA-004)
 - **GitHub Issue:** [#15](https://github.com/KenEverestNunes/ThreadLore/issues/15)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Workflow Integrity)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/context/WeaveContext.tsx`
 - **Description:**
   When a user returns to the Upload step and selects or drops a new image, `handleFileSelect` sets `rawImage` and moves to `crop`, but does not reset `analysisResult`, `compiledResult`, or `masterMatrix`. If the new image's analysis fails or is cancelled, prior analysis data and stale draft state persist.
@@ -300,14 +334,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Selecting a new photo should completely clear prior analysis results, compiled drafts, and active matrices.
 - **Actual Behavior:**
   Prior photo analysis and draft persist in state.
+- **Resolution:**
+  Updated `handleFileSelect` in `WeaveContext.tsx` to explicitly clear `croppedBlob`, `croppedImageUrl`, `analysisResult`, `compiledResult`, and reset the weave preset and matrix to canonical `plain_1_1` upon new image ingestion. Added automated unit regression test `frontend/src/test/swatch_ingestion_reset.test.tsx`.
 
 ---
 
 ### Issue #016: Failed/Unavailable Analysis Displays Misleading "AI Suggestion" Badge (TL-QA-013)
 - **GitHub Issue:** [#16](https://github.com/KenEverestNunes/ThreadLore/issues/16)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (UX / Clarity)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/MasterTileEditor.tsx`
 - **Description:**
   When Gemini weave analysis fails or returns `status: "unavailable"`, the UI still displays an active pill badge in `MasterTileEditor` stating: `"AI Suggestion: Custom Master Tile (0% heuristic)"`, misleading the user into thinking Gemini specifically suggested a custom matrix.
@@ -319,6 +356,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   When analysis status is unavailable, the badge should clearly state: `"AI Suggestion Unavailable: Manual Selection Required"` or be hidden entirely.
 - **Actual Behavior:**
   Displays `"AI Suggestion: Custom Master Tile (0% heuristic)"`.
+- **Resolution:**
+  Updated `MasterTileEditor.tsx` to inspect `analysisResult.status === "unavailable"`. When unavailable, it renders an amber badge stating `"AI Suggestion Unavailable: Manual Selection Required"` rather than misleadingly attributing a custom tile with 0% heuristic to an AI suggestion. Added automated unit regression test `frontend/src/test/ai_badge_status.test.tsx`.
 
 ---
 
@@ -342,10 +381,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #018: Optical Spacing Slider Limits (8 to 50 px) Cannot Accommodate Dense or Coarse Threads (TL-QA-008)
 - **GitHub Issue:** [#18](https://github.com/KenEverestNunes/ThreadLore/issues/18)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Edge-Case Textiles)
 - **Reported Date:** 2026-11-16
-- **Component:** `frontend/src/components/CanvasOverlay.tsx`, `backend/app/cv/fft_profiler.py`
+- **Resolved Date:** 2026-11-17
+- **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
   The FFT profiler can detect thread spacing below 8 px (very fine silk/linen micro-weaves) or above 50 px (chunky handspun wool or close-up macro shots). However, the manual sliders in `CanvasOverlay` are hard-clamped to `min="8"` and `max="50"`. If FFT detects 6.5 px or 62 px, moving the slider snaps away from the measured value and cannot return to it.
 - **Reproduction Steps:**
@@ -355,14 +395,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Dynamic slider limits (e.g. min 4 px, max 100 px, or auto-scaling range based on detected spacing).
 - **Actual Behavior:**
   Slider is clamped to 8..50 px.
+- **Resolution:**
+  Updated `CanvasOverlay.tsx` to dynamically compute `minSliderSpacing` (down to 4 px or below detected/current values) and `maxSliderSpacing` (up to 100 px or above detected/current values) for the Δx and Δy range inputs. Added automated unit regression test `frontend/src/test/spacing_slider_limits.test.tsx`.
 
 ---
 
 ### Issue #019: Unmeasured Default Thread Spacing (22 px) Rendered Without "Manual Guess" Label (TL-QA-007)
 - **GitHub Issue:** [#19](https://github.com/KenEverestNunes/ThreadLore/issues/19)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Clarity)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
   When FFT optical profiling cannot detect periodic thread peaks (`spacing_detected: false`), `CanvasOverlay` falls back to an arbitrary default of 22.0 px without visually labeling it as an unmeasured manual placeholder. Weavers may assume 22.0 px is an accurate optical measurement.
@@ -374,14 +417,17 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Display an indicator or badge: "22.0 px (Default Placeholder: Optical detection uncertain)" prompting manual adjustment.
 - **Actual Behavior:**
   Displays 22.0 px as if it were a detected value.
+- **Resolution:**
+  Updated `CanvasOverlay.tsx` to detect `!analysisResult?.spacing_detected`. When true, it displays an amber warning banner highlighting that optical detection was uncertain and thread spacing is a default placeholder requiring manual slider adjustment, and annotates the Δx and Δy readouts with `(Placeholder)`. Added automated unit regression test `frontend/src/test/spacing_placeholder_label.test.tsx`.
 
 ---
 
 ### Issue #020: Sample Swatches Lack Explicit "Synthetic / Simulated" Labeling (TL-QA-014)
 - **GitHub Issue:** [#20](https://github.com/KenEverestNunes/ThreadLore/issues/20)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Transparency)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/PhotoUploader.tsx`
 - **Description:**
   In `PhotoUploader`, buttons read "Plain Linen (1/1)" and "Harris Tweed (2/2 Twill)". These samples are procedurally generated via HTML Canvas with synthetic colored rectangles rather than authentic archival textile photographs. Users may believe they are testing genuine museum samples.
@@ -392,6 +438,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Label samples transparently, e.g. "Synthetic Plain Linen (1/1)" and "Simulated 2/2 Twill", and offer a real photographic sample.
 - **Actual Behavior:**
   Lacks explicit synthetic/demo labeling.
+- **Resolution:**
+  Updated `PhotoUploader.tsx` to explicitly label the sample buttons as "Synthetic Plain Linen (1/1)" and "Simulated 2/2 Twill (Harris Tweed)", clearly indicating "Try sample (synthetic / simulated)" and generating transparently named sample files (`${type}_synthetic_swatch_sample.jpg`). Added automated unit regression test `frontend/src/test/sample_swatch_labeling.test.tsx`.
 
 ---
 
