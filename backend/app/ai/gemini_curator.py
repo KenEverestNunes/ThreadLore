@@ -99,16 +99,19 @@ class GeminiCurator:
 
     @property
     def client(self) -> genai.Client | None:
-        """Lazy-initialize Vertex AI client if not injected."""
+        """Lazy-initialize Vertex AI or AI Studio client if not injected."""
         if self._client is None:
             try:
-                self._client = genai.Client(
-                    vertexai=True,
-                    project=self.settings.PROJECT_ID,
-                    location=self.settings.LOCATION,
-                )
+                if self.settings.GEMINI_API_KEY:
+                    self._client = genai.Client(api_key=self.settings.GEMINI_API_KEY)
+                else:
+                    self._client = genai.Client(
+                        vertexai=True,
+                        project=self.settings.PROJECT_ID,
+                        location=self.settings.LOCATION,
+                    )
             except Exception as e:
-                logger.warning("Could not initialize Vertex AI GenAI client: %s", e)
+                logger.warning("Could not initialize GenAI client: %s", e)
                 self._client = None
         return self._client
 

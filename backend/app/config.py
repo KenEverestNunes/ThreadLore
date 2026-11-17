@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     PROJECT_ID: str = "threadlore-prod"
     LOCATION: str = "global"  # Gemini 3.8 Flash endpoint location (decoupled from Cloud Run region)
     GEMINI_MODEL: str = "gemini-3.8-flash"
+    GEMINI_API_KEY: str | None = None
     GCS_BUCKET_NAME: str = "threadlore-swatches-prod"
     MAX_UPLOAD_SIZE_BYTES: int = 2 * 1024 * 1024  # 2MB
     CORS_ORIGINS: list[str] = [
