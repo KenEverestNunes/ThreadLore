@@ -51,7 +51,10 @@ interface WeaveContextType {
 
 const WeaveContext = createContext<WeaveContextType | undefined>(undefined);
 
-export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const WeaveProvider: React.FC<{
+  children: ReactNode;
+  initialCompiledResult?: CompileDraftResponse | null;
+}> = ({ children, initialCompiledResult = null }) => {
   const [step, setStep] = useState<WorkflowStep>("upload");
   const [rawImage, setRawImage] = useState<string | null>(null);
   const [croppedBlob, setCroppedBlob] = useState<Blob | null>(null);
@@ -81,7 +84,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   });
 
   const [isCompiling, setIsCompiling] = useState(false);
-  const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(null);
+  const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(initialCompiledResult);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileSelect = useCallback((file: File) => {
