@@ -28,6 +28,7 @@ describe('Issue #12: Theme Mode Toggle (Dark / Light / System)', () => {
     fireEvent.click(lightBtn);
 
     expect(document.documentElement.classList.contains('dark')).toBe(false);
+    expect(document.body.classList.contains('dark')).toBe(false);
     expect(localStorage.getItem('threadlore-theme')).toBe('light');
   });
 
@@ -44,6 +45,7 @@ describe('Issue #12: Theme Mode Toggle (Dark / Light / System)', () => {
     // Switch to dark
     fireEvent.click(darkBtn);
     expect(document.documentElement.classList.contains('dark')).toBe(true);
+    expect(document.body.classList.contains('dark')).toBe(true);
     expect(localStorage.getItem('threadlore-theme')).toBe('dark');
   });
 });

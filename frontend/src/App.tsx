@@ -107,21 +107,18 @@ const Header: React.FC = () => {
 
   const applyTheme = useCallback((mode: "light" | "dark" | "system") => {
     const root = document.documentElement;
-    if (mode === "light") {
-      root.classList.remove("dark");
-      root.style.colorScheme = "light";
-    } else if (mode === "dark") {
+    const body = document.body;
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = mode === "dark" || (mode === "system" && prefersDark);
+
+    if (isDark) {
       root.classList.add("dark");
+      body?.classList.add("dark");
       root.style.colorScheme = "dark";
     } else {
-      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (prefersDark) {
-        root.classList.add("dark");
-        root.style.colorScheme = "dark";
-      } else {
-        root.classList.remove("dark");
-        root.style.colorScheme = "light";
-      }
+      root.classList.remove("dark");
+      body?.classList.remove("dark");
+      root.style.colorScheme = "light";
     }
   }, []);
 
@@ -139,15 +136,8 @@ const Header: React.FC = () => {
     applyTheme(theme);
     if (theme === "system" && window.matchMedia) {
       const mql = window.matchMedia("(prefers-color-scheme: dark)");
-      const handler = (e: MediaQueryListEvent) => {
-        const root = document.documentElement;
-        if (e.matches) {
-          root.classList.add("dark");
-          root.style.colorScheme = "dark";
-        } else {
-          root.classList.remove("dark");
-          root.style.colorScheme = "light";
-        }
+      const handler = () => {
+        applyTheme("system");
       };
       mql.addEventListener("change", handler);
       return () => mql.removeEventListener("change", handler);
@@ -183,7 +173,7 @@ const Header: React.FC = () => {
             <button
               type="button"
               onClick={() => handleThemeChange("light")}
-              className={`rounded-md p-1.5 transition ${
+              className={`rounded-md p-1.5 transition cursor-pointer ${
                 theme === "light"
                   ? "bg-white text-amber-500 shadow-sm dark:bg-zinc-800"
                   : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
@@ -191,12 +181,12 @@ const Header: React.FC = () => {
               title="Light Theme"
               aria-label="Light theme"
             >
-              <Sun className="h-3.5 w-3.5" />
+              <Sun className="h-3.5 w-3.5 pointer-events-none" />
             </button>
             <button
               type="button"
               onClick={() => handleThemeChange("dark")}
-              className={`rounded-md p-1.5 transition ${
+              className={`rounded-md p-1.5 transition cursor-pointer ${
                 theme === "dark"
                   ? "bg-white text-indigo-500 shadow-sm dark:bg-zinc-800"
                   : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
@@ -204,12 +194,12 @@ const Header: React.FC = () => {
               title="Dark Theme"
               aria-label="Dark theme"
             >
-              <Moon className="h-3.5 w-3.5" />
+              <Moon className="h-3.5 w-3.5 pointer-events-none" />
             </button>
             <button
               type="button"
               onClick={() => handleThemeChange("system")}
-              className={`rounded-md p-1.5 transition ${
+              className={`rounded-md p-1.5 transition cursor-pointer ${
                 theme === "system"
                   ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
                   : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
@@ -217,7 +207,7 @@ const Header: React.FC = () => {
               title="System Theme"
               aria-label="System theme"
             >
-              <Monitor className="h-3.5 w-3.5" />
+              <Monitor className="h-3.5 w-3.5 pointer-events-none" />
             </button>
           </div>
 
