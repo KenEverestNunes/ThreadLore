@@ -191,7 +191,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #010: WIF 1.1 Plaintext Code Drawer Lacks One-Click "Copy to Clipboard"
 - **GitHub Issue:** [#10](https://github.com/KenEverestNunes/ThreadLore/issues/10)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Ergonomics)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -203,7 +203,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   A "Copy WIF" button with transient checkmark confirmation ("Copied!").
 - **Actual Behavior:**
-  Only a "Download File" button is present.
+  Only a "Download File" button was present.
+- **Resolution:**
+  - Added "Copy WIF" action button to the WIF drawer header with `navigator.clipboard.writeText(wif_text)`.
+  - Added transient 2-second visual confirmation ("Copied!" with green Check mark).
+  - Added automated unit and integration tests in `frontend/src/test/copy_wif_clipboard.test.tsx` verifying clipboard API integration and UI state transitions.
 
 ---
 
