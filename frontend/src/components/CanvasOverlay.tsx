@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { Eye, FlipHorizontal, Move, RotateCcw, RotateCw, Sliders } from "lucide-react";
+import { AlertCircle, Eye, FlipHorizontal, Move, RotateCcw, RotateCw, Sliders } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 
 export const CanvasOverlay: React.FC = () => {
@@ -159,10 +159,20 @@ export const CanvasOverlay: React.FC = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isPanning) return;
-    const deltaX = e.clientX - panStartRef.current.x;
-    const deltaY = e.clientY - panStartRef.current.y;
-    setOffsetX(panStartRef.current.initOffX + deltaX);
-    setOffsetY(panStartRef.current.initOffY + deltaY);
+    const canvas = canvasRef.current;
+    let scaleX = 1;
+    let scaleY = 1;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        scaleX = canvas.width / rect.width;
+        scaleY = canvas.height / rect.height;
+      }
+    }
+    const deltaX = (e.clientX - panStartRef.current.x) * scaleX;
+    const deltaY = (e.clientY - panStartRef.current.y) * scaleY;
+    setOffsetX(Math.round(panStartRef.current.initOffX + deltaX));
+    setOffsetY(Math.round(panStartRef.current.initOffY + deltaY));
   };
 
   const handleMouseUp = () => {
@@ -182,6 +192,22 @@ export const CanvasOverlay: React.FC = () => {
       setSpacingY(22.0);
     }
   };
+
+  // Dynamic min/max bounds accommodating fine silk micro-weaves and coarse yarns
+  const minSliderSpacing = Math.min(
+    4.0,
+    Math.floor(spacingX),
+    Math.floor(spacingY),
+    Math.floor(analysisResult?.dx_px || 4.0),
+    Math.floor(analysisResult?.dy_px || 4.0)
+  );
+  const maxSliderSpacing = Math.max(
+    100.0,
+    Math.ceil(spacingX),
+    Math.ceil(spacingY),
+    Math.ceil(analysisResult?.dx_px || 100.0),
+    Math.ceil(analysisResult?.dy_px || 100.0)
+  );
 
   return (
     <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -267,16 +293,32 @@ export const CanvasOverlay: React.FC = () => {
         </div>
 
         {/* Thread Spacing Sliders */}
+        {!analysisResult?.spacing_detected && (
+          <div className="flex items-center space-x-1.5 rounded-lg border border-amber-200/80 bg-amber-50/90 px-3 py-1.5 text-xs text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-amber-300">
+            <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              <strong>Default Placeholder: Optical detection uncertain.</strong> Adjust Δx and Δy sliders manually to match yarn density.
+            </span>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
           <div>
             <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mb-1">
               <span>Δx (Warp Spacing)</span>
-              <span>{spacingX.toFixed(1)} px</span>
+              <span>
+                {spacingX.toFixed(1)} px
+                {!analysisResult?.spacing_detected && (
+                  <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                    (Placeholder)
+                  </span>
+                )}
+              </span>
             </div>
             <input
               type="range"
-              min="8"
-              max="50"
+              min={minSliderSpacing}
+              max={maxSliderSpacing}
               step="0.5"
               value={spacingX}
               onChange={(e) => {
@@ -291,12 +333,19 @@ export const CanvasOverlay: React.FC = () => {
           <div>
             <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mb-1">
               <span>Δy (Weft Spacing)</span>
-              <span>{spacingY.toFixed(1)} px</span>
+              <span>
+                {spacingY.toFixed(1)} px
+                {!analysisResult?.spacing_detected && (
+                  <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                    (Placeholder)
+                  </span>
+                )}
+              </span>
             </div>
             <input
               type="range"
-              min="8"
-              max="50"
+              min={minSliderSpacing}
+              max={maxSliderSpacing}
               step="0.5"
               value={spacingY}
               onChange={(e) => {
