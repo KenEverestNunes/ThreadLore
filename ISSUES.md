@@ -94,9 +94,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #005: Canvas Mouse Drag Drift Due to Coordinate Buffer Resolution Mismatch
 - **GitHub Issue:** [#5](https://github.com/KenEverestNunes/ThreadLore/issues/5)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (UX / Visual Precision)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
   The `<canvas>` element's internal drawing buffer is hardcoded to 450×450 px, while its CSS rendering size is styled to 400×400 px (`h-[400px] w-[400px] max-w-full`). When the user drags the canvas to adjust the grid phase offset, screen pixel deltas are added directly to buffer coordinates without scaling (`offsetX + deltaX`), causing the grid to drift and lag behind the mouse cursor by ~12.5% (and worse on mobile screens).
@@ -107,6 +108,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Mouse movement deltas should be scaled by `canvas.width / rect.width` and `canvas.height / rect.height` so dragging is 1:1 with cursor travel.
 - **Actual Behavior:**
   Mouse dragging drifts due to unscaled buffer-to-display pixel ratios.
+- **Resolution:**
+  Updated `handleMouseMove` in `CanvasOverlay.tsx` to dynamically query the canvas bounding rect and scale client screen deltas by `canvas.width / rect.width` and `canvas.height / rect.height` before applying to `offsetX` and `offsetY`, ensuring 1:1 phase alignment with cursor movement across all viewport sizes. Added automated unit regression test `frontend/src/test/canvas_drag_scaling.test.tsx`.
 
 ---
 
