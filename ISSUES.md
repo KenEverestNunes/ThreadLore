@@ -259,6 +259,137 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ---
 
+### Issue #014: Stale Compiled WIF and Draft Accessible After Verification Changes (TL-QA-003)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** High (Data Consistency)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/context/WeaveContext.tsx`, `frontend/src/App.tsx`, `frontend/src/components/LoomDraftCard.tsx`
+- **Description:**
+  After compiling a draft, if a user navigates back to "Verify & Align" and modifies matrix cells, yarn colors, repeats, units, or provenance metadata, `compiledResult` is not invalidated or marked dirty. The top stepper allows navigating directly back to "Loom Draft & WIF", displaying the stale prior draft whose threading, tie-up, drawdown, and downloaded WIF disagree with the newly edited state.
+- **Reproduction Steps:**
+  1. Compile a valid draft and view the draft card.
+  2. Click "Back to Editor".
+  3. Toggle matrix cells or change warp/weft colors or project repeats.
+  4. Click "Loom Draft & WIF" in the top stepper without recompiling.
+- **Expected Behavior:**
+  Modifying any weave or metadata setting should clear or mark `compiledResult` as stale, disabling direct stepper access to Draft or requiring recompilation.
+- **Actual Behavior:**
+  Stale draft remains displayed and downloadable.
+
+---
+
+### Issue #015: Ingestion of New Swatch Does Not Clear Prior Analysis or Draft Results (TL-QA-004)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** High (Workflow Integrity)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/context/WeaveContext.tsx`
+- **Description:**
+  When a user returns to the Upload step and selects or drops a new image, `handleFileSelect` sets `rawImage` and moves to `crop`, but does not reset `analysisResult`, `compiledResult`, or `masterMatrix`. If the new image's analysis fails or is cancelled, prior analysis data and stale draft state persist.
+- **Reproduction Steps:**
+  1. Process and compile image A.
+  2. Return to the Upload step and select image B.
+  3. If image B analysis fails or is cancelled, observe that prior suggestion and draft from image A remain.
+- **Expected Behavior:**
+  Selecting a new photo should completely clear prior analysis results, compiled drafts, and active matrices.
+- **Actual Behavior:**
+  Prior photo analysis and draft persist in state.
+
+---
+
+### Issue #016: Failed/Unavailable Analysis Displays Misleading "AI Suggestion" Badge (TL-QA-013)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** Medium (UX / Clarity)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/components/MasterTileEditor.tsx`
+- **Description:**
+  When Gemini weave analysis fails or returns `status: "unavailable"`, the UI still displays an active pill badge in `MasterTileEditor` stating: `"AI Suggestion: Custom Master Tile (0% heuristic)"`, misleading the user into thinking Gemini specifically suggested a custom matrix.
+- **Reproduction Steps:**
+  1. Trigger an analysis failure or run without Vertex AI credentials.
+  2. Arrive at the "Verify & Align" screen.
+  3. Inspect the top-right pill badge on the Master Tile Editor.
+- **Expected Behavior:**
+  When analysis status is unavailable, the badge should clearly state: `"AI Suggestion Unavailable: Manual Selection Required"` or be hidden entirely.
+- **Actual Behavior:**
+  Displays `"AI Suggestion: Custom Master Tile (0% heuristic)"`.
+
+---
+
+### Issue #017: Canvas and Cropper Interaction Handlers Lack Touch / PointerEvent Support (TL-QA-010)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** Medium (Mobile / Tablet Accessibility)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/components/SwatchCropper.tsx`, `frontend/src/components/CanvasOverlay.tsx`
+- **Description:**
+  Both `SwatchCropper` and `CanvasOverlay` rely exclusively on desktop `MouseEvent` listeners (`mousedown`, `mousemove`, `mouseup`). Users operating touch devices (iPads, Surface tablets, touchscreens) cannot drag the crop box, resize corner handles, or drag the canvas grid phase.
+- **Reproduction Steps:**
+  1. Open ThreadLore on a touchscreen device or emulate mobile touch in DevTools.
+  2. Attempt to drag the crop box in SwatchCropper or pan the grid in CanvasOverlay.
+- **Expected Behavior:**
+  Unified `PointerEvent` (`onPointerDown`, `onPointerMove`, `onPointerUp`) handling enabling seamless dragging on touchscreens, stylus devices, and mice alike.
+- **Actual Behavior:**
+  Interactions do not respond to touch.
+
+---
+
+### Issue #018: Optical Spacing Slider Limits (8 to 50 px) Cannot Accommodate Dense or Coarse Threads (TL-QA-008)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** Low (Edge-Case Textiles)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/components/CanvasOverlay.tsx`, `backend/app/cv/fft_profiler.py`
+- **Description:**
+  The FFT profiler can detect thread spacing below 8 px (very fine silk/linen micro-weaves) or above 50 px (chunky handspun wool or close-up macro shots). However, the manual sliders in `CanvasOverlay` are hard-clamped to `min="8"` and `max="50"`. If FFT detects 6.5 px or 62 px, moving the slider snaps away from the measured value and cannot return to it.
+- **Reproduction Steps:**
+  1. Use an image whose thread spacing is 6 px or 60 px.
+  2. Arrive at "Verify & Align" and touch the spacing slider.
+- **Expected Behavior:**
+  Dynamic slider limits (e.g. min 4 px, max 100 px, or auto-scaling range based on detected spacing).
+- **Actual Behavior:**
+  Slider is clamped to 8..50 px.
+
+---
+
+### Issue #019: Unmeasured Default Thread Spacing (22 px) Rendered Without "Manual Guess" Label (TL-QA-007)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** Low (Clarity)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/components/CanvasOverlay.tsx`
+- **Description:**
+  When FFT optical profiling cannot detect periodic thread peaks (`spacing_detected: false`), `CanvasOverlay` falls back to an arbitrary default of 22.0 px without visually labeling it as an unmeasured manual placeholder. Weavers may assume 22.0 px is an accurate optical measurement.
+- **Reproduction Steps:**
+  1. Upload an image where FFT frequency analysis fails (e.g. low-contrast plain swatch).
+  2. Arrive at "Verify & Align".
+  3. Inspect Δx and Δy readouts: displays "22.0 px" with no indication of uncertainty.
+- **Expected Behavior:**
+  Display an indicator or badge: "22.0 px (Default Placeholder: Optical detection uncertain)" prompting manual adjustment.
+- **Actual Behavior:**
+  Displays 22.0 px as if it were a detected value.
+
+---
+
+### Issue #020: Sample Swatches Lack Explicit "Synthetic / Simulated" Labeling (TL-QA-014)
+- **Status:** 🔴 Open (Pending User Triage)
+- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **Severity:** Low (Transparency)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/components/PhotoUploader.tsx`
+- **Description:**
+  In `PhotoUploader`, buttons read "Plain Linen (1/1)" and "Harris Tweed (2/2 Twill)". These samples are procedurally generated via HTML Canvas with synthetic colored rectangles rather than authentic archival textile photographs. Users may believe they are testing genuine museum samples.
+- **Reproduction Steps:**
+  1. Visit the Upload screen.
+  2. Observe sample buttons under "Try sample:".
+- **Expected Behavior:**
+  Label samples transparently, e.g. "Synthetic Plain Linen (1/1)" and "Simulated 2/2 Twill", and offer a real photographic sample.
+- **Actual Behavior:**
+  Lacks explicit synthetic/demo labeling.
+
+---
+
 ## Issue Log Template (For Adding Future Issues)
 
 ```markdown

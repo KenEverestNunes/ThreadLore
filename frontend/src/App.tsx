@@ -110,7 +110,7 @@ export const App: React.FC = () => {
               <div>
                 <span className="text-sm font-bold tracking-tight">ThreadLore</span>
                 <span className="hidden sm:inline-block ml-2 text-[11px] text-zinc-400 font-normal">
-                  — Preserve the weave, not just the photograph
+                  | Preserve the weave, not just the photograph
                 </span>
               </div>
             </div>
