@@ -24,7 +24,7 @@ const STEPS: { id: WorkflowStep; label: string; icon: React.FC<{ className?: str
 ];
 
 const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance }) => {
-  const { step, setStep, rawImage, compiledResult } = useWeave();
+  const { step, setStep, rawImage, croppedImageUrl, compiledResult } = useWeave();
 
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -36,8 +36,8 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
             const isActive = step === s.id;
             const isCompleted =
               (s.id === "upload" && rawImage !== null) ||
-              (s.id === "crop" && (step === "verify" || step === "draft")) ||
-              (s.id === "verify" && step === "draft");
+              (s.id === "crop" && croppedImageUrl !== null) ||
+              (s.id === "verify" && compiledResult !== null);
 
             return (
               <button
@@ -45,12 +45,12 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
                 onClick={() => {
                   if (s.id === "upload") setStep("upload");
                   else if (s.id === "crop" && rawImage) setStep("crop");
-                  else if (s.id === "verify" && rawImage) setStep("verify");
+                  else if (s.id === "verify" && croppedImageUrl) setStep("verify");
                   else if (s.id === "draft" && compiledResult) setStep("draft");
                 }}
                 disabled={
                   (s.id === "crop" && !rawImage) ||
-                  (s.id === "verify" && !rawImage) ||
+                  (s.id === "verify" && !croppedImageUrl) ||
                   (s.id === "draft" && !compiledResult)
                 }
                 className={`flex items-center space-x-2 text-xs font-medium transition disabled:opacity-40 disabled:cursor-not-allowed ${
