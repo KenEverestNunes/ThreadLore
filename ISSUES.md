@@ -379,9 +379,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #020: Sample Swatches Lack Explicit "Synthetic / Simulated" Labeling (TL-QA-014)
 - **GitHub Issue:** [#20](https://github.com/KenEverestNunes/ThreadLore/issues/20)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Transparency)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/PhotoUploader.tsx`
 - **Description:**
   In `PhotoUploader`, buttons read "Plain Linen (1/1)" and "Harris Tweed (2/2 Twill)". These samples are procedurally generated via HTML Canvas with synthetic colored rectangles rather than authentic archival textile photographs. Users may believe they are testing genuine museum samples.
@@ -392,6 +393,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Label samples transparently, e.g. "Synthetic Plain Linen (1/1)" and "Simulated 2/2 Twill", and offer a real photographic sample.
 - **Actual Behavior:**
   Lacks explicit synthetic/demo labeling.
+- **Resolution:**
+  Updated `PhotoUploader.tsx` to explicitly label the sample buttons as "Synthetic Plain Linen (1/1)" and "Simulated 2/2 Twill (Harris Tweed)", clearly indicating "Try sample (synthetic / simulated)" and generating transparently named sample files (`${type}_synthetic_swatch_sample.jpg`). Added automated unit regression test `frontend/src/test/sample_swatch_labeling.test.tsx`.
 
 ---
 

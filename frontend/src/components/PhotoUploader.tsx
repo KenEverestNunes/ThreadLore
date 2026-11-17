@@ -55,7 +55,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
 
     canvas.toBlob((blob) => {
       if (blob) {
-        const file = new File([blob], `${type}_swatch_sample.jpg`, { type: "image/jpeg" });
+        const file = new File([blob], `${type}_synthetic_swatch_sample.jpg`, { type: "image/jpeg" });
         handleFileSelect(file);
       }
     }, "image/jpeg", 0.9);
@@ -121,18 +121,18 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
 
         <span className="text-zinc-300 dark:text-zinc-700">•</span>
 
-        <span className="text-zinc-500">Try sample:</span>
+        <span className="text-zinc-500">Try sample (synthetic / simulated):</span>
         <button
           onClick={() => loadSampleSwatch("plain")}
           className="rounded-md border border-zinc-200 px-2.5 py-1 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
-          Plain Linen (1/1)
+          Synthetic Plain Linen (1/1)
         </button>
         <button
           onClick={() => loadSampleSwatch("twill")}
           className="rounded-md border border-zinc-200 px-2.5 py-1 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
-          Harris Tweed (2/2 Twill)
+          Simulated 2/2 Twill (Harris Tweed)
         </button>
       </div>
     </div>
