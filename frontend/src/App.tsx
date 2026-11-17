@@ -106,16 +106,21 @@ const Header: React.FC = () => {
   });
 
   const applyTheme = useCallback((mode: "light" | "dark" | "system") => {
+    const root = document.documentElement;
     if (mode === "light") {
-      document.documentElement.classList.remove("dark");
+      root.classList.remove("dark");
+      root.style.colorScheme = "light";
     } else if (mode === "dark") {
-      document.documentElement.classList.add("dark");
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
     } else {
       const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       if (prefersDark) {
-        document.documentElement.classList.add("dark");
+        root.classList.add("dark");
+        root.style.colorScheme = "dark";
       } else {
-        document.documentElement.classList.remove("dark");
+        root.classList.remove("dark");
+        root.style.colorScheme = "light";
       }
     }
   }, []);
@@ -135,10 +140,13 @@ const Header: React.FC = () => {
     if (theme === "system" && window.matchMedia) {
       const mql = window.matchMedia("(prefers-color-scheme: dark)");
       const handler = (e: MediaQueryListEvent) => {
+        const root = document.documentElement;
         if (e.matches) {
-          document.documentElement.classList.add("dark");
+          root.classList.add("dark");
+          root.style.colorScheme = "dark";
         } else {
-          document.documentElement.classList.remove("dark");
+          root.classList.remove("dark");
+          root.style.colorScheme = "light";
         }
       };
       mql.addEventListener("change", handler);
