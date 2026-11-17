@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { Eye, Move, RotateCcw, Sliders } from "lucide-react";
+import { AlertCircle, Eye, Move, RotateCcw, Sliders } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 
 export const CanvasOverlay: React.FC = () => {
@@ -238,11 +238,27 @@ export const CanvasOverlay: React.FC = () => {
         />
 
         {/* Thread Spacing Sliders */}
+        {!analysisResult?.spacing_detected && (
+          <div className="flex items-center space-x-1.5 rounded-lg border border-amber-200/80 bg-amber-50/90 px-3 py-1.5 text-xs text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-amber-300">
+            <AlertCircle className="h-3.5 w-3.5 flex-shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              <strong>Default Placeholder: Optical detection uncertain.</strong> Adjust Δx and Δy sliders manually to match yarn density.
+            </span>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
           <div>
             <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mb-1">
               <span>Δx (Warp Spacing)</span>
-              <span>{spacingX.toFixed(1)} px</span>
+              <span>
+                {spacingX.toFixed(1)} px
+                {!analysisResult?.spacing_detected && (
+                  <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                    (Placeholder)
+                  </span>
+                )}
+              </span>
             </div>
             <input
               type="range"
@@ -262,7 +278,14 @@ export const CanvasOverlay: React.FC = () => {
           <div>
             <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mb-1">
               <span>Δy (Weft Spacing)</span>
-              <span>{spacingY.toFixed(1)} px</span>
+              <span>
+                {spacingY.toFixed(1)} px
+                {!analysisResult?.spacing_detected && (
+                  <span className="ml-1 text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+                    (Placeholder)
+                  </span>
+                )}
+              </span>
             </div>
             <input
               type="range"
