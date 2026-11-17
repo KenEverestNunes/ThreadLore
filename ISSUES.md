@@ -228,19 +228,25 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #012: Inability to Switch to Light Mode (Hardcoded Dark Theme)
 - **GitHub Issue:** [#12](https://github.com/KenEverestNunes/ThreadLore/issues/12)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Accessibility / User Preference)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/index.html`, `frontend/src/App.tsx`
 - **Description:**
-  Every component contains complete Tailwind light/dark mode pairs (e.g., `bg-white dark:bg-zinc-900`), but `index.html` hardcodes `<html lang="en" class="dark">` and there is no theme toggle button in the header. Weavers working in brightly illuminated studios cannot toggle to light mode.
+  Every component contains complete Tailwind light/dark mode pairs (e.g., `bg-white dark:bg-zinc-900`), but `index.html` hardcoded `<html lang="en" class="dark">` and there was no theme toggle button in the header. Weavers working in brightly illuminated studios could not toggle to light mode.
 - **Reproduction Steps:**
   1. Inspect the header navbar.
   2. Look for a Theme / Dark Mode toggle button.
 - **Expected Behavior:**
   A theme toggle button in the top navigation bar allowing users to switch between Dark, Light, and System themes.
 - **Actual Behavior:**
-  App is permanently locked to dark mode.
+  App was permanently locked to dark mode.
+- **Resolution:**
+  - Added theme switcher control in `frontend/src/App.tsx` header navbar with dedicated buttons for Light, Dark, and System themes.
+  - Implemented client-side theme persistence with `localStorage` and dynamic system color scheme listener.
+  - Updated `frontend/index.html` with theme initialization script and responsive body background classes.
+  - Added automated unit regression tests in `frontend/src/test/theme_toggle.test.tsx`.
 
 ---
 
