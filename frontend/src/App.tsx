@@ -81,13 +81,15 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
           })}
         </div>
 
-        <button
-          onClick={onOpenGuidance}
-          className="flex items-center space-x-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-600 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800"
-        >
-          <HelpCircle className="h-3.5 w-3.5" />
-          <span className="hidden md:inline">Capture Guidelines</span>
-        </button>
+        {(step === "upload" || step === "crop") && (
+          <button
+            onClick={onOpenGuidance}
+            className="flex items-center space-x-1.5 rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs text-zinc-600 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800"
+          >
+            <HelpCircle className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">Capture Guidelines</span>
+          </button>
+        )}
       </div>
 
       {/* Step View Router */}
@@ -146,7 +148,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80 print:hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <button
           type="button"
           onClick={() => setStep("upload")}
@@ -154,10 +156,10 @@ const Header: React.FC = () => {
           title="Return to Upload Swatch home page"
           aria-label="ThreadLore home"
         >
-          <ThreadLoreIcon className="h-8 w-8 shadow-sm flex-shrink-0" />
+          <ThreadLoreIcon className="h-10 w-10 shadow-sm flex-shrink-0" size={40} />
           <div>
-            <span className="text-sm font-bold tracking-tight">ThreadLore</span>
-            <span className="hidden sm:inline-block ml-2 text-[11px] text-zinc-400 font-normal">
+            <span className="text-lg sm:text-xl font-bold tracking-tight">ThreadLore</span>
+            <span className="hidden sm:inline-block ml-2.5 text-xs sm:text-sm text-zinc-400 font-normal">
               | Preserve the weave, not just the photograph
             </span>
           </div>
@@ -237,13 +239,12 @@ export const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-200 bg-white py-6 dark:border-zinc-800 dark:bg-zinc-950 text-xs text-zinc-500 text-center space-y-1 print:hidden">
-          <p>
-            ThreadLore • AI-Assisted, Human-Verified Textile Reconstruction • Powered by Gemini 3.8 Flash & WIF 1.1 Specification
-          </p>
-          <p className="text-[11px] text-zinc-400">
-            Strict 4-Shaft / 4-Treadle physical constraints • Deterministic closed-form Boolean factorization • User-supplied provenance
-          </p>
+        <footer className="border-t border-zinc-200/80 bg-white/70 py-4 dark:border-zinc-800/80 dark:bg-zinc-950/70 backdrop-blur-sm print:hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="font-medium text-zinc-600 dark:text-zinc-400">
+              © 2026 Ken Nunes. All rights reserved.
+            </p>
+          </div>
         </footer>
 
         {/* Modal */}
