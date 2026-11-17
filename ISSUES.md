@@ -51,7 +51,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #003: Stepper Allows Premature Navigation to "Verify & Align" Before Swatch Is Cropped
 - **GitHub Issue:** [#3](https://github.com/KenEverestNunes/ThreadLore/issues/3)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (Workflow / UX Integrity)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/App.tsx`
@@ -64,7 +64,12 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   The "Verify & Align" step in the stepper should remain disabled (`disabled={!croppedImageUrl}`) until the user actually crops and confirms a swatch.
 - **Actual Behavior:**
-  The stepper is enabled because the condition only checks `rawImage !== null`. The CanvasOverlay renders an empty black box with no image or optical metrics.
+  The stepper was enabled because the condition only checked `rawImage !== null`. The CanvasOverlay rendered an empty black box with no image or optical metrics.
+- **Resolution:**
+  - Updated `App.tsx` stepper button to require `croppedImageUrl !== null` for both `disabled` and `onClick` handlers.
+  - Updated `isCompleted` step status: `crop` requires `croppedImageUrl !== null` and `verify` requires `compiledResult !== null`.
+  - Added automated unit and regression tests in `frontend/src/test/stepper_guard.test.tsx` verifying negative and positive states.
+  - Resolved via PR #21 (commit `0336eb0`).
 
 ---
 
@@ -387,6 +392,30 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Label samples transparently, e.g. "Synthetic Plain Linen (1/1)" and "Simulated 2/2 Twill", and offer a real photographic sample.
 - **Actual Behavior:**
   Lacks explicit synthetic/demo labeling.
+
+---
+
+### Issue #022: Brand Logo in Header Should Redirect to Home Page on Click
+- **GitHub Issue:** [#22](https://github.com/KenEverestNunes/ThreadLore/issues/22)
+- **Status:** 🟢 Resolved
+- **Severity:** Low (Navigation / UX Polish)
+- **Reported Date:** 2026-11-16
+- **Component:** `frontend/src/App.tsx`
+- **Description:**
+  In the top navigation bar, the ThreadLore brand icon and title are rendered as an unclickable static div. Users navigating between steps (such as Macro Crop, Verify & Align, or Loom Draft) expect clicking the brand logo to return them to the initial home screen (Upload Swatch, step "upload").
+- **Reproduction Steps:**
+  1. Open ThreadLore.
+  2. Select a sample swatch or upload an image to transition to the "crop" or "verify" step.
+  3. Attempt to click on the ThreadLore logo or title in the top navigation header.
+  4. Notice the cursor remains default/pointer-less and nothing happens.
+- **Expected Behavior:**
+  Clicking the brand logo/title should navigate back to the home page (step "upload"), providing standard web application navigation and allowing users to easily return to the start.
+- **Actual Behavior:**
+  The brand logo and title were non-interactive elements without click handlers or cursor pointer styles.
+- **Resolution:**
+  - Extracted `<Header />` as a child component of `<WeaveProvider>` to access `useWeave()`.
+  - Wrapped the brand logo and title in an accessible `<button>` with `onClick={() => setStep("upload")}`, `aria-label="ThreadLore home"`, and `cursor-pointer` styling.
+  - Added automated regression tests in `frontend/src/test/logo_navigation.test.tsx` verifying navigation back to the upload step from both `crop` and `verify` steps.
 
 ---
 
