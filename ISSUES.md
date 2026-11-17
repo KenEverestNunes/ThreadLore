@@ -378,9 +378,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #019: Unmeasured Default Thread Spacing (22 px) Rendered Without "Manual Guess" Label (TL-QA-007)
 - **GitHub Issue:** [#19](https://github.com/KenEverestNunes/ThreadLore/issues/19)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Clarity)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
   When FFT optical profiling cannot detect periodic thread peaks (`spacing_detected: false`), `CanvasOverlay` falls back to an arbitrary default of 22.0 px without visually labeling it as an unmeasured manual placeholder. Weavers may assume 22.0 px is an accurate optical measurement.
@@ -392,6 +393,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Display an indicator or badge: "22.0 px (Default Placeholder: Optical detection uncertain)" prompting manual adjustment.
 - **Actual Behavior:**
   Displays 22.0 px as if it were a detected value.
+- **Resolution:**
+  Updated `CanvasOverlay.tsx` to detect `!analysisResult?.spacing_detected`. When true, it displays an amber warning banner highlighting that optical detection was uncertain and thread spacing is a default placeholder requiring manual slider adjustment, and annotates the Δx and Δy readouts with `(Placeholder)`. Added automated unit regression test `frontend/src/test/spacing_placeholder_label.test.tsx`.
 
 ---
 
