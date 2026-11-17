@@ -217,7 +217,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #011: Drawdown and Treadling Previews Truncated with No Scale/Zoom Controls
 - **GitHub Issue:** [#11](https://github.com/KenEverestNunes/ThreadLore/issues/11)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved (PR opened)
 - **Severity:** Low (Visualization)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`

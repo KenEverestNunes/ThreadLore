@@ -9,6 +9,13 @@ import {
 import { useWeave } from "../context/WeaveContext";
 import { downloadWifFile } from "../services/api";
 
+type ZoomLevel = "small" | "medium" | "large";
+const ZOOM_CONFIG: Record<ZoomLevel, { cellSize: number; label: string }> = {
+  small: { cellSize: 5, label: "Small (5px)" },
+  medium: { cellSize: 8, label: "Medium (8px)" },
+  large: { cellSize: 14, label: "Large (14px)" },
+};
+
 export const LoomDraftCard: React.FC = () => {
   const {
     compiledResult,
@@ -21,6 +28,8 @@ export const LoomDraftCard: React.FC = () => {
 
   const [showWifCode, setShowWifCode] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [zoom, setZoom] = useState<ZoomLevel>("medium");
+  const [showFullProject, setShowFullProject] = useState(false);
 
   if (!compiledResult || !compiledResult.draft) {
     return (
@@ -37,6 +46,11 @@ export const LoomDraftCard: React.FC = () => {
   }
 
   const { draft, wif_text } = compiledResult;
+
+  const isTruncated = draft.warp_threads > 60 || draft.weft_picks > 40;
+  const visibleWarp = showFullProject ? draft.warp_threads : Math.min(60, draft.warp_threads);
+  const visibleWeft = showFullProject ? draft.weft_picks : Math.min(40, draft.weft_picks);
+  const cellSize = ZOOM_CONFIG[zoom].cellSize;
 
   const handleDownload = () => {
     const filename = provenance.title
@@ -130,9 +144,84 @@ export const LoomDraftCard: React.FC = () => {
 
       {/* Visual Loom Draft Matrix Layout */}
       <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 overflow-x-auto">
-        <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
-          Loom Draft Diagram: Threading, Tie-up, Treadling & Drawdown
-        </h4>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              Loom Draft Diagram: Threading, Tie-up, Treadling & Drawdown
+            </h4>
+            <div className="flex items-center space-x-2 text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+              <span>
+                {isTruncated && !showFullProject
+                  ? `Showing preview: ${visibleWarp} ends × ${visibleWeft} picks (Total: ${draft.warp_threads}×${draft.weft_picks})`
+                  : `Showing full project: ${visibleWarp} ends × ${visibleWeft} picks`}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            {/* View Full Toggle for large projects */}
+            {isTruncated && (
+              <button
+                type="button"
+                onClick={() => setShowFullProject(!showFullProject)}
+                className={`rounded-lg border px-2.5 py-1 font-medium transition ${
+                  showFullProject
+                    ? "border-indigo-500 bg-indigo-50 text-indigo-700 dark:border-indigo-500 dark:bg-indigo-950/60 dark:text-indigo-300"
+                    : "border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                }`}
+              >
+                {showFullProject ? "Show Preview" : "Show Full Project"}
+              </button>
+            )}
+
+            {/* Zoom Controls */}
+            <div className="flex items-center rounded-lg border border-zinc-200 bg-zinc-100/60 p-0.5 dark:border-zinc-800 dark:bg-zinc-800" role="group" aria-label="Drawdown zoom scale">
+              <span className="px-2 text-[11px] text-zinc-400 font-medium">Zoom:</span>
+              <button
+                type="button"
+                onClick={() => setZoom("small")}
+                aria-pressed={zoom === "small"}
+                className={`rounded px-2 py-1 text-xs font-medium transition ${
+                  zoom === "small"
+                    ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
+                    : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
+                }`}
+                title="Small (5px)"
+                aria-label="Small zoom"
+              >
+                Small (5px)
+              </button>
+              <button
+                type="button"
+                onClick={() => setZoom("medium")}
+                aria-pressed={zoom === "medium"}
+                className={`rounded px-2 py-1 text-xs font-medium transition ${
+                  zoom === "medium"
+                    ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
+                    : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
+                }`}
+                title="Medium (8px)"
+                aria-label="Medium zoom"
+              >
+                Medium (8px)
+              </button>
+              <button
+                type="button"
+                onClick={() => setZoom("large")}
+                aria-pressed={zoom === "large"}
+                className={`rounded px-2 py-1 text-xs font-medium transition ${
+                  zoom === "large"
+                    ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-700 dark:text-zinc-100"
+                    : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
+                }`}
+                title="Large (14px)"
+                aria-label="Large zoom"
+              >
+                Large (14px)
+              </button>
+            </div>
+          </div>
+        </div>
 
         <div className="inline-block min-w-full space-y-4">
           {/* Top Row: Threading + Tieup */}
@@ -145,11 +234,11 @@ export const LoomDraftCard: React.FC = () => {
               <div
                 className="grid gap-0.5"
                 style={{
-                  gridTemplateColumns: `repeat(${Math.min(60, draft.warp_threads)}, minmax(8px, 1fr))`,
+                  gridTemplateColumns: `repeat(${visibleWarp}, minmax(${Math.max(4, cellSize)}px, 1fr))`,
                 }}
               >
                 {[4, 3, 2, 1].map((shaftNum) =>
-                  draft.threading.slice(0, 60).map((assignedShaft, endIdx) => (
+                  draft.threading.slice(0, visibleWarp).map((assignedShaft, endIdx) => (
                     <div
                       key={`th-${shaftNum}-${endIdx}`}
                       className={`h-3 w-3 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
@@ -198,23 +287,24 @@ export const LoomDraftCard: React.FC = () => {
             {/* Drawdown Simulation */}
             <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
               <span className="block text-[11px] font-medium text-zinc-500 mb-1">
-                Drawdown Fabric Simulation (Showing up to 60×60)
+                Drawdown Fabric Simulation ({visibleWarp}×{visibleWeft})
               </span>
               <div
                 className="grid gap-[0.5px] border border-zinc-300 dark:border-zinc-700 bg-zinc-200 dark:bg-zinc-800"
                 style={{
-                  gridTemplateColumns: `repeat(${Math.min(60, draft.warp_threads)}, minmax(6px, 1fr))`,
-                  width: `${Math.min(60, draft.warp_threads) * 8}px`,
+                  gridTemplateColumns: `repeat(${visibleWarp}, minmax(${cellSize}px, 1fr))`,
+                  width: `${visibleWarp * cellSize}px`,
                 }}
               >
-                {draft.drawdown.slice(0, 60).map((row, pIdx) =>
-                  row.slice(0, 60).map((cell, eIdx) => (
+                {draft.drawdown.slice(0, visibleWeft).map((row, pIdx) =>
+                  row.slice(0, visibleWarp).map((cell, eIdx) => (
                     <div
                       key={`dd-${pIdx}-${eIdx}`}
                       style={{
                         backgroundColor: cell === 1 ? warpColor : weftColor,
+                        width: `${cellSize}px`,
+                        height: `${cellSize}px`,
                       }}
-                      className="h-2 w-2"
                       title={`Pick ${pIdx + 1}, End ${eIdx + 1}: ${cell === 1 ? "Warp" : "Weft"}`}
                     />
                   ))
@@ -233,11 +323,12 @@ export const LoomDraftCard: React.FC = () => {
                   gridTemplateColumns: `repeat(${draft.treadles}, minmax(14px, 1fr))`,
                 }}
               >
-                {draft.treadling.slice(0, 40).map((treadleNum, pickIdx) =>
+                {draft.treadling.slice(0, visibleWeft).map((treadleNum, pickIdx) =>
                   Array.from({ length: draft.treadles }).map((_, colTreadleIdx) => (
                     <div
                       key={`tr-${pickIdx}-${colTreadleIdx}`}
-                      className={`h-2.5 w-3.5 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
+                      style={{ height: `${cellSize}px` }}
+                      className={`w-3.5 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
                         colTreadleIdx + 1 === treadleNum
                           ? "bg-zinc-900 dark:bg-zinc-100"
                           : "bg-transparent"
