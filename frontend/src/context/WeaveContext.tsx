@@ -87,13 +87,27 @@ export const WeaveProvider: React.FC<{
   const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(initialCompiledResult);
   const [error, setError] = useState<string | null>(null);
 
+  const selectPreset = useCallback((preset: WeaveFamily) => {
+    setActivePreset(preset);
+    setCompiledResult(null);
+    const info = CANONICAL_PRESETS[preset];
+    if (info) {
+      setRepeatSize(info.repeatSize);
+      setMasterMatrix(info.matrix.map((row) => [...row]));
+    }
+  }, []);
+
   const handleFileSelect = useCallback((file: File) => {
     setError(null);
+    setCroppedBlob(null);
+    setCroppedImageUrl(null);
+    setAnalysisResult(null);
     setCompiledResult(null);
     if (!file.type.startsWith("image/")) {
       setError("Invalid file format. Please upload a valid image (JPEG, PNG, or WebP).");
       return;
     }
+    selectPreset("plain_1_1");
     const reader = new FileReader();
     reader.onload = (e) => {
       setRawImage(e.target?.result as string);
@@ -103,7 +117,7 @@ export const WeaveProvider: React.FC<{
       setError("Failed to read image file. Please try another image.");
     };
     reader.readAsDataURL(file);
-  }, []);
+  }, [selectPreset]);
 
   const handleCropComplete = useCallback(async (blob: Blob, dataUrl: string) => {
     setCroppedBlob(blob);
@@ -141,16 +155,6 @@ export const WeaveProvider: React.FC<{
       setActivePreset("plain_1_1");
     } finally {
       setIsAnalyzing(false);
-    }
-  }, []);
-
-  const selectPreset = useCallback((preset: WeaveFamily) => {
-    setActivePreset(preset);
-    setCompiledResult(null);
-    const info = CANONICAL_PRESETS[preset];
-    if (info) {
-      setRepeatSize(info.repeatSize);
-      setMasterMatrix(info.matrix.map((row) => [...row]));
     }
   }, []);
 
