@@ -96,6 +96,39 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
   );
 };
 
+const Header: React.FC = () => {
+  const { setStep } = useWeave();
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => setStep("upload")}
+          className="flex items-center space-x-3 text-left hover:opacity-85 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 -ml-1"
+          title="Return to Upload Swatch home page"
+          aria-label="ThreadLore home"
+        >
+          <ThreadLoreIcon className="h-8 w-8 shadow-sm flex-shrink-0" />
+          <div>
+            <span className="text-sm font-bold tracking-tight">ThreadLore</span>
+            <span className="hidden sm:inline-block ml-2 text-[11px] text-zinc-400 font-normal">
+              | Preserve the weave, not just the photograph
+            </span>
+          </div>
+        </button>
+
+        <div className="flex items-center space-x-3 text-xs">
+          <span className="flex items-center space-x-1.5 rounded-full border border-zinc-200 bg-zinc-100/60 px-2.5 py-1 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>4-Shaft Rising-Shed Engine</span>
+          </span>
+        </div>
+      </div>
+    </header>
+  );
+};
+
 export const App: React.FC = () => {
   const [isGuidanceOpen, setIsGuidanceOpen] = useState(false);
 
@@ -103,26 +136,7 @@ export const App: React.FC = () => {
     <WeaveProvider>
       <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100 flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
         {/* Navigation Bar */}
-        <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <ThreadLoreIcon className="h-8 w-8 shadow-sm flex-shrink-0" />
-              <div>
-                <span className="text-sm font-bold tracking-tight">ThreadLore</span>
-                <span className="hidden sm:inline-block ml-2 text-[11px] text-zinc-400 font-normal">
-                  | Preserve the weave, not just the photograph
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3 text-xs">
-              <span className="flex items-center space-x-1.5 rounded-full border border-zinc-200 bg-zinc-100/60 px-2.5 py-1 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>4-Shaft Rising-Shed Engine</span>
-              </span>
-            </div>
-          </div>
-        </header>
+        <Header />
 
         {/* Main Application Body */}
         <main className="flex-1 flex flex-col">
