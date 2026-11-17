@@ -159,11 +159,13 @@ export const WeaveProvider: React.FC<{
     setActivePreset("custom");
     setCompiledResult(null);
     setMasterMatrix((prev) => {
+      const prevH = prev.length || 1;
+      const prevW = prev[0]?.length || 1;
       const newMatrix: BinaryMatrix = [];
       for (let r = 0; r < size; r++) {
         const row: number[] = [];
         for (let c = 0; c < size; c++) {
-          row.push((r < prev.length && c < (prev[0]?.length || 0)) ? prev[r][c] : 0);
+          row.push(prev[r % prevH][c % prevW] ?? 0);
         }
         newMatrix.push(row);
       }
