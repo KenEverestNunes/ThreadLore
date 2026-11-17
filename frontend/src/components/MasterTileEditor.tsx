@@ -27,7 +27,13 @@ export const MasterTileEditor: React.FC = () => {
         </div>
 
         {/* Gemini suggestion pill if available */}
-        {analysisResult && (
+        {analysisResult && analysisResult.status === "unavailable" && (
+          <div className="flex items-center space-x-1.5 rounded-full border border-zinc-200 bg-zinc-100/80 px-2.5 py-0.5 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+            <Sparkles className="h-3 w-3 opacity-40" />
+            <span>AI Suggestion Unavailable: Manual Selection Required</span>
+          </div>
+        )}
+        {analysisResult && analysisResult.status !== "unavailable" && (
           <div className="flex items-center space-x-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
             <Sparkles className="h-3 w-3" />
             <span>AI Suggestion: {CANONICAL_PRESETS[analysisResult.weave_family]?.label || analysisResult.weave_family}</span>

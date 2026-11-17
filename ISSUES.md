@@ -330,9 +330,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #016: Failed/Unavailable Analysis Displays Misleading "AI Suggestion" Badge (TL-QA-013)
 - **GitHub Issue:** [#16](https://github.com/KenEverestNunes/ThreadLore/issues/16)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (UX / Clarity)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/MasterTileEditor.tsx`
 - **Description:**
   When Gemini weave analysis fails or returns `status: "unavailable"`, the UI still displays an active pill badge in `MasterTileEditor` stating: `"AI Suggestion: Custom Master Tile (0% heuristic)"`, misleading the user into thinking Gemini specifically suggested a custom matrix.
@@ -344,6 +345,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   When analysis status is unavailable, the badge should clearly state: `"AI Suggestion Unavailable: Manual Selection Required"` or be hidden entirely.
 - **Actual Behavior:**
   Displays `"AI Suggestion: Custom Master Tile (0% heuristic)"`.
+- **Resolution:**
+  Updated `MasterTileEditor.tsx` to inspect `analysisResult.status === "unavailable"`. When unavailable, it renders an amber badge stating `"AI Suggestion Unavailable: Manual Selection Required"` rather than misleadingly attributing a custom tile with 0% heuristic to an AI suggestion. Added automated unit regression test `frontend/src/test/ai_badge_status.test.tsx`.
 
 ---
 
