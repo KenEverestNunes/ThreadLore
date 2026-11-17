@@ -20,6 +20,7 @@ export const SwatchCropper: React.FC = () => {
 
   const dragStartRef = useRef({ x: 0, y: 0, initCenterX: 0.5, initCenterY: 0.5 });
   const resizeStartRef = useRef({ x: 0, y: 0, initScale: 0.5 });
+  const sliderRef = useRef<HTMLDivElement>(null);
 
   // Preload and verify image dimensions immediately upon receiving rawImage
   useEffect(() => {
@@ -83,15 +84,50 @@ export const SwatchCropper: React.FC = () => {
     };
   };
 
-  // Mouse wheel zoom
-  const handleWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    const zoomDelta = e.deltaY < 0 ? -0.05 : 0.05; // scrolling up zooms in (tighter crop)
-    setCropScale((prev) => {
-      const next = Math.max(0.15, Math.min(0.95, prev + zoomDelta));
-      return Math.round(next * 100) / 100;
-    });
-  };
+  // Non-passive native mouse wheel listener to strictly prevent browser page scroll while zooming
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const onWheelNative = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const zoomDelta = e.deltaY < 0 ? -0.05 : 0.05; // scrolling up zooms in (tighter crop)
+      setCropScale((prev) => {
+        const next = Math.max(0.05, Math.min(0.95, prev + zoomDelta));
+        return Math.round(next * 100) / 100;
+      });
+    };
+
+    el.addEventListener("wheel", onWheelNative, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheelNative);
+    };
+  }, []);
+
+  // Non-passive wheel listener on slider to enable mouse/trackpad scrolling
+  useEffect(() => {
+    const el = sliderRef.current;
+    if (!el) return;
+
+    const onSliderWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (delta === 0) return;
+      const isZoomIn = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX < 0 : e.deltaY < 0;
+      const zoomDelta = isZoomIn ? -0.03 : 0.03;
+      setCropScale((prev) => {
+        const next = Math.max(0.05, Math.min(0.95, prev + zoomDelta));
+        return Math.round(next * 100) / 100;
+      });
+    };
+
+    el.addEventListener("wheel", onSliderWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onSliderWheel);
+    };
+  }, []);
 
   // Unified mouse move handler for dragging and resizing
   const handleMouseMove = useCallback(
@@ -127,7 +163,7 @@ export const SwatchCropper: React.FC = () => {
           scaleDelta = Math.max(-deltaX, deltaY);
         }
 
-        const newScale = Math.max(0.15, Math.min(0.95, resizeStartRef.current.initScale + scaleDelta * 1.5));
+        const newScale = Math.max(0.05, Math.min(0.95, resizeStartRef.current.initScale + scaleDelta * 1.5));
         setCropScale(Math.round(newScale * 100) / 100);
       }
     },
@@ -258,15 +294,14 @@ export const SwatchCropper: React.FC = () => {
       {/* Main Image Viewport & Overlay */}
       <div
         ref={containerRef}
-        onWheel={handleWheel}
-        className="relative inline-block max-h-[62vh] max-w-full overflow-hidden rounded-2xl border-2 border-zinc-200 bg-zinc-950 shadow-2xl dark:border-zinc-800"
+        className="relative inline-block max-h-[74vh] max-w-full overflow-hidden rounded-2xl border-2 border-zinc-200 bg-zinc-950 shadow-2xl dark:border-zinc-800"
       >
         <img
           ref={imageRef}
           src={rawImage}
           alt="Raw Swatch"
           onLoad={onImageLoad}
-          className="block max-h-[58vh] max-w-full w-auto object-contain select-none pointer-events-none"
+          className="block max-h-[70vh] max-w-full w-auto object-contain select-none pointer-events-none"
         />
 
         {/* 1:1 Macro Square Crop Box (always rendered when image is present) */}
@@ -333,77 +368,45 @@ export const SwatchCropper: React.FC = () => {
       </p>
 
       {/* Interactive Controls Row */}
-      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-xl rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-3xl sm:max-w-4xl rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         {/* Zoom In & Out Controls */}
-        <div className="flex items-center space-x-2.5 w-full sm:w-auto flex-1">
+        <div className="flex items-center space-x-3 w-full sm:w-auto flex-1">
           <button
-            onClick={() => setCropScale((prev) => Math.min(0.95, Math.round((prev + 0.05) * 100) / 100))}
-            title="Zoom Out (Broader Swatch Area)"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition"
-          >
-            <ZoomOut className="h-4 w-4" />
-          </button>
-
-          <div className="flex items-center space-x-2 flex-1">
-            <input
-              type="range"
-              min="0.15"
-              max="0.95"
-              step="0.05"
-              value={cropScale}
-              onChange={(e) => setCropScale(parseFloat(e.target.value))}
-              className="w-full accent-amber-500 dark:accent-amber-400 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer"
-            />
-          </div>
-
-          <button
-            onClick={() => setCropScale((prev) => Math.max(0.15, Math.round((prev - 0.05) * 100) / 100))}
+            onClick={() => setCropScale((prev) => Math.max(0.05, Math.round((prev - 0.05) * 100) / 100))}
             title="Zoom In (Tighter Macro Focus)"
-            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition flex-shrink-0"
           >
             <ZoomIn className="h-4 w-4" />
           </button>
 
-          <span className="min-w-[42px] text-center text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-md">
+          <div ref={sliderRef} className="relative flex items-center flex-1 h-9 px-1">
+            <input
+              type="range"
+              min="0.05"
+              max="0.95"
+              step="0.01"
+              value={cropScale}
+              onChange={(e) => setCropScale(parseFloat(e.target.value))}
+              aria-label="Crop area zoom scale"
+              className="w-full cursor-pointer relative z-10"
+            />
+          </div>
+
+          <button
+            onClick={() => setCropScale((prev) => Math.min(0.95, Math.round((prev + 0.05) * 100) / 100))}
+            title="Zoom Out (Broader Swatch Area)"
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition flex-shrink-0"
+          >
+            <ZoomOut className="h-4 w-4" />
+          </button>
+
+          <span className="min-w-[48px] text-center text-xs font-mono font-medium text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded-md flex-shrink-0">
             {Math.round(cropScale * 100)}%
           </span>
         </div>
 
-        {/* Quick Presets & Actions */}
+        {/* Quick Actions */}
         <div className="flex items-center space-x-2 w-full sm:w-auto justify-end">
-          <div className="hidden md:flex items-center space-x-1 border-r border-zinc-200 dark:border-zinc-800 pr-2 mr-1">
-            <button
-              onClick={() => setCropScale(0.3)}
-              className={`px-2 py-1 text-[11px] rounded font-medium transition ${
-                cropScale === 0.3
-                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                  : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-              }`}
-            >
-              30% Tight
-            </button>
-            <button
-              onClick={() => setCropScale(0.5)}
-              className={`px-2 py-1 text-[11px] rounded font-medium transition ${
-                cropScale === 0.5
-                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                  : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-              }`}
-            >
-              50% Std
-            </button>
-            <button
-              onClick={() => setCropScale(0.75)}
-              className={`px-2 py-1 text-[11px] rounded font-medium transition ${
-                cropScale === 0.75
-                  ? "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300"
-                  : "text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-              }`}
-            >
-              75% Wide
-            </button>
-          </div>
-
           <button
             onClick={resetWorkflow}
             title="Upload a different photo"
