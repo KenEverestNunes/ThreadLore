@@ -82,6 +82,40 @@ globalThis.fetch = vi.fn((url: string | URL | Request) => {
     } as Response);
   }
 
+  if (urlStr.includes('/api/compile')) {
+    return Promise.resolve({
+      ok: true,
+      status: 200,
+      json: () =>
+        Promise.resolve({
+          is_valid: true,
+          validation_errors: [],
+          draft: {
+            shaft_count: 4,
+            treadle_count: 4,
+            threading: [1, 2, 1, 2],
+            tieup: [
+              [1, 0, 1, 0],
+              [0, 1, 0, 1],
+              [1, 0, 1, 0],
+              [0, 1, 0, 1],
+            ],
+            treadling: [1, 2, 1, 2],
+            drawdown: [
+              [1, 0, 1, 0],
+              [0, 1, 0, 1],
+              [1, 0, 1, 0],
+              [0, 1, 0, 1],
+            ],
+            color_table: ['#1E293B', '#E2E8F0'],
+            warp_colors: [1, 1, 1, 1],
+            weft_colors: [2, 2, 2, 2],
+          },
+          wif_text: '[WIF]\nVersion=1.1\n[TEXT]\nTitle=Preserved Textile Sample\n',
+        }),
+    } as Response);
+  }
+
   return Promise.resolve({
     ok: true,
     status: 200,

@@ -86,6 +86,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const handleFileSelect = useCallback((file: File) => {
     setError(null);
+    setCompiledResult(null);
     const reader = new FileReader();
     reader.onload = (e) => {
       setRawImage(e.target?.result as string);
@@ -100,6 +101,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const handleCropComplete = useCallback(async (blob: Blob, dataUrl: string) => {
     setCroppedBlob(blob);
     setCroppedImageUrl(dataUrl);
+    setCompiledResult(null);
     setIsAnalyzing(true);
     setError(null);
     setStep("verify");
@@ -133,6 +135,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const selectPreset = useCallback((preset: WeaveFamily) => {
     setActivePreset(preset);
+    setCompiledResult(null);
     const info = CANONICAL_PRESETS[preset];
     if (info) {
       setRepeatSize(info.repeatSize);
@@ -143,6 +146,7 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const setCustomRepeatSize = useCallback((size: number) => {
     setRepeatSize(size);
     setActivePreset("custom");
+    setCompiledResult(null);
     setMasterMatrix((prev) => {
       const newMatrix: BinaryMatrix = [];
       for (let r = 0; r < size; r++) {
@@ -158,12 +162,43 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const toggleMatrixCell = useCallback((row: number, col: number) => {
     setActivePreset("custom");
+    setCompiledResult(null);
     setMasterMatrix((prev) => {
       const next = prev.map((r, rIdx) =>
         r.map((val, cIdx) => (rIdx === row && cIdx === col ? (val === 1 ? 0 : 1) : val))
       );
       return next;
     });
+  }, []);
+
+  const handleSetWarpColor = useCallback((color: string) => {
+    setWarpColor(color);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetWeftColor = useCallback((color: string) => {
+    setWeftColor(color);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetRepeatWarp = useCallback((repeats: number) => {
+    setRepeatWarp(repeats);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetRepeatWeft = useCallback((repeats: number) => {
+    setRepeatWeft(repeats);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetUnits = useCallback((newUnits: "Inches" | "Centimeters" | "Decipoints") => {
+    setUnits(newUnits);
+    setCompiledResult(null);
+  }, []);
+
+  const handleSetProvenance = useCallback((metadata: ProvenanceMetadata) => {
+    setProvenance(metadata);
+    setCompiledResult(null);
   }, []);
 
   const triggerCompile = useCallback(async () => {
@@ -221,17 +256,17 @@ export const WeaveProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         masterMatrix,
         repeatSize,
         warpColor,
-        setWarpColor,
+        setWarpColor: handleSetWarpColor,
         weftColor,
-        setWeftColor,
+        setWeftColor: handleSetWeftColor,
         repeatWarp,
-        setRepeatWarp,
+        setRepeatWarp: handleSetRepeatWarp,
         repeatWeft,
-        setRepeatWeft,
+        setRepeatWeft: handleSetRepeatWeft,
         units,
-        setUnits,
+        setUnits: handleSetUnits,
         provenance,
-        setProvenance,
+        setProvenance: handleSetProvenance,
         isCompiling,
         compiledResult,
         error,
