@@ -260,10 +260,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #013: Network-Dependent WIF File Download When Text Is Held in Memory
 - **GitHub Issue:** [#13](https://github.com/KenEverestNunes/ThreadLore/issues/13)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Reliability / Offline Capability)
 - **Reported Date:** 2026-11-16
-- **Component:** `frontend/src/services/api.ts`, `backend/app/api/server.py`
+- **Component:** `frontend/src/services/api.ts`
 - **Description:**
   When clicking "Download .WIF File", the client sends a POST request over the network to `/api/download-wif` just to receive back the exact same `wif_text` already held in client memory. If the backend server is unreachable or offline, the download fails even though the full WIF file is already rendered on screen.
 - **Reproduction Steps:**
@@ -274,7 +274,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   Generate a client-side `Blob([wifText], { type: "text/plain;charset=utf-8" })` directly in the browser for instant, 100% offline-reliable downloads.
 - **Actual Behavior:**
-  Makes an unnecessary network roundtrip.
+  Made an unnecessary network roundtrip to the backend.
+- **Resolution:**
+  - Refactored `downloadWifFile` in `frontend/src/services/api.ts` to directly construct a browser `Blob([wifText], { type: "text/plain;charset=utf-8" })` and trigger client-side download via an object URL and anchor element.
+  - Eliminated the network roundtrip entirely, making WIF file downloads instant and 100% offline-capable.
+  - Added automated regression tests in `frontend/src/test/offline_wif_download.test.tsx` verifying that no fetch calls are made and client-side download is triggered.
 
 ---
 

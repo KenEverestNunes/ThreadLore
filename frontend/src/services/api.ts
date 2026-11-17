@@ -50,19 +50,7 @@ export async function downloadWifFile(
   wifText: string,
   filename: string = "threadlore_draft.wif"
 ): Promise<void> {
-  const response = await fetch(`${BASE_URL}/api/download-wif`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ wif_text: wifText, filename }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Download failed with status ${response.status}`);
-  }
-
-  const blob = await response.blob();
+  const blob = new Blob([wifText], { type: "text/plain;charset=utf-8" });
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
