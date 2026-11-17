@@ -112,12 +112,13 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #006: Lack of Real-Time Float and Structural Validity Feedback in Master Tile Editor
 - **GitHub Issue:** [#6](https://github.com/KenEverestNunes/ThreadLore/issues/6)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Core Weaving Usability)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/MasterTileEditor.tsx`, `frontend/src/context/WeaveContext.tsx`
 - **Description:**
-  When a user toggles matrix cells or resizes a repeat (e.g. from 2×2 to 3×3, which zero-pads and creates an empty row), there is no live client-side structural validation. If a user accidentally creates a uniform row/column (e.g. all 0s or all 1s) or an excessive float (> 4 threads), no visual warning is shown. The user only finds out when they click "Compile 4-Shaft Loom Draft" and wait for a server roundtrip error.
+  When a user toggles matrix cells or resizes a repeat (e.g. from 2×2 to 3×3, which zero-pads and creates an empty row), there was no live client-side structural validation. If a user accidentally created a uniform row/column (e.g. all 0s or all 1s) or an excessive float (> 4 threads), no visual warning was shown. The user only found out when they clicked "Compile 4-Shaft Loom Draft" and waited for a server roundtrip error.
 - **Reproduction Steps:**
   1. On the "Verify & Align" screen, click the "3×3" repeat button.
   2. Notice the matrix now contains row 3 as all 0s and column 3 as all 0s.
@@ -128,7 +129,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
   - Resizing repeat size should sensibly wrap or modularly repeat existing weave patterns rather than appending empty 0s.
   - The tile editor should highlight invalid rows/columns in real-time with an advisory warning badge before the user clicks Compile.
 - **Actual Behavior:**
-  Zero-padding breaks factorization silently; errors are only caught on backend compilation.
+  Zero-padding broke factorization silently; errors were only caught on backend compilation.
+- **Resolution:**
+  - Updated `setCustomRepeatSize` in `frontend/src/context/WeaveContext.tsx` to modularly wrap existing pattern cells using `prev[r % prevH][c % prevW]` across row and column dimensions.
+  - Implemented real-time client-side structural interlacing and cyclic float validation in `frontend/src/components/MasterTileEditor.tsx` with instant advisory warning banners and ring highlighting on invalid picks/ends.
+  - Added automated unit regression tests in `frontend/src/test/master_tile_validation.test.tsx`.
 
 ---
 
