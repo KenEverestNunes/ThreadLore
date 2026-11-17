@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import {
   ArrowLeft,
+  Check,
   Code,
+  Copy,
   Download,
 } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
@@ -18,6 +20,7 @@ export const LoomDraftCard: React.FC = () => {
   } = useWeave();
 
   const [showWifCode, setShowWifCode] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   if (!compiledResult || !compiledResult.draft) {
     return (
@@ -40,6 +43,17 @@ export const LoomDraftCard: React.FC = () => {
       ? provenance.title.toLowerCase().replace(/[^a-z0-9]+/g, "_")
       : "threadlore_draft";
     downloadWifFile(wif_text, `${filename}.wif`);
+  };
+
+  const handleCopyWif = async () => {
+    if (!wif_text) return;
+    try {
+      await navigator.clipboard.writeText(wif_text);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy WIF to clipboard:", err);
+    }
   };
 
   return (
@@ -242,13 +256,34 @@ export const LoomDraftCard: React.FC = () => {
         <div className="rounded-xl border border-zinc-200 bg-zinc-950 p-5 text-white dark:border-zinc-800 font-mono text-xs shadow-lg">
           <div className="flex items-center justify-between mb-3 border-b border-zinc-800 pb-2">
             <span className="text-zinc-400">Standard WIF 1.1 Plaintext File</span>
-            <button
-              onClick={handleDownload}
-              className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center space-x-1"
-            >
-              <Download className="h-3 w-3" />
-              <span>Download File</span>
-            </button>
+            <div className="flex items-center space-x-3">
+              <button
+                type="button"
+                onClick={handleCopyWif}
+                className="text-xs text-zinc-300 hover:text-white flex items-center space-x-1.5 transition cursor-pointer"
+                title="Copy WIF text to clipboard"
+              >
+                {isCopied ? (
+                  <>
+                    <Check className="h-3 w-3 text-emerald-400" />
+                    <span className="text-emerald-400 font-medium">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3 w-3" />
+                    <span>Copy WIF</span>
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center space-x-1 transition cursor-pointer"
+              >
+                <Download className="h-3 w-3" />
+                <span>Download File</span>
+              </button>
+            </div>
           </div>
           <pre className="max-h-72 overflow-y-auto whitespace-pre font-mono text-[11px] leading-relaxed text-zinc-300">
             {wif_text}
