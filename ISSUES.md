@@ -7,6 +7,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ## Active & Resolved Issues
 
 ### Issue #001: Cropper Bounding Box & Zoom Visibility on Sample Load
+- **GitHub Issue:** [#1](https://github.com/KenEverestNunes/ThreadLore/issues/1)
 - **Status:** 🟢 Resolved
 - **Severity:** Medium (UX / Interaction)
 - **Reported By:** User
@@ -30,6 +31,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #002: Dedicated ThreadLore Brand Icon & Favicon
+- **GitHub Issue:** [#2](https://github.com/KenEverestNunes/ThreadLore/issues/2)
 - **Status:** 🟢 Resolved
 - **Severity:** Low (Branding / Polish)
 - **Reported By:** User
