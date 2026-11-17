@@ -360,10 +360,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #018: Optical Spacing Slider Limits (8 to 50 px) Cannot Accommodate Dense or Coarse Threads (TL-QA-008)
 - **GitHub Issue:** [#18](https://github.com/KenEverestNunes/ThreadLore/issues/18)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (Edge-Case Textiles)
 - **Reported Date:** 2026-11-16
-- **Component:** `frontend/src/components/CanvasOverlay.tsx`, `backend/app/cv/fft_profiler.py`
+- **Resolved Date:** 2026-11-17
+- **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
   The FFT profiler can detect thread spacing below 8 px (very fine silk/linen micro-weaves) or above 50 px (chunky handspun wool or close-up macro shots). However, the manual sliders in `CanvasOverlay` are hard-clamped to `min="8"` and `max="50"`. If FFT detects 6.5 px or 62 px, moving the slider snaps away from the measured value and cannot return to it.
 - **Reproduction Steps:**
@@ -373,6 +374,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
   Dynamic slider limits (e.g. min 4 px, max 100 px, or auto-scaling range based on detected spacing).
 - **Actual Behavior:**
   Slider is clamped to 8..50 px.
+- **Resolution:**
+  Updated `CanvasOverlay.tsx` to dynamically compute `minSliderSpacing` (down to 4 px or below detected/current values) and `maxSliderSpacing` (up to 100 px or above detected/current values) for the Δx and Δy range inputs. Added automated unit regression test `frontend/src/test/spacing_slider_limits.test.tsx`.
 
 ---
 
