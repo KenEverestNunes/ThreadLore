@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { HelpCircle, Upload } from "lucide-react";
+import { AlertCircle, HelpCircle, Upload } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 
 interface PhotoUploaderProps {
@@ -7,7 +7,7 @@ interface PhotoUploaderProps {
 }
 
 export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) => {
-  const { handleFileSelect } = useWeave();
+  const { handleFileSelect, error } = useWeave();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onDragOver = (e: React.DragEvent) => {
@@ -72,6 +72,20 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
           interoperable WIF 1.1 specifications.
         </p>
       </div>
+
+      {/* Error alert banner */}
+      {error && (
+        <div
+          role="alert"
+          className="mb-6 flex w-full max-w-xl items-start space-x-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 shadow-sm"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+          <div className="flex-1">
+            <span className="font-semibold block">File Upload Error</span>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
 
       {/* Drag & drop upload area */}
       <div

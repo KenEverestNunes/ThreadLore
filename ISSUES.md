@@ -154,10 +154,10 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #008: File Upload Errors Not Rendered in PhotoUploader UI
 - **GitHub Issue:** [#8](https://github.com/KenEverestNunes/ThreadLore/issues/8)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** Low (UX Polish)
 - **Reported Date:** 2026-11-16
-- **Component:** `frontend/src/components/PhotoUploader.tsx`
+- **Component:** `frontend/src/components/PhotoUploader.tsx`, `frontend/src/context/WeaveContext.tsx`
 - **Description:**
   `PhotoUploader.tsx` does not consume the `error` state from `WeaveContext`. If `handleFileSelect` encounters an invalid file or `FileReader.onerror` triggers, the error message is placed in context but never rendered anywhere on the upload screen.
 - **Reproduction Steps:**
@@ -166,7 +166,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   An alert banner appears in `PhotoUploader` explaining why the file could not be loaded.
 - **Actual Behavior:**
-  Silent failure with no visual user feedback.
+  Silent failure occurred with no visual user feedback.
+- **Resolution:**
+  - Added mime-type validation in `handleFileSelect` in `frontend/src/context/WeaveContext.tsx` rejecting non-image files with explicit descriptive error messages.
+  - Consumed `error` from `useWeave()` in `frontend/src/components/PhotoUploader.tsx` and rendered an accessible `role="alert"` notification banner.
+  - Added automated unit and integration tests in `frontend/src/test/upload_error_display.test.tsx` verifying error banner rendering for invalid formats and file read failures.
 
 ---
 
