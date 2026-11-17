@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Check,
   Crop,
   Eye,
   FileCheck2,
   HelpCircle,
+  Monitor,
+  Moon,
+  Sun,
   Upload,
 } from "lucide-react";
 import { WeaveProvider, useWeave } from "./context/WeaveContext";
@@ -98,6 +101,48 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
 
 const Header: React.FC = () => {
   const { setStep } = useWeave();
+  const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
+    return (localStorage.getItem("threadlore-theme") as "light" | "dark" | "system") || "dark";
+  });
+
+  const applyTheme = useCallback((mode: "light" | "dark" | "system") => {
+    const root = document.documentElement;
+    const body = document.body;
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = mode === "dark" || (mode === "system" && prefersDark);
+
+    if (isDark) {
+      root.classList.add("dark");
+      body?.classList.add("dark");
+      root.style.colorScheme = "dark";
+    } else {
+      root.classList.remove("dark");
+      body?.classList.remove("dark");
+      root.style.colorScheme = "light";
+    }
+  }, []);
+
+  const handleThemeChange = (mode: "light" | "dark" | "system") => {
+    setTheme(mode);
+    try {
+      localStorage.setItem("threadlore-theme", mode);
+    } catch {
+      // localStorage might be unavailable
+    }
+    applyTheme(mode);
+  };
+
+  useEffect(() => {
+    applyTheme(theme);
+    if (theme === "system" && window.matchMedia) {
+      const mql = window.matchMedia("(prefers-color-scheme: dark)");
+      const handler = () => {
+        applyTheme("system");
+      };
+      mql.addEventListener("change", handler);
+      return () => mql.removeEventListener("change", handler);
+    }
+  }, [theme, applyTheme]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80 print:hidden">
@@ -119,9 +164,57 @@ const Header: React.FC = () => {
         </button>
 
         <div className="flex items-center space-x-3 text-xs">
+          {/* Theme Mode Switcher */}
+          <div
+            className="flex items-center rounded-lg border border-zinc-200 bg-zinc-100/60 p-0.5 dark:border-zinc-800 dark:bg-zinc-900"
+            role="group"
+            aria-label="Theme mode"
+          >
+            <button
+              type="button"
+              onClick={() => handleThemeChange("light")}
+              className={`rounded-md p-1.5 transition cursor-pointer ${
+                theme === "light"
+                  ? "bg-white text-amber-500 shadow-sm dark:bg-zinc-800"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
+              }`}
+              title="Light Theme"
+              aria-label="Light theme"
+            >
+              <Sun className="h-3.5 w-3.5 pointer-events-none" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleThemeChange("dark")}
+              className={`rounded-md p-1.5 transition cursor-pointer ${
+                theme === "dark"
+                  ? "bg-white text-indigo-500 shadow-sm dark:bg-zinc-800"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
+              }`}
+              title="Dark Theme"
+              aria-label="Dark theme"
+            >
+              <Moon className="h-3.5 w-3.5 pointer-events-none" />
+            </button>
+            <button
+              type="button"
+              onClick={() => handleThemeChange("system")}
+              className={`rounded-md p-1.5 transition cursor-pointer ${
+                theme === "system"
+                  ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200"
+              }`}
+              title="System Theme"
+              aria-label="System theme"
+            >
+              <Monitor className="h-3.5 w-3.5 pointer-events-none" />
+            </button>
+          </div>
+
           <span className="flex items-center space-x-1.5 rounded-full border border-zinc-200 bg-zinc-100/60 px-2.5 py-1 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>4-Shaft Rising-Shed Engine</span>
+            <span className="hidden sm:inline">4-Shaft Rising-Shed Engine</span>
+            <span className="sm:hidden">4-Shaft</span>
           </span>
         </div>
       </div>
