@@ -142,7 +142,9 @@ export const CanvasOverlay: React.FC = () => {
     renderCanvas();
   }, [renderCanvas]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handlePointerDown = (
+    e: React.PointerEvent<HTMLCanvasElement> | React.MouseEvent<HTMLCanvasElement>
+  ) => {
     setIsPanning(true);
     panStartRef.current = {
       x: e.clientX,
@@ -150,9 +152,20 @@ export const CanvasOverlay: React.FC = () => {
       initOffX: offsetX,
       initOffY: offsetY,
     };
+    if ("setPointerCapture" in e.currentTarget && "pointerId" in e) {
+      try {
+        (e.currentTarget as HTMLCanvasElement).setPointerCapture(
+          (e as React.PointerEvent<HTMLCanvasElement>).pointerId
+        );
+      } catch {
+        // Ignored if pointer capture is unsupported
+      }
+    }
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handlePointerMove = (
+    e: React.PointerEvent<HTMLCanvasElement> | React.MouseEvent<HTMLCanvasElement>
+  ) => {
     if (!isPanning) return;
     const deltaX = e.clientX - panStartRef.current.x;
     const deltaY = e.clientY - panStartRef.current.y;
@@ -160,8 +173,27 @@ export const CanvasOverlay: React.FC = () => {
     setOffsetY(panStartRef.current.initOffY + deltaY);
   };
 
-  const handleMouseUp = () => {
-    setIsPanning(false);
+  const handlePointerUp = (
+    e?: React.PointerEvent<HTMLCanvasElement> | React.MouseEvent<HTMLCanvasElement>
+  ) => {
+    if (isPanning) {
+      setIsPanning(false);
+      if (e && "releasePointerCapture" in e.currentTarget && "pointerId" in e) {
+        try {
+          if (
+            (e.currentTarget as HTMLCanvasElement).hasPointerCapture(
+              (e as React.PointerEvent<HTMLCanvasElement>).pointerId
+            )
+          ) {
+            (e.currentTarget as HTMLCanvasElement).releasePointerCapture(
+              (e as React.PointerEvent<HTMLCanvasElement>).pointerId
+            );
+          }
+        } catch {
+          // Ignored
+        }
+      }
+    }
   };
 
   const resetAlignment = () => {
@@ -203,11 +235,15 @@ export const CanvasOverlay: React.FC = () => {
           ref={canvasRef}
           width={450}
           height={450}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          className={`h-[400px] w-[400px] max-w-full select-none ${
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={() => handlePointerUp()}
+          onMouseDown={handlePointerDown}
+          onMouseMove={handlePointerMove}
+          onMouseUp={() => handlePointerUp()}
+          onMouseLeave={() => handlePointerUp()}
+          className={`h-[400px] w-[400px] max-w-full select-none touch-none ${
             isPanning ? "cursor-grabbing" : "cursor-grab"
           }`}
         />

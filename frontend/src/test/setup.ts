@@ -89,3 +89,16 @@ globalThis.fetch = vi.fn((url: string | URL | Request) => {
     blob: () => Promise.resolve(new Blob(['mock'])),
   } as Response);
 }) as any;
+
+// Mock PointerEvent methods for jsdom environments
+if (typeof Element !== 'undefined') {
+  if (!Element.prototype.setPointerCapture) {
+    Element.prototype.setPointerCapture = vi.fn();
+  }
+  if (!Element.prototype.releasePointerCapture) {
+    Element.prototype.releasePointerCapture = vi.fn();
+  }
+  if (!Element.prototype.hasPointerCapture) {
+    Element.prototype.hasPointerCapture = vi.fn(() => false);
+  }
+}
