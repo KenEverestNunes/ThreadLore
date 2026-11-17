@@ -369,7 +369,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #017: Canvas and Cropper Interaction Handlers Lack Touch / PointerEvent Support (TL-QA-010)
 - **GitHub Issue:** [#17](https://github.com/KenEverestNunes/ThreadLore/issues/17)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved (PR opened)
 - **Severity:** Medium (Mobile / Tablet Accessibility)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/SwatchCropper.tsx`, `frontend/src/components/CanvasOverlay.tsx`

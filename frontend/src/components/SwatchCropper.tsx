@@ -60,7 +60,7 @@ export const SwatchCropper: React.FC = () => {
   };
 
   // Drag box repositioning
-  const handleBoxMouseDown = (e: React.MouseEvent) => {
+  const handleBoxPointerDown = (e: React.PointerEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(true);
@@ -73,7 +73,10 @@ export const SwatchCropper: React.FC = () => {
   };
 
   // Corner resize start
-  const handleResizeMouseDown = (e: React.MouseEvent, corner: ResizeCorner) => {
+  const handleResizePointerDown = (
+    e: React.PointerEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement>,
+    corner: ResizeCorner
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setResizingCorner(corner);
@@ -129,9 +132,9 @@ export const SwatchCropper: React.FC = () => {
     };
   }, []);
 
-  // Unified mouse move handler for dragging and resizing
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
+  // Unified pointer / mouse move handler for dragging and resizing
+  const handlePointerMove = useCallback(
+    (e: PointerEvent | MouseEvent) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       if (rect.width === 0 || rect.height === 0) return;
@@ -170,24 +173,33 @@ export const SwatchCropper: React.FC = () => {
     [isDragging, resizingCorner, cropScale, imgDimensions]
   );
 
-  const handleMouseUp = useCallback(() => {
+  const handlePointerUp = useCallback(() => {
     setIsDragging(false);
     setResizingCorner(null);
   }, []);
 
   useEffect(() => {
     if (isDragging || resizingCorner) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
+      window.addEventListener("pointercancel", handlePointerUp);
+      window.addEventListener("mousemove", handlePointerMove);
+      window.addEventListener("mouseup", handlePointerUp);
     } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
     }
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
     };
-  }, [isDragging, resizingCorner, handleMouseMove, handleMouseUp]);
+  }, [isDragging, resizingCorner, handlePointerMove, handlePointerUp]);
 
   // Keyboard navigation for precision pixel adjustments
   useEffect(() => {
@@ -306,14 +318,15 @@ export const SwatchCropper: React.FC = () => {
 
         {/* 1:1 Macro Square Crop Box (always rendered when image is present) */}
         <div
-          onMouseDown={handleBoxMouseDown}
+          onPointerDown={handleBoxPointerDown}
+          onMouseDown={handleBoxPointerDown}
           style={{
             left: `${leftPercent}%`,
             top: `${topPercent}%`,
             width: `${widthPercent}%`,
             height: `${heightPercent}%`,
           }}
-          className="absolute cursor-move border-2 border-amber-400 shadow-[0_0_0_9999px_rgba(0,0,0,0.65)] hover:border-amber-300 transition-colors"
+          className="absolute cursor-move touch-none border-2 border-amber-400 shadow-[0_0_0_9999px_rgba(0,0,0,0.65)] hover:border-amber-300 transition-colors"
         >
           {/* Rule of thirds grid lines */}
           <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none opacity-40">
@@ -337,27 +350,31 @@ export const SwatchCropper: React.FC = () => {
           {/* Corner Resize Handles */}
           {/* Top-Left */}
           <div
-            onMouseDown={(e) => handleResizeMouseDown(e, "nw")}
+            onPointerDown={(e) => handleResizePointerDown(e, "nw")}
+            onMouseDown={(e) => handleResizePointerDown(e, "nw")}
             title="Drag to resize crop box"
-            className="absolute -top-1.5 -left-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nwse-resize shadow-md hover:scale-125 transition-transform"
+            className="absolute -top-1.5 -left-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nwse-resize touch-none shadow-md hover:scale-125 transition-transform"
           />
           {/* Top-Right */}
           <div
-            onMouseDown={(e) => handleResizeMouseDown(e, "ne")}
+            onPointerDown={(e) => handleResizePointerDown(e, "ne")}
+            onMouseDown={(e) => handleResizePointerDown(e, "ne")}
             title="Drag to resize crop box"
-            className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nesw-resize shadow-md hover:scale-125 transition-transform"
+            className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nesw-resize touch-none shadow-md hover:scale-125 transition-transform"
           />
           {/* Bottom-Left */}
           <div
-            onMouseDown={(e) => handleResizeMouseDown(e, "sw")}
+            onPointerDown={(e) => handleResizePointerDown(e, "sw")}
+            onMouseDown={(e) => handleResizePointerDown(e, "sw")}
             title="Drag to resize crop box"
-            className="absolute -bottom-1.5 -left-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nesw-resize shadow-md hover:scale-125 transition-transform"
+            className="absolute -bottom-1.5 -left-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nesw-resize touch-none shadow-md hover:scale-125 transition-transform"
           />
           {/* Bottom-Right */}
           <div
-            onMouseDown={(e) => handleResizeMouseDown(e, "se")}
+            onPointerDown={(e) => handleResizePointerDown(e, "se")}
+            onMouseDown={(e) => handleResizePointerDown(e, "se")}
             title="Drag to resize crop box"
-            className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nwse-resize shadow-md hover:scale-125 transition-transform"
+            className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 rounded-full border-2 border-amber-500 bg-white cursor-nwse-resize touch-none shadow-md hover:scale-125 transition-transform"
           />
         </div>
       </div>
