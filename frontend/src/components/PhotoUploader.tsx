@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { HelpCircle, Upload } from "lucide-react";
+import { AlertCircle, HelpCircle, Upload } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 
 interface PhotoUploaderProps {
@@ -7,7 +7,7 @@ interface PhotoUploaderProps {
 }
 
 export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) => {
-  const { handleFileSelect } = useWeave();
+  const { handleFileSelect, error } = useWeave();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onDragOver = (e: React.DragEvent) => {
@@ -55,7 +55,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
 
     canvas.toBlob((blob) => {
       if (blob) {
-        const file = new File([blob], `${type}_swatch_sample.jpg`, { type: "image/jpeg" });
+        const file = new File([blob], `${type}_synthetic_swatch_sample.jpg`, { type: "image/jpeg" });
         handleFileSelect(file);
       }
     }, "image/jpeg", 0.9);
@@ -72,6 +72,20 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
           interoperable WIF 1.1 specifications.
         </p>
       </div>
+
+      {/* Error alert banner */}
+      {error && (
+        <div
+          role="alert"
+          className="mb-6 flex w-full max-w-xl items-start space-x-2.5 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 shadow-sm"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+          <div className="flex-1">
+            <span className="font-semibold block">File Upload Error</span>
+            <span>{error}</span>
+          </div>
+        </div>
+      )}
 
       {/* Drag & drop upload area */}
       <div
@@ -121,18 +135,18 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
 
         <span className="text-zinc-300 dark:text-zinc-700">•</span>
 
-        <span className="text-zinc-500">Try sample:</span>
+        <span className="text-zinc-500">Try sample (synthetic / simulated):</span>
         <button
           onClick={() => loadSampleSwatch("plain")}
           className="rounded-md border border-zinc-200 px-2.5 py-1 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
-          Plain Linen (1/1)
+          Synthetic Plain Linen (1/1)
         </button>
         <button
           onClick={() => loadSampleSwatch("twill")}
           className="rounded-md border border-zinc-200 px-2.5 py-1 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
-          Harris Tweed (2/2 Twill)
+          Simulated 2/2 Twill (Harris Tweed)
         </button>
       </div>
     </div>

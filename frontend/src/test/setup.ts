@@ -54,6 +54,13 @@ class MockFileReader {
 }
 (window as any).FileReader = MockFileReader;
 
+// Mock Clipboard API
+Object.assign(navigator, {
+  clipboard: {
+    writeText: vi.fn().mockImplementation(() => Promise.resolve()),
+  },
+});
+
 // Mock global fetch to return safe responses in unit tests
 globalThis.fetch = vi.fn((url: string | URL | Request) => {
   const urlStr = url.toString();
