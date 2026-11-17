@@ -284,7 +284,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #014: Stale Compiled WIF and Draft Accessible After Verification Changes (TL-QA-003)
 - **GitHub Issue:** [#14](https://github.com/KenEverestNunes/ThreadLore/issues/14)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Data Consistency)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`, `frontend/src/App.tsx`, `frontend/src/components/LoomDraftCard.tsx`
@@ -298,7 +298,11 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   Modifying any weave or metadata setting should clear or mark `compiledResult` as stale, disabling direct stepper access to Draft or requiring recompilation.
 - **Actual Behavior:**
-  Stale draft remains displayed and downloadable.
+  Stale draft was displayed and downloadable because `compiledResult` remained cached in context.
+- **Resolution:**
+  - Wrapped parameter setters (`setWarpColor`, `setWeftColor`, `setRepeatWarp`, `setRepeatWeft`, `setUnits`, `setProvenance`) and structure actions (`selectPreset`, `setCustomRepeatSize`, `toggleMatrixCell`, `handleCropComplete`, `handleFileSelect`) in `WeaveContext.tsx` to automatically invalidate `compiledResult` (`setCompiledResult(null)`).
+  - Configured `pool: 'forks'` in `frontend/vitest.config.ts` for deterministic test isolation on Windows.
+  - Added automated regression tests in `frontend/src/test/stale_draft_invalidation.test.tsx` verifying that toggling cells, changing presets, or altering yarn palettes immediately invalidates `compiledResult` and disables direct stepper navigation to Draft.
 
 ---
 
