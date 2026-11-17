@@ -32,7 +32,7 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
   return (
     <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Step Progress Stepper */}
-      <div className="flex items-center justify-between border-b border-zinc-200 pb-4 dark:border-zinc-800">
+      <div className="flex items-center justify-between border-b border-zinc-200 pb-4 dark:border-zinc-800 print:hidden">
         <div className="flex items-center space-x-2 sm:space-x-6 overflow-x-auto py-1">
           {STEPS.map((s) => {
             const Icon = s.icon;
@@ -145,7 +145,7 @@ const Header: React.FC = () => {
   }, [theme, applyTheme]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80">
+    <header className="sticky top-0 z-40 border-b border-zinc-200/80 bg-white/80 backdrop-blur dark:border-zinc-800/80 dark:bg-zinc-950/80 print:hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         <button
           type="button"
@@ -237,7 +237,7 @@ export const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-200 bg-white py-6 dark:border-zinc-800 dark:bg-zinc-950 text-xs text-zinc-500 text-center space-y-1">
+        <footer className="border-t border-zinc-200 bg-white py-6 dark:border-zinc-800 dark:bg-zinc-950 text-xs text-zinc-500 text-center space-y-1 print:hidden">
           <p>
             ThreadLore • AI-Assisted, Human-Verified Textile Reconstruction • Powered by Gemini 3.8 Flash & WIF 1.1 Specification
           </p>
