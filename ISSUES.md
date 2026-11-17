@@ -75,12 +75,13 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #004: Missing Fine Rotation Angle Slider and Wale Mirroring Controls in Canvas Overlay
 - **GitHub Issue:** [#4](https://github.com/KenEverestNunes/ThreadLore/issues/4)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved
 - **Severity:** High (Feature Incomplete / Optical Alignment)
 - **Reported Date:** 2026-11-16
+- **Resolved Date:** 2026-11-17
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
 - **Description:**
-  Real textile photographs rarely sit at an exact 0.00° orthogonal angle; handwoven fabrics typically exhibit 2°–8° of skew or camera rotation. While rotation math (`fineAngle`) exists inside the canvas rendering pipeline, there is no rotation slider or angle input in the UI controls. Additionally, there is no horizontal/vertical mirror toggle to test S-twill vs. Z-twill diagonal wale orientation against the photo.
+  Real textile photographs rarely sit at an exact 0.00° orthogonal angle; handwoven fabrics typically exhibit 2° to 8° of skew or camera rotation. While rotation math (`fineAngle`) exists inside the canvas rendering pipeline, there was no rotation slider or angle input in the UI controls. Additionally, there was no horizontal/vertical mirror toggle to test S-twill vs. Z-twill diagonal wale orientation against the photo.
 - **Reproduction Steps:**
   1. Upload or crop a fabric photo with slight angular skew (e.g., 5° off-axis).
   2. Arrive at "Verify & Align".
@@ -88,7 +89,12 @@ This document tracks identified bugs, functional discrepancies, user interface e
 - **Expected Behavior:**
   A "Fine Rotation Angle" slider (-15° to +15° with 0.1° precision) and a "Mirror Twill Wale (S ↔ Z)" toggle button allowing weavers to align overlay grid lines to angled yarns.
 - **Actual Behavior:**
-  No angle slider or mirroring button exists in the UI; weavers cannot align skewed fabric photos.
+  No angle slider or mirroring button existed in the UI; weavers could not align skewed fabric photos.
+- **Resolution:**
+  - Added Fine Rotation Angle range slider (-15° to +15° with 0.1° step) in `frontend/src/components/CanvasOverlay.tsx` connected to the center-rotated canvas drawing pipeline.
+  - Added "Mirror Twill Wale (S ↔ Z)" interactive toggle button reflecting pattern columns so weavers can verify S-twill vs Z-twill diagonal wale orientation against the photo.
+  - Updated `resetAlignment` to return rotation angle to 0.0° and restore default wale orientation.
+  - Added automated unit regression tests in `frontend/src/test/canvas_rotation_mirroring.test.tsx`.
 
 ---
 

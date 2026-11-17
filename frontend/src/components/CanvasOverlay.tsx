@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
-import { Eye, Move, RotateCcw, Sliders } from "lucide-react";
+import { Eye, FlipHorizontal, Move, RotateCcw, RotateCw, Sliders } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 
 export const CanvasOverlay: React.FC = () => {
@@ -21,6 +21,7 @@ export const CanvasOverlay: React.FC = () => {
   const [spacingY, setSpacingY] = useState<number>(() => analysisResult?.dy_px || 22.0);
   const [lockDensity, setLockDensity] = useState(true);
   const [fineAngle, setFineAngle] = useState(0.0);
+  const [mirrorWale, setMirrorWale] = useState(false);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
 
@@ -92,7 +93,10 @@ export const CanvasOverlay: React.FC = () => {
 
         for (let x = startX; x < w + tileWidthPx; x += dx) {
           // Find which column in the master tile this end belongs to
-          const colInTile = Math.floor(((x - offsetX) / dx) % repeatSize + repeatSize) % repeatSize;
+          let colInTile = Math.floor(((x - offsetX) / dx) % repeatSize + repeatSize) % repeatSize;
+          if (mirrorWale) {
+            colInTile = repeatSize - 1 - colInTile;
+          }
 
           const isWarpOver =
             rowInTile < masterMatrix.length &&
@@ -134,6 +138,7 @@ export const CanvasOverlay: React.FC = () => {
     spacingX,
     spacingY,
     fineAngle,
+    mirrorWale,
     offsetX,
     offsetY,
   ]);
@@ -168,6 +173,7 @@ export const CanvasOverlay: React.FC = () => {
     setOffsetX(0);
     setOffsetY(0);
     setFineAngle(0.0);
+    setMirrorWale(false);
     if (analysisResult?.spacing_detected) {
       if (analysisResult.dx_px) setSpacingX(analysisResult.dx_px);
       if (analysisResult.dy_px) setSpacingY(analysisResult.dy_px);
@@ -237,6 +243,29 @@ export const CanvasOverlay: React.FC = () => {
           className="w-full accent-zinc-900 dark:accent-zinc-100"
         />
 
+        {/* Fine Rotation Angle Slider */}
+        <div className="pt-1">
+          <div className="flex justify-between text-zinc-600 dark:text-zinc-400 mb-1">
+            <span className="flex items-center space-x-1.5">
+              <RotateCw className="h-3.5 w-3.5 text-zinc-500" />
+              <span>Fine Rotation Angle</span>
+            </span>
+            <span className="font-mono">
+              {fineAngle > 0 ? `+${fineAngle.toFixed(1)}` : fineAngle.toFixed(1)}°
+            </span>
+          </div>
+          <input
+            type="range"
+            min="-15"
+            max="15"
+            step="0.1"
+            value={fineAngle}
+            onChange={(e) => setFineAngle(parseFloat(e.target.value))}
+            aria-label="Fine Rotation Angle"
+            className="w-full accent-zinc-900 dark:accent-zinc-100"
+          />
+        </div>
+
         {/* Thread Spacing Sliders */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
           <div>
@@ -290,6 +319,27 @@ export const CanvasOverlay: React.FC = () => {
             />
             <span>Lock Square Aspect (Δx = Δy)</span>
           </label>
+        </div>
+
+        {/* Wale Mirroring Toggle & Phase Offset */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-200/60 dark:border-zinc-700/60">
+          <button
+            type="button"
+            onClick={() => setMirrorWale((prev) => !prev)}
+            className={`flex items-center space-x-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
+              mirrorWale
+                ? "border-indigo-500 bg-indigo-50 text-indigo-700 dark:border-indigo-500 dark:bg-indigo-950/60 dark:text-indigo-300"
+                : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+            }`}
+            aria-label="Mirror Twill Wale (S ↔ Z)"
+            title="Mirror twill diagonal orientation to match S-twill or Z-twill weave in photo"
+          >
+            <FlipHorizontal className="h-3.5 w-3.5" />
+            <span>Mirror Twill Wale (S ↔ Z)</span>
+            <span className="rounded bg-zinc-200/80 px-1 py-0.2 text-[10px] dark:bg-zinc-700 font-mono">
+              {mirrorWale ? "Mirrored (S-Wale)" : "Normal (Z-Wale)"}
+            </span>
+          </button>
 
           <span className="text-[11px] font-mono text-zinc-500">
             Phase Offset: ({offsetX}px, {offsetY}px)
