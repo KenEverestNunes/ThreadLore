@@ -193,7 +193,7 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #009: Missing Printable Physical Loom Card / Bench Draft Sheet View
 - **GitHub Issue:** [#9](https://github.com/KenEverestNunes/ThreadLore/issues/9)
-- **Status:** 🔴 Open
+- **Status:** 🟢 Resolved (PR opened)
 - **Severity:** Medium (Handweaver Workflow)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
