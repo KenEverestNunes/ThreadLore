@@ -50,8 +50,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #003: Stepper Allows Premature Navigation to "Verify & Align" Before Swatch Is Cropped
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#3](https://github.com/KenEverestNunes/ThreadLore/issues/3)
+- **Status:** 🔴 Open
 - **Severity:** Medium (Workflow / UX Integrity)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/App.tsx`
@@ -69,8 +69,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #004: Missing Fine Rotation Angle Slider and Wale Mirroring Controls in Canvas Overlay
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#4](https://github.com/KenEverestNunes/ThreadLore/issues/4)
+- **Status:** 🔴 Open
 - **Severity:** High (Feature Incomplete / Optical Alignment)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
@@ -88,8 +88,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #005: Canvas Mouse Drag Drift Due to Coordinate Buffer Resolution Mismatch
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#5](https://github.com/KenEverestNunes/ThreadLore/issues/5)
+- **Status:** 🔴 Open
 - **Severity:** Medium (UX / Visual Precision)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
@@ -106,8 +106,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #006: Lack of Real-Time Float and Structural Validity Feedback in Master Tile Editor
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#6](https://github.com/KenEverestNunes/ThreadLore/issues/6)
+- **Status:** 🔴 Open
 - **Severity:** High (Core Weaving Usability)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/MasterTileEditor.tsx`, `frontend/src/context/WeaveContext.tsx`
@@ -128,8 +128,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #007: Swatch Analysis Error Handler Swallows Server Error Details
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#7](https://github.com/KenEverestNunes/ThreadLore/issues/7)
+- **Status:** 🔴 Open
 - **Severity:** Medium (Error Handling / Diagnostics)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`
@@ -148,8 +148,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #008: File Upload Errors Not Rendered in PhotoUploader UI
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#8](https://github.com/KenEverestNunes/ThreadLore/issues/8)
+- **Status:** 🔴 Open
 - **Severity:** Low (UX Polish)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/PhotoUploader.tsx`
@@ -166,8 +166,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #009: Missing Printable Physical Loom Card / Bench Draft Sheet View
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#9](https://github.com/KenEverestNunes/ThreadLore/issues/9)
+- **Status:** 🔴 Open
 - **Severity:** Medium (Handweaver Workflow)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -185,8 +185,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #010: WIF 1.1 Plaintext Code Drawer Lacks One-Click "Copy to Clipboard"
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#10](https://github.com/KenEverestNunes/ThreadLore/issues/10)
+- **Status:** 🔴 Open
 - **Severity:** Low (Ergonomics)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -203,8 +203,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #011: Drawdown and Treadling Previews Truncated with No Scale/Zoom Controls
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#11](https://github.com/KenEverestNunes/ThreadLore/issues/11)
+- **Status:** 🔴 Open
 - **Severity:** Low (Visualization)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/LoomDraftCard.tsx`
@@ -222,8 +222,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #012: Inability to Switch to Light Mode (Hardcoded Dark Theme)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#12](https://github.com/KenEverestNunes/ThreadLore/issues/12)
+- **Status:** 🔴 Open
 - **Severity:** Low (Accessibility / User Preference)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/index.html`, `frontend/src/App.tsx`
@@ -240,8 +240,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #013: Network-Dependent WIF File Download When Text Is Held in Memory
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#13](https://github.com/KenEverestNunes/ThreadLore/issues/13)
+- **Status:** 🔴 Open
 - **Severity:** Low (Reliability / Offline Capability)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/services/api.ts`, `backend/app/api/server.py`
@@ -260,8 +260,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #014: Stale Compiled WIF and Draft Accessible After Verification Changes (TL-QA-003)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#14](https://github.com/KenEverestNunes/ThreadLore/issues/14)
+- **Status:** 🔴 Open
 - **Severity:** High (Data Consistency)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`, `frontend/src/App.tsx`, `frontend/src/components/LoomDraftCard.tsx`
@@ -280,8 +280,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #015: Ingestion of New Swatch Does Not Clear Prior Analysis or Draft Results (TL-QA-004)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#15](https://github.com/KenEverestNunes/ThreadLore/issues/15)
+- **Status:** 🔴 Open
 - **Severity:** High (Workflow Integrity)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/context/WeaveContext.tsx`
@@ -299,8 +299,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #016: Failed/Unavailable Analysis Displays Misleading "AI Suggestion" Badge (TL-QA-013)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#16](https://github.com/KenEverestNunes/ThreadLore/issues/16)
+- **Status:** 🔴 Open
 - **Severity:** Medium (UX / Clarity)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/MasterTileEditor.tsx`
@@ -318,8 +318,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #017: Canvas and Cropper Interaction Handlers Lack Touch / PointerEvent Support (TL-QA-010)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#17](https://github.com/KenEverestNunes/ThreadLore/issues/17)
+- **Status:** 🔴 Open
 - **Severity:** Medium (Mobile / Tablet Accessibility)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/SwatchCropper.tsx`, `frontend/src/components/CanvasOverlay.tsx`
@@ -336,8 +336,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #018: Optical Spacing Slider Limits (8 to 50 px) Cannot Accommodate Dense or Coarse Threads (TL-QA-008)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#18](https://github.com/KenEverestNunes/ThreadLore/issues/18)
+- **Status:** 🔴 Open
 - **Severity:** Low (Edge-Case Textiles)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`, `backend/app/cv/fft_profiler.py`
@@ -354,8 +354,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #019: Unmeasured Default Thread Spacing (22 px) Rendered Without "Manual Guess" Label (TL-QA-007)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#19](https://github.com/KenEverestNunes/ThreadLore/issues/19)
+- **Status:** 🔴 Open
 - **Severity:** Low (Clarity)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/CanvasOverlay.tsx`
@@ -373,8 +373,8 @@ This document tracks identified bugs, functional discrepancies, user interface e
 ---
 
 ### Issue #020: Sample Swatches Lack Explicit "Synthetic / Simulated" Labeling (TL-QA-014)
-- **Status:** 🔴 Open (Pending User Triage)
-- **GitHub Issue:** *Not created (Awaiting user review & confirmation)*
+- **GitHub Issue:** [#20](https://github.com/KenEverestNunes/ThreadLore/issues/20)
+- **Status:** 🔴 Open
 - **Severity:** Low (Transparency)
 - **Reported Date:** 2026-11-16
 - **Component:** `frontend/src/components/PhotoUploader.tsx`
