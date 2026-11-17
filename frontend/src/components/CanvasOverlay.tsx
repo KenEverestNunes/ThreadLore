@@ -154,10 +154,20 @@ export const CanvasOverlay: React.FC = () => {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isPanning) return;
-    const deltaX = e.clientX - panStartRef.current.x;
-    const deltaY = e.clientY - panStartRef.current.y;
-    setOffsetX(panStartRef.current.initOffX + deltaX);
-    setOffsetY(panStartRef.current.initOffY + deltaY);
+    const canvas = canvasRef.current;
+    let scaleX = 1;
+    let scaleY = 1;
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        scaleX = canvas.width / rect.width;
+        scaleY = canvas.height / rect.height;
+      }
+    }
+    const deltaX = (e.clientX - panStartRef.current.x) * scaleX;
+    const deltaY = (e.clientY - panStartRef.current.y) * scaleY;
+    setOffsetX(Math.round(panStartRef.current.initOffX + deltaX));
+    setOffsetY(Math.round(panStartRef.current.initOffY + deltaY));
   };
 
   const handleMouseUp = () => {
