@@ -177,6 +177,22 @@ export const CanvasOverlay: React.FC = () => {
     }
   };
 
+  // Dynamic min/max bounds accommodating fine silk micro-weaves and coarse yarns
+  const minSliderSpacing = Math.min(
+    4.0,
+    Math.floor(spacingX),
+    Math.floor(spacingY),
+    Math.floor(analysisResult?.dx_px || 4.0),
+    Math.floor(analysisResult?.dy_px || 4.0)
+  );
+  const maxSliderSpacing = Math.max(
+    100.0,
+    Math.ceil(spacingX),
+    Math.ceil(spacingY),
+    Math.ceil(analysisResult?.dx_px || 100.0),
+    Math.ceil(analysisResult?.dy_px || 100.0)
+  );
+
   return (
     <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <div className="flex items-center justify-between mb-4">
@@ -246,8 +262,8 @@ export const CanvasOverlay: React.FC = () => {
             </div>
             <input
               type="range"
-              min="8"
-              max="50"
+              min={minSliderSpacing}
+              max={maxSliderSpacing}
               step="0.5"
               value={spacingX}
               onChange={(e) => {
@@ -266,8 +282,8 @@ export const CanvasOverlay: React.FC = () => {
             </div>
             <input
               type="range"
-              min="8"
-              max="50"
+              min={minSliderSpacing}
+              max={maxSliderSpacing}
               step="0.5"
               value={spacingY}
               onChange={(e) => {
