@@ -270,8 +270,8 @@ export const LoomDraftCard: React.FC = () => {
           {/* Top Row: Threading + Tieup */}
           <div className="flex items-end space-x-4">
             {/* Threading Matrix (Shafts 4..1 down, Warp ends 1..N across) */}
-            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
                 Threading (Warp Shaft Assignments 1..4)
               </span>
               <div
@@ -284,21 +284,23 @@ export const LoomDraftCard: React.FC = () => {
                   draft.threading.slice(0, visibleWarp).map((assignedShaft, endIdx) => (
                     <div
                       key={`th-${shaftNum}-${endIdx}`}
-                      className={`h-3 w-3 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
+                      className={`h-3 w-3 rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[7px] font-bold leading-none ${
                         assignedShaft === shaftNum
-                          ? "bg-zinc-900 dark:bg-zinc-100"
-                          : "bg-transparent"
+                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
+                          : "bg-transparent print:bg-white"
                       }`}
                       title={`End ${endIdx + 1}: Shaft ${shaftNum}`}
-                    />
+                    >
+                      {assignedShaft === shaftNum ? "■" : ""}
+                    </div>
                   ))
                 )}
               </div>
             </div>
 
             {/* Tie-up Matrix (Shafts × Treadles) */}
-            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
                 Tie-Up ({draft.shafts}×{draft.treadles})
               </span>
               <div
@@ -311,10 +313,10 @@ export const LoomDraftCard: React.FC = () => {
                   row.map((val, tIdx) => (
                     <div
                       key={`tu-${sIdx}-${tIdx}`}
-                      className={`h-4 w-4 rounded-[1px] border border-zinc-300 dark:border-zinc-700 flex items-center justify-center text-[9px] font-bold ${
+                      className={`h-4 w-4 rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[9px] font-bold ${
                         val === 1
-                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                          : "bg-white text-zinc-400 dark:bg-zinc-900"
+                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
+                          : "bg-white text-zinc-400 dark:bg-zinc-900 print:bg-white print:text-transparent"
                       }`}
                     >
                       {val === 1 ? "X" : ""}
@@ -328,12 +330,12 @@ export const LoomDraftCard: React.FC = () => {
           {/* Bottom Row: Drawdown + Treadling */}
           <div className="flex items-start space-x-4">
             {/* Drawdown Simulation */}
-            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
                 Drawdown Fabric Simulation ({visibleWarp}×{visibleWeft})
               </span>
               <div
-                className="grid gap-[0.5px] border border-zinc-300 dark:border-zinc-700 bg-zinc-200 dark:bg-zinc-800"
+                className="grid gap-[0.5px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 bg-zinc-200 dark:bg-zinc-800 print:bg-zinc-300"
                 style={{
                   gridTemplateColumns: `repeat(${visibleWarp}, minmax(${cellSize}px, 1fr))`,
                   width: `${visibleWarp * cellSize}px`,
@@ -348,6 +350,7 @@ export const LoomDraftCard: React.FC = () => {
                         width: `${cellSize}px`,
                         height: `${cellSize}px`,
                       }}
+                      className={cell === 1 ? "print:!bg-black" : "print:!bg-white"}
                       title={`Pick ${pIdx + 1}, End ${eIdx + 1}: ${cell === 1 ? "Warp" : "Weft"}`}
                     />
                   ))
@@ -356,8 +359,8 @@ export const LoomDraftCard: React.FC = () => {
             </div>
 
             {/* Treadling Sequence */}
-            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950">
-              <span className="block text-[11px] font-medium text-zinc-500 mb-1">
+            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
+              <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
                 Treadling
               </span>
               <div
@@ -371,12 +374,14 @@ export const LoomDraftCard: React.FC = () => {
                     <div
                       key={`tr-${pickIdx}-${colTreadleIdx}`}
                       style={{ height: `${cellSize}px` }}
-                      className={`w-3.5 rounded-[1px] border border-zinc-300 dark:border-zinc-700 ${
+                      className={`w-3.5 rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[7px] font-bold leading-none ${
                         colTreadleIdx + 1 === treadleNum
-                          ? "bg-zinc-900 dark:bg-zinc-100"
-                          : "bg-transparent"
+                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
+                          : "bg-transparent print:bg-white"
                       }`}
-                    />
+                    >
+                      {colTreadleIdx + 1 === treadleNum ? "■" : ""}
+                    </div>
                   ))
                 )}
               </div>
