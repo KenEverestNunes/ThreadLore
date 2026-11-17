@@ -102,7 +102,7 @@ const MainContent: React.FC<{ onOpenGuidance: () => void }> = ({ onOpenGuidance 
 };
 
 const Header: React.FC = () => {
-  const { setStep } = useWeave();
+  const { resetWorkflow } = useWeave();
   const [theme, setTheme] = useState<"light" | "dark" | "system">(() => {
     return (localStorage.getItem("threadlore-theme") as "light" | "dark" | "system") || "dark";
   });
@@ -151,9 +151,9 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <button
           type="button"
-          onClick={() => setStep("upload")}
+          onClick={resetWorkflow}
           className="flex items-center space-x-3 text-left hover:opacity-85 transition cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded-lg p-1 -ml-1"
-          title="Return to Upload Swatch home page"
+          title="Return to Upload Swatch home page and reset session"
           aria-label="ThreadLore home"
         >
           <ThreadLoreIcon className="h-10 w-10 shadow-sm flex-shrink-0" size={40} />

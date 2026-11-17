@@ -255,6 +255,18 @@ export const WeaveProvider: React.FC<{
     setAnalysisResult(null);
     setCompiledResult(null);
     setError(null);
+    setProvenance({
+      title: "Preserved Textile Sample",
+      origin: "",
+      maker: "",
+      date_period: "",
+      notes: "",
+    });
+    setWarpColor("#1E293B");
+    setWeftColor("#E2E8F0");
+    setRepeatWarp(10);
+    setRepeatWeft(10);
+    setUnits("Centimeters");
     selectPreset("plain_1_1");
   }, [selectPreset]);
 

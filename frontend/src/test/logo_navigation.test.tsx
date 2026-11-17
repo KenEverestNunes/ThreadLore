@@ -29,6 +29,10 @@ describe('Issue #22 - Logo Navigation to Home Page Regression Test', () => {
     await waitFor(() => {
       expect(screen.getByText(/Upload Textile Swatch Photo/i)).toBeInTheDocument();
     });
+
+    // Verify stepper buttons for subsequent steps are disabled/locked
+    expect(screen.getByRole('button', { name: /1:1 Macro Crop/i })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Verify & Align/i })).toBeDisabled();
   });
 
   it('should redirect back to the home page when clicking brand logo from verify step', async () => {
