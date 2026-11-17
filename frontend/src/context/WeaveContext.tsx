@@ -89,13 +89,17 @@ export const WeaveProvider: React.FC<{
 
   const handleFileSelect = useCallback((file: File) => {
     setError(null);
+    if (!file.type.startsWith("image/")) {
+      setError("Invalid file format. Please upload a valid image (JPEG, PNG, or WebP).");
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       setRawImage(e.target?.result as string);
       setStep("crop");
     };
     reader.onerror = () => {
-      setError("Failed to read image file.");
+      setError("Failed to read image file. Please try another image.");
     };
     reader.readAsDataURL(file);
   }, []);
