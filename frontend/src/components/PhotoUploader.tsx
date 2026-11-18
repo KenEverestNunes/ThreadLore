@@ -27,6 +27,21 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
     }
   };
 
+  // Helper to load real macro photograph samples
+  const loadRealPhotoSample = async (filename: string) => {
+    try {
+      const response = await fetch(`/samples/${filename}`);
+      if (!response.ok) {
+        throw new Error(`Failed to load sample image: ${response.statusText}`);
+      }
+      const blob = await response.blob();
+      const file = new File([blob], filename, { type: blob.type || "image/jpeg" });
+      handleFileSelect(file);
+    } catch (err) {
+      console.error("Error loading sample swatch:", err);
+    }
+  };
+
   // Helper to generate quick synthetic swatch for testing
   const loadSampleSwatch = (type: "plain" | "twill") => {
     const canvas = document.createElement("canvas");
@@ -124,7 +139,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
       </div>
 
       {/* Helper actions & sample swatches */}
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs">
+      <div className="mt-6 flex flex-col items-center space-y-3 text-xs">
         <button
           onClick={onOpenGuidance}
           className="flex items-center space-x-1.5 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 font-medium"
@@ -133,21 +148,43 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
           <span>Macro Photography Guidelines</span>
         </button>
 
-        <span className="text-zinc-300 dark:text-zinc-700">•</span>
+        {/* Real macro fabric samples */}
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+          <span className="text-zinc-500 font-medium">Real macro samples:</span>
+          <button
+            type="button"
+            onClick={() => loadRealPhotoSample("tartan_2_2_twill.jpg")}
+            className="flex items-center space-x-1.5 rounded-lg border border-indigo-200 bg-indigo-50/70 px-2.5 py-1 text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60 font-medium shadow-sm transition"
+          >
+            <span>📷 Real Tartan Plaid (2/2 Twill)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => loadRealPhotoSample("denim_3_1_twill.jpg")}
+            className="flex items-center space-x-1.5 rounded-lg border border-indigo-200 bg-indigo-50/70 px-2.5 py-1 text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60 font-medium shadow-sm transition"
+          >
+            <span>📷 Real Denim (3/1 Twill)</span>
+          </button>
+        </div>
 
-        <span className="text-zinc-500">Try sample (synthetic / simulated):</span>
-        <button
-          onClick={() => loadSampleSwatch("plain")}
-          className="rounded-md border border-zinc-200 px-2.5 py-1 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-        >
-          Synthetic Plain Linen (1/1)
-        </button>
-        <button
-          onClick={() => loadSampleSwatch("twill")}
-          className="rounded-md border border-zinc-200 px-2.5 py-1 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-        >
-          Simulated 2/2 Twill (Harris Tweed)
-        </button>
+        {/* Synthetic procedural samples */}
+        <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-zinc-500">
+          <span>Synthetic / simulated:</span>
+          <button
+            type="button"
+            onClick={() => loadSampleSwatch("plain")}
+            className="rounded-md border border-zinc-200 px-2 py-0.5 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            Synthetic Plain Linen (1/1)
+          </button>
+          <button
+            type="button"
+            onClick={() => loadSampleSwatch("twill")}
+            className="rounded-md border border-zinc-200 px-2 py-0.5 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            Simulated 2/2 Twill (Harris Tweed)
+          </button>
+        </div>
       </div>
     </div>
   );

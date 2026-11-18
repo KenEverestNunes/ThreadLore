@@ -120,3 +120,37 @@ def test_gemini_curator_no_client_fallback() -> None:
     result = curator.fallback_suggestion("AI service offline")
     assert result.status == "unavailable"
     assert result.default_matrix is None
+
+
+def test_gemini_curator_non_textile_guard_rejection() -> None:
+    """Verify non-textile image (e.g. apple, pet, landscape) triggers safe unavailable status."""
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    mock_response.text = json.dumps({
+        "status": "unavailable",
+        "is_woven_textile": False,
+        "weave_family": "custom",
+        "twill_direction": None,
+        "repeat_size": 2,
+        "confidence": 0.0,
+        "default_matrix": None,
+        "technical_description": "Not a Woven Textile: The uploaded photograph does not appear to be a woven fabric.",
+        "float_risk_notes": None,
+    })
+    mock_client.models.generate_content.return_value = mock_response
+
+    curator = GeminiCurator(client=mock_client)
+    result = curator.analyze_swatch(b"apple_photo_bytes")
+
+    assert result.status == "unavailable"
+    assert result.is_woven_textile is False
+    assert "not a woven textile" in result.technical_description.lower()
+
+
+def test_gemini_system_prompt_includes_textile_validation_guard() -> None:
+    """Verify system prompt explicitly instructs textile fabric validation."""
+    prompt_lower = SYSTEM_PROMPT.lower()
+    assert "textile fabric validation" in prompt_lower
+    assert "non-textile" in prompt_lower
+    assert "is_woven_textile" in prompt_lower
+

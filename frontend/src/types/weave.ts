@@ -39,6 +39,7 @@ export interface LoomDraft {
 
 export interface SwatchAnalysisResponse {
   status: "success" | "unavailable" | "uncertain";
+  is_woven_textile?: boolean;
   weave_family: WeaveFamily;
   twill_direction?: "S" | "Z" | null;
   repeat_size: number;

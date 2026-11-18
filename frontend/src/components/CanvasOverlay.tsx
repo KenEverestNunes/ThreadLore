@@ -362,6 +362,7 @@ export const CanvasOverlay: React.FC = () => {
                 setSpacingX(val);
                 if (lockDensity) setSpacingY(val);
               }}
+              aria-label="Δx (Warp Spacing)"
               className="w-full accent-zinc-900 dark:accent-zinc-100"
             />
           </div>
@@ -389,6 +390,7 @@ export const CanvasOverlay: React.FC = () => {
                 setSpacingY(val);
                 if (lockDensity) setSpacingX(val);
               }}
+              aria-label="Δy (Weft Spacing)"
               className="w-full accent-zinc-900 dark:accent-zinc-100"
             />
           </div>
