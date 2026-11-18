@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Check, RotateCcw, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
+import { AlertCircle, Check, Maximize2, RotateCcw, Sparkles, ZoomIn, ZoomOut } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 
 type ResizeCorner = "nw" | "ne" | "sw" | "se" | null;
@@ -232,7 +232,10 @@ export const SwatchCropper: React.FC = () => {
 
   // Compute exact geometry ensuring a true 1:1 square on screen
   const minDim = Math.min(imgDimensions.width, imgDimensions.height);
-  const cropPixelSize = minDim * cropScale;
+  const cropPixelSize = Math.round(minDim * cropScale);
+  const isBelowMin = cropPixelSize < 100;
+  const isSubOptimal = cropPixelSize >= 100 && cropPixelSize < 160;
+  const isWideCrop = cropScale > 0.85;
   const widthPercent = (cropPixelSize / imgDimensions.width) * 100;
   const heightPercent = (cropPixelSize / imgDimensions.height) * 100;
   const halfW = widthPercent / 2;
@@ -298,7 +301,7 @@ export const SwatchCropper: React.FC = () => {
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           Square Macro Swatch Crop
         </h3>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-zinc-600 dark:text-zinc-400">
           Position the 1:1 square crop box directly over the clearest section of warp and weft yarns.
         </p>
       </div>
@@ -344,7 +347,7 @@ export const SwatchCropper: React.FC = () => {
           {/* Floating badge */}
           <div className="absolute top-1.5 left-1.5 flex items-center space-x-1 rounded-md bg-zinc-950/80 px-2 py-0.5 text-[10px] font-medium text-amber-300 backdrop-blur shadow-sm pointer-events-none">
             <Maximize2 className="h-2.5 w-2.5" />
-            <span>1:1 Macro • {Math.round(cropScale * 100)}%</span>
+            <span>1:1 Macro • {cropPixelSize}×{cropPixelSize} px ({Math.round(cropScale * 100)}%)</span>
           </div>
 
           {/* Corner Resize Handles */}
@@ -379,13 +382,62 @@ export const SwatchCropper: React.FC = () => {
         </div>
       </div>
 
+      {/* Real-time Crop Quality & Resolution Feedback */}
+      <div className="mt-3 w-full max-w-3xl sm:max-w-4xl">
+        {isBelowMin ? (
+          <div
+            role="status"
+            className="flex items-center space-x-2 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2 text-xs text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-300 shadow-sm"
+          >
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400" />
+            <div className="flex-1">
+              <span className="font-semibold">Resolution too low ({cropPixelSize}×{cropPixelSize} px): </span>
+              <span>Minimum 100×100 px required for weave analysis. Zoom out or drag corner handles to enlarge crop.</span>
+            </div>
+          </div>
+        ) : isSubOptimal ? (
+          <div
+            role="status"
+            className="flex items-center space-x-2 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2 text-xs text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300 shadow-sm"
+          >
+            <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+            <div className="flex-1">
+              <span className="font-semibold">Fair resolution ({cropPixelSize}×{cropPixelSize} px): </span>
+              <span>Yarn crossings may be indistinct. If detection is uncertain, select a clearer macro area or use a higher-resolution photo.</span>
+            </div>
+          </div>
+        ) : isWideCrop ? (
+          <div
+            role="status"
+            className="flex items-center space-x-2 rounded-xl border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-xs text-indigo-800 dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300 shadow-sm"
+          >
+            <Sparkles className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
+            <div className="flex-1">
+              <span className="font-semibold">Wide crop ({cropPixelSize}×{cropPixelSize} px): </span>
+              <span>For best optical detection, zoom in so 4 to 12 yarn crossings fill the square box.</span>
+            </div>
+          </div>
+        ) : (
+          <div
+            role="status"
+            className="flex items-center space-x-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300 shadow-sm"
+          >
+            <Check className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+            <div className="flex-1">
+              <span className="font-semibold">Optimal macro focus ({cropPixelSize}×{cropPixelSize} px): </span>
+              <span>Ideal resolution for optical thread spacing and 4-shaft weave reconstruction.</span>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Helpful Hint */}
-      <p className="mt-2 text-[11px] text-zinc-400 dark:text-zinc-500">
+      <p className="mt-2 text-[11px] text-zinc-500 dark:text-zinc-400">
         Drag box to reposition • Scroll mouse wheel or use controls below to zoom • Drag corner dots to resize
       </p>
 
       {/* Interactive Controls Row */}
-      <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-3xl sm:max-w-4xl rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="mt-3 flex flex-col sm:flex-row items-center justify-between gap-4 w-full max-w-3xl sm:max-w-4xl rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         {/* Zoom In & Out Controls */}
         <div className="flex items-center space-x-3 w-full sm:w-auto flex-1">
           <button
@@ -427,7 +479,7 @@ export const SwatchCropper: React.FC = () => {
           <button
             onClick={resetWorkflow}
             title="Upload a different photo"
-            className="flex items-center space-x-1 rounded-xl border border-zinc-200 px-2.5 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 transition"
+            className="flex items-center space-x-1 rounded-xl border border-zinc-200 px-2.5 py-1.5 text-xs font-medium text-zinc-600 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 transition"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Change Photo</span>
@@ -444,7 +496,9 @@ export const SwatchCropper: React.FC = () => {
 
           <button
             onClick={performCrop}
-            className="flex items-center space-x-1.5 rounded-xl bg-amber-500 px-4 py-1.5 text-xs font-semibold text-zinc-950 hover:bg-amber-400 active:bg-amber-600 shadow-sm transition"
+            disabled={isBelowMin}
+            title={isBelowMin ? "Minimum 100×100 px required for weave analysis" : "Confirm crop and run weave analysis"}
+            className="flex items-center space-x-1.5 rounded-xl bg-amber-500 px-4 py-1.5 text-xs font-semibold text-zinc-950 hover:bg-amber-400 active:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition"
           >
             <Check className="h-4 w-4 stroke-[2.5]" />
             <span>Confirm & Analyze</span>
