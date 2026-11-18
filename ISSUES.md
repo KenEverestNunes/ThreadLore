@@ -1,4 +1,4 @@
-# 📋 ThreadLore — Issue Tracker & Bug Registry
+# 📋 ThreadLore: Issue Tracker & Bug Registry
 
 This document tracks identified bugs, functional discrepancies, user interface enhancements, and their resolution status.
 

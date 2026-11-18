@@ -34,7 +34,7 @@ def test_adversarial_salt_and_pepper_fuzz() -> None:
     rng = np.random.default_rng(999)
     mask = rng.random((300, 300)) < 0.40
     corrupted = base_img.copy()
-    corrupted[mask] = rng.integers(0, 256, (np.sum(mask), 3), dtype=np.uint8)
+    corrupted[mask] = rng.integers(0, 256, (int(np.sum(mask)), 3), dtype=np.uint8)
 
     # Preprocessing bilateral filter helps smooth impulse noise
     enhanced = ImagePreprocessor.enhance_contrast(corrupted)

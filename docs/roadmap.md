@@ -1,4 +1,4 @@
-# ThreadLore — Exhaustive Implementation Roadmap
+# ThreadLore  -  Exhaustive Implementation Roadmap
 
 ---
 
@@ -58,19 +58,19 @@ Establish a deterministic, monorepo workspace branching off existing tracked Git
 - Git repository tracked at `https://github.com/KenEverestNunes/ThreadLore.git`.
 
 **Files Created / Modified:**
-- `.gitignore` — Universal ignore rules for Python, Node, OS, IDE, and Cloud artifacts (already established).
-- `.editorconfig` — Consistent indentation, encoding, and newline rules across IDEs.
-- `pyproject.toml` — Python packaging, tool configurations for Ruff, Mypy, and Pytest.
-- `backend/requirements.txt` — Pinned production dependencies for backend service (includes `scipy` and `google-genai==3.3.0`).
-- `backend/requirements-dev.txt` — Pinned testing and quality analysis dependencies.
-- `frontend/package.json` — Frontend package definition and build scripts.
-- `frontend/tsconfig.json` — Strict TypeScript compiler configuration.
-- `frontend/tsconfig.node.json` — TypeScript configuration for Vite tooling.
-- `frontend/vite.config.ts` — Vite build and dev server configuration with proxy.
-- `frontend/tailwind.config.js` — Tailwind CSS token configuration.
-- `frontend/postcss.config.js` — PostCSS runner configuration.
-- `.github/workflows/ci.yml` — Initial automated CI testing and linting workflow.
-- `Makefile` — Standardized developer workflow shortcuts (`make lint`, `make test`, `make run`).
+- `.gitignore`  -  Universal ignore rules for Python, Node, OS, IDE, and Cloud artifacts (already established).
+- `.editorconfig`  -  Consistent indentation, encoding, and newline rules across IDEs.
+- `pyproject.toml`  -  Python packaging, tool configurations for Ruff, Mypy, and Pytest.
+- `backend/requirements.txt`  -  Pinned production dependencies for backend service (includes `scipy` and `google-genai==3.3.0`).
+- `backend/requirements-dev.txt`  -  Pinned testing and quality analysis dependencies.
+- `frontend/package.json`  -  Frontend package definition and build scripts.
+- `frontend/tsconfig.json`  -  Strict TypeScript compiler configuration.
+- `frontend/tsconfig.node.json`  -  TypeScript configuration for Vite tooling.
+- `frontend/vite.config.ts`  -  Vite build and dev server configuration with proxy.
+- `frontend/tailwind.config.js`  -  Tailwind CSS token configuration.
+- `frontend/postcss.config.js`  -  PostCSS runner configuration.
+- `.github/workflows/ci.yml`  -  Initial automated CI testing and linting workflow.
+- `Makefile`  -  Standardized developer workflow shortcuts (`make lint`, `make test`, `make run`).
 
 **Implementation Details & Micro-Tasks:**
 1. Switch to integration branch: `git checkout -b develop` (and feature branch `feat/core-engine`).
@@ -113,13 +113,13 @@ Implement the core mathematical compiler that factors arbitrary $2\times2$, $3\t
 - `numpy==1.26.4` and `pytest==8.3.3` active in `.venv`.
 
 **Files Created / Modified:**
-- `backend/app/core/__init__.py` — Package export interface.
-- `backend/app/core/types.py` — Strongly typed domain models, enums (11 canonical weaves), provenance metadata, and matrix definitions.
-- `backend/app/core/compiler.py` — Boolean matrix factorization algorithm deriving shafts, treadles, exact tie-up $M[s,t] = D[i_t, j_s]$, and project repeat expansion.
-- `backend/app/core/validator.py` — Structural interlacing validator (uniform row/col rejection) and cyclic float counter ($2N$ toroidal wrap).
-- `backend/tests/conftest.py` — Pytest fixtures for all 11 canonical ground-truth weave matrices and edge cases.
-- `backend/tests/test_compiler.py` — Mathematical round-trip, factorization, and repeat expansion unit tests.
-- `backend/tests/test_validator.py` — Boundary unit tests for uniform row/col detection, cyclic float limits, and shaft overflow.
+- `backend/app/core/__init__.py`  -  Package export interface.
+- `backend/app/core/types.py`  -  Strongly typed domain models, enums (11 canonical weaves), provenance metadata, and matrix definitions.
+- `backend/app/core/compiler.py`  -  Boolean matrix factorization algorithm deriving shafts, treadles, exact tie-up $M[s,t] = D[i_t, j_s]$, and project repeat expansion.
+- `backend/app/core/validator.py`  -  Structural interlacing validator (uniform row/col rejection) and cyclic float counter ($2N$ toroidal wrap).
+- `backend/tests/conftest.py`  -  Pytest fixtures for all 11 canonical ground-truth weave matrices and edge cases.
+- `backend/tests/test_compiler.py`  -  Mathematical round-trip, factorization, and repeat expansion unit tests.
+- `backend/tests/test_validator.py`  -  Boundary unit tests for uniform row/col detection, cyclic float limits, and shaft overflow.
 
 **Implementation Details & Micro-Tasks:**
 1. Define domain types in `backend/app/core/types.py`:
@@ -159,8 +159,8 @@ Develop a zero-dependency WIF 1.1 serializer that converts compiled `LoomDraft` 
 - Phase 1 completed (`LoomDraft` active).
 
 **Files Created / Modified:**
-- `backend/app/core/wif.py` — WIF 1.1 serializer and validation parser.
-- `backend/tests/test_wif.py` — Compliance, indexing, physical units, color palette, independent reader verification, and round-trip tests.
+- `backend/app/core/wif.py`  -  WIF 1.1 serializer and validation parser.
+- `backend/tests/test_wif.py`  -  Compliance, indexing, physical units, color palette, independent reader verification, and round-trip tests.
 
 **Implementation Details & Micro-Tasks:**
 1. Implement strict conformance with official WIF 1.1 specification:
@@ -203,11 +203,11 @@ Build an image preprocessing and frequency-domain analysis engine using OpenCV, 
 - `opencv-python-headless==4.10.0.84`, `numpy==1.26.4`, and `scipy==1.14.1` active in `.venv`.
 
 **Files Created / Modified:**
-- `backend/app/cv/__init__.py` — Package exports.
-- `backend/app/cv/preprocessor.py` — Color space transforms, bilateral filtering, CLAHE contrast enhancement, and affine image rotation deskewing.
-- `backend/app/cv/fft_profiler.py` — 2D Fast Fourier Transform, magnitude spectrum computation, and harmonic peak detection for $\Delta x$ and $\Delta y$.
-- `backend/tests/fixtures/synthetic_textiles.py` — Deterministic synthetic image generator for plain weave and twill fabrics with known ground-truth thread counts and rotation angles.
-- `backend/tests/test_cv.py` — Unit tests verifying frequency detection, rotation correction, and edge-case handling.
+- `backend/app/cv/__init__.py`  -  Package exports.
+- `backend/app/cv/preprocessor.py`  -  Color space transforms, bilateral filtering, CLAHE contrast enhancement, and affine image rotation deskewing.
+- `backend/app/cv/fft_profiler.py`  -  2D Fast Fourier Transform, magnitude spectrum computation, and harmonic peak detection for $\Delta x$ and $\Delta y$.
+- `backend/tests/fixtures/synthetic_textiles.py`  -  Deterministic synthetic image generator for plain weave and twill fabrics with known ground-truth thread counts and rotation angles.
+- `backend/tests/test_cv.py`  -  Unit tests verifying frequency detection, rotation correction, and edge-case handling.
 
 **Implementation Details & Micro-Tasks:**
 1. Author `generate_synthetic_weave` in `backend/tests/fixtures/synthetic_textiles.py` to produce mathematical sinusoidal weave images with configurable angles, thread spacing, and Gaussian noise.
@@ -245,10 +245,10 @@ Integrate the Google GenAI SDK (`google-genai==3.3.0`) to call `gemini-3.8-flash
 - GCP Project ID and Vertex AI API access configured.
 
 **Files Created / Modified:**
-- `backend/app/config.py` — Environment configuration management using `pydantic-settings` (`GEMINI_MODEL`, `LOCATION`).
-- `backend/app/ai/__init__.py` — Package exports.
-- `backend/app/ai/gemini_curator.py` — Multimodal Gemini client, prompt definitions, and structured response parser.
-- `backend/tests/test_gemini.py` — Unit tests using mock replay fixtures and gated live integration tests.
+- `backend/app/config.py`  -  Environment configuration management using `pydantic-settings` (`GEMINI_MODEL`, `LOCATION`).
+- `backend/app/ai/__init__.py`  -  Package exports.
+- `backend/app/ai/gemini_curator.py`  -  Multimodal Gemini client, prompt definitions, and structured response parser.
+- `backend/tests/test_gemini.py`  -  Unit tests using mock replay fixtures and gated live integration tests.
 
 **Implementation Details & Micro-Tasks:**
 1. Implement `Settings` in `backend/app/config.py` reading:
@@ -295,13 +295,13 @@ Assemble the computer vision, AI technical curation, compiler, and WIF serializa
 - `fastapi==0.115.5`, `uvicorn==0.32.1`, `httpx==0.27.2` active.
 
 **Files Created / Modified:**
-- `backend/app/__init__.py` — Root package exports.
-- `backend/app/api/__init__.py` — API routing module.
-- `backend/app/api/schemas.py` — REST request and response DTO schemas (including `ProvenanceMetadata`).
-- `backend/app/api/routes_swatch.py` — Endpoint for photo upload, CV deskewing, and Gemini technical curation (with `unavailable` fallback).
-- `backend/app/api/routes_compile.py` — Endpoint for master tile compilation, repeat expansion, validation, and WIF generation.
-- `backend/app/api/server.py` — FastAPI application instantiation, middleware, and lifecycle handlers.
-- `backend/tests/test_api.py` — Comprehensive API integration tests using Starlette/HTTPX `TestClient`.
+- `backend/app/__init__.py`  -  Root package exports.
+- `backend/app/api/__init__.py`  -  API routing module.
+- `backend/app/api/schemas.py`  -  REST request and response DTO schemas (including `ProvenanceMetadata`).
+- `backend/app/api/routes_swatch.py`  -  Endpoint for photo upload, CV deskewing, and Gemini technical curation (with `unavailable` fallback).
+- `backend/app/api/routes_compile.py`  -  Endpoint for master tile compilation, repeat expansion, validation, and WIF generation.
+- `backend/app/api/server.py`  -  FastAPI application instantiation, middleware, and lifecycle handlers.
+- `backend/tests/test_api.py`  -  Comprehensive API integration tests using Starlette/HTTPX `TestClient`.
 
 **Implementation Details & Micro-Tasks:**
 1. Define REST DTO schemas in `backend/app/api/schemas.py`:
@@ -343,13 +343,13 @@ Establish the React client architecture, TypeScript domain contracts, centralize
 - Phase 5 completed (Backend API contracts defined in `schemas.py`).
 
 **Files Created / Modified:**
-- `frontend/src/types/weave.ts` — TypeScript interfaces matching backend DTO schemas (11 canonical weaves + provenance).
-- `frontend/src/services/api.ts` — HTTP client service wrapping `fetch` with error boundaries.
-- `frontend/src/context/WeaveContext.tsx` — React Context and custom hook for workflow state.
-- `frontend/src/components/CaptureGuidance.tsx` — Modal displaying macro photography instructions and human-in-the-loop workflow.
-- `frontend/src/components/ProvenanceForm.tsx` — Optional form for user-supplied textile origin, maker, date, and history.
-- `frontend/src/components/SwatchCropper.tsx` — Interactive square cropping component.
-- `frontend/src/index.css` — Global monochrome styles and canvas reset.
+- `frontend/src/types/weave.ts`  -  TypeScript interfaces matching backend DTO schemas (11 canonical weaves + provenance).
+- `frontend/src/services/api.ts`  -  HTTP client service wrapping `fetch` with error boundaries.
+- `frontend/src/context/WeaveContext.tsx`  -  React Context and custom hook for workflow state.
+- `frontend/src/components/CaptureGuidance.tsx`  -  Modal displaying macro photography instructions and human-in-the-loop workflow.
+- `frontend/src/components/ProvenanceForm.tsx`  -  Optional form for user-supplied textile origin, maker, date, and history.
+- `frontend/src/components/SwatchCropper.tsx`  -  Interactive square cropping component.
+- `frontend/src/index.css`  -  Global monochrome styles and canvas reset.
 
 **Implementation Details & Micro-Tasks:**
 1. Define strict TypeScript interfaces in `frontend/src/types/weave.ts`: `WeaveFamily` (11 variations), `ProvenanceMetadata`, `BinaryMatrix`, `SwatchAnalysisResponse`, `CompileDraftRequest`, `CompileDraftResponse`, `WorkflowStep`.
@@ -378,10 +378,10 @@ Develop the interactive verification interface: an $N \times N$ master repeat ti
 - Phase 6 completed (`WeaveContext` active).
 
 **Files Created / Modified:**
-- `frontend/src/components/MasterTileEditor.tsx` — Interactive $N \times N$ toggle grid with repeat size selector and 11-weave preset dropdown.
-- `frontend/src/components/ColorPickerRow.tsx` — Independent warp and weft yarn color selectors.
-- `frontend/src/components/CanvasOverlay.tsx` — HTML5 Canvas rendering rectified photo with live tiled weave pattern and draggable phase alignment ($X/Y$ offset).
-- `frontend/src/components/VerificationPanel.tsx` — Container orchestrating the live feedback loop.
+- `frontend/src/components/MasterTileEditor.tsx`  -  Interactive $N \times N$ toggle grid with repeat size selector and 11-weave preset dropdown.
+- `frontend/src/components/ColorPickerRow.tsx`  -  Independent warp and weft yarn color selectors.
+- `frontend/src/components/CanvasOverlay.tsx`  -  HTML5 Canvas rendering rectified photo with live tiled weave pattern and draggable phase alignment ($X/Y$ offset).
+- `frontend/src/components/VerificationPanel.tsx`  -  Container orchestrating the live feedback loop.
 
 **Implementation Details & Micro-Tasks:**
 1. Implement `MasterTileEditor` in `frontend/src/components/MasterTileEditor.tsx`:
@@ -417,12 +417,12 @@ Wire the complete frontend user journey to the FastAPI backend, implementing the
 - Phase 6 and 7 completed (React components active).
 
 **Files Created / Modified:**
-- `frontend/src/components/DraftCard.tsx` — Standard 4-part loom draft visualization.
-- `frontend/src/components/WeaveNotes.tsx` — Technical weave explanation and user-supplied provenance display.
-- `frontend/src/components/ExportToolbar.tsx` — Project repeat counts, WIF 1.1 download button, and reset actions.
-- `frontend/src/components/ConstraintAlert.tsx` — Error banner explaining loom limit, uniform thread, or float violations.
-- `frontend/src/App.tsx` — Main application shell orchestrating the 6-step workflow.
-- `frontend/src/App.test.tsx` — Frontend integration tests using Vitest and React Testing Library.
+- `frontend/src/components/DraftCard.tsx`  -  Standard 4-part loom draft visualization.
+- `frontend/src/components/WeaveNotes.tsx`  -  Technical weave explanation and user-supplied provenance display.
+- `frontend/src/components/ExportToolbar.tsx`  -  Project repeat counts, WIF 1.1 download button, and reset actions.
+- `frontend/src/components/ConstraintAlert.tsx`  -  Error banner explaining loom limit, uniform thread, or float violations.
+- `frontend/src/App.tsx`  -  Main application shell orchestrating the 6-step workflow.
+- `frontend/src/App.test.tsx`  -  Frontend integration tests using Vitest and React Testing Library.
 
 **Implementation Details & Micro-Tasks:**
 1. Implement `DraftCard` rendering universal 4-part loom draft: Threading (top-left), Tie-Up (top-right), Treadling (bottom-right), and Drawdown (bottom-left) with crisp monochrome styling.
@@ -454,12 +454,12 @@ Package the unified full-stack application into an optimized, multi-stage Docker
 - Active GCP Project with billing enabled.
 
 **Files Created / Modified:**
-- `Dockerfile` — Production multi-stage build container.
-- `docker-compose.yml` — Local production container simulation.
-- `.dockerignore` — Build context exclusions.
-- `backend/app/storage/gcs.py` — Cloud Storage client for raw swatch archiving.
-- `backend/app/api/server.py` — Updated to mount compiled frontend static files and serve SPA fallback.
-- `deploy.sh` — Automated deployment script using Google Cloud CLI.
+- `Dockerfile`  -  Production multi-stage build container.
+- `docker-compose.yml`  -  Local production container simulation.
+- `.dockerignore`  -  Build context exclusions.
+- `backend/app/storage/gcs.py`  -  Cloud Storage client for raw swatch archiving.
+- `backend/app/api/server.py`  -  Updated to mount compiled frontend static files and serve SPA fallback.
+- `deploy.sh`  -  Automated deployment script using Google Cloud CLI.
 
 **Implementation Details & Micro-Tasks:**
 1. Update `backend/app/api/server.py` to mount compiled static assets under `/assets` and serve `index.html` fallback for client routes while preserving `/api/*` and `/healthz`.
@@ -493,9 +493,9 @@ Establish automated GitHub Actions CI workflows for linting, type-checking, unit
 - Phase 0 through Phase 9 completed.
 
 **Files Created / Modified:**
-- `.github/workflows/ci.yml` — Extended GitHub Actions workflow with container build and full matrix testing.
-- `backend/tests/test_adversarial.py` — Adversarial stress tests (extreme noise, blank images, invalid WIF payloads).
-- `scripts/verify_wif_handweaving.py` — Automated verification script testing generated WIFs against external parsing rules.
+- `.github/workflows/ci.yml`  -  Extended GitHub Actions workflow with container build and full matrix testing.
+- `backend/tests/test_adversarial.py`  -  Adversarial stress tests (extreme noise, blank images, invalid WIF payloads).
+- `scripts/verify_wif_handweaving.py`  -  Automated verification script testing generated WIFs against external parsing rules.
 
 **Implementation Details & Micro-Tasks:**
 1. Extend the baseline `.github/workflows/ci.yml` established in Phase 0 by adding:
@@ -529,19 +529,19 @@ Author comprehensive technical documentation, architecture specifications, repro
 - Phase 0 through Phase 10 completed and verified.
 
 **Files Created / Modified:**
-- `README.md` — Production-grade project overview and recruiter landing page.
-- `docs/architecture.md` — Deep technical architecture breakdown with diagrams.
-- `docs/wif_spec_guide.md` — Weaving Information File standard compliance explanation.
-- `SECURITY.md` — Vulnerability reporting and security posture.
-- `CONTRIBUTING.md` — Developer setup, code standards, and PR guidelines.
-- `LICENSE` — MIT License declaration.
-- `.env.example` — Template environment variables.
+- `README.md`  -  Production-grade project overview and recruiter landing page.
+- `docs/architecture.md`  -  Deep technical architecture breakdown with diagrams.
+- `docs/wif_spec_guide.md`  -  Weaving Information File standard compliance explanation.
+- `SECURITY.md`  -  Vulnerability reporting and security posture.
+- `CONTRIBUTING.md`  -  Developer setup, code standards, and PR guidelines.
+- `LICENSE`  -  MIT License declaration.
+- `.env.example`  -  Template environment variables.
 
 **Implementation Details & Micro-Tasks:**
 1. Author `README.md` with:
    - Technology badges (FastAPI, React, TypeScript, OpenCV, Vertex AI, Cloud Run, Pytest, MIT).
    - 10-second value proposition for cultural heritage preservation.
-   - Embedded high-res architecture diagram (`threadlore_architecture.png`).
+   - Embedded high-res architecture diagram (`docs/assets/threadlore_architecture.png`).
    - Core features breakdown.
    - One-command quickstart (`make setup && make run`).
    - API reference table (`/healthz`, `/api/swatch`, `/api/compile`, `/api/download-wif`).

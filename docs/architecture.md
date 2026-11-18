@@ -1,4 +1,4 @@
-# ThreadLore — Deep Technical Architecture & Mathematical Specification
+# ThreadLore: Deep Technical Architecture & Mathematical Specification
 
 > **"Preserve the weave, not just the photograph."**  
 > An AI-assisted, human-verified textile reconstruction pipeline that converts macro fabric photographs into mathematically validated, loom-compatible WIF 1.1 specifications.
