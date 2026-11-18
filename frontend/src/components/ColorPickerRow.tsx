@@ -21,6 +21,7 @@ export const ColorPickerRow: React.FC = () => {
     setRepeatWeft,
     units,
     setUnits,
+    analysisResult,
   } = useWeave();
 
   return (
@@ -68,6 +69,29 @@ export const ColorPickerRow: React.FC = () => {
 
       {/* Preset Swatches */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
+        {analysisResult?.dominant_warp_hex && analysisResult?.dominant_weft_hex && (
+          <button
+            type="button"
+            onClick={() => {
+              if (analysisResult.dominant_warp_hex) setWarpColor(analysisResult.dominant_warp_hex);
+              if (analysisResult.dominant_weft_hex) setWeftColor(analysisResult.dominant_weft_hex);
+            }}
+            className="flex items-center space-x-1.5 rounded-md border border-indigo-200 bg-indigo-50/70 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-100 dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300 dark:hover:bg-indigo-900/60 shadow-sm transition"
+            title="Restore yarn colors extracted from source swatch photo"
+          >
+            <div className="flex -space-x-1">
+              <span
+                className="inline-block h-3 w-3 rounded-full border border-white dark:border-zinc-800"
+                style={{ backgroundColor: analysisResult.dominant_warp_hex }}
+              />
+              <span
+                className="inline-block h-3 w-3 rounded-full border border-white dark:border-zinc-800"
+                style={{ backgroundColor: analysisResult.dominant_weft_hex }}
+              />
+            </div>
+            <span>Extracted from Swatch</span>
+          </button>
+        )}
         <span className="text-xs text-zinc-500">Preset Palettes:</span>
         {PALETTE_PRESETS.map((p) => (
           <button

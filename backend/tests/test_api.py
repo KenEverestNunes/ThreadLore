@@ -189,6 +189,10 @@ def test_swatch_upload_success(monkeypatch: pytest.MonkeyPatch) -> None:
     assert data["spacing_detected"] is True
     assert data["dx_px"] is not None
     assert data["dy_px"] is not None
+    assert data["dominant_warp_hex"] is not None
+    assert data["dominant_weft_hex"] is not None
+    assert data["dominant_warp_hex"].startswith("#")
+    assert data["dominant_weft_hex"].startswith("#")
 
 
 def test_swatch_upload_invalid_mime() -> None:
