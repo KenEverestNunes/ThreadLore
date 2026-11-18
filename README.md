@@ -97,8 +97,6 @@ The pipeline enforces mathematical verification at every stage, combining optica
 
 | Document | Purpose |
 |---|---|
-| 📋 **[Product Requirements Document (PRD)](docs/prd.md)** | Single source of truth for personas, requirements, and mathematical constraints. |
-| 🗺️ **[Implementation Roadmap](docs/roadmap.md)** | Engineering blueprint across all phases from initialization to Cloud Run deployment. |
 | 📐 **[Technical Architecture](docs/architecture.md)** | In-depth breakdown of 2D FFT, Gemini curation, and Boolean matrix factorization. |
 | 📜 **[WIF 1.1 Specification Guide](docs/wif_spec_guide.md)** | Standard compliance rules, section layout, and parser verification. |
 | 🖼️ **[Architecture Whiteboard](docs/architecture_whiteboard.html)** | Standalone browser whiteboard diagram. |
