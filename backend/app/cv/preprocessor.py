@@ -161,7 +161,9 @@ class ImagePreprocessor:
 
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 20, 0.2)
         flags = cv2.KMEANS_PP_CENTERS
-        _compactness, labels, centers = cv2.kmeans(pixels, k, None, criteria, 10, flags)
+        _compactness, labels, centers = cv2.kmeans(  # type: ignore[call-overload]
+            pixels, k, None, criteria, 10, flags
+        )
 
         # Count frequencies in each cluster
         counts = np.bincount(labels.flatten())
