@@ -6,6 +6,8 @@ spatial periodicities, rotation skew angles, and Gaussian noise.
 
 from __future__ import annotations
 
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -19,7 +21,7 @@ def generate_synthetic_weave(
     angle_deg: float = 0.0,
     noise_std: float = 5.0,
     seed: int = 42,
-) -> np.ndarray:
+) -> np.ndarray[Any, Any]:
     """Generate a synthetic 2D woven fabric image.
 
     Args:
@@ -90,4 +92,4 @@ def generate_synthetic_weave(
             img_gray, rot_matrix, (width, height), borderMode=cv2.BORDER_REFLECT
         )
 
-    return cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)
+    return cv2.cvtColor(img_gray, cv2.COLOR_GRAY2BGR)  # type: ignore[no-any-return]

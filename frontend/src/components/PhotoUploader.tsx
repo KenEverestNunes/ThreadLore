@@ -82,7 +82,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
         <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
           Preserve the weave, not just the photograph.
         </h2>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-lg mx-auto">
+        <p className="text-sm text-zinc-700 dark:text-zinc-300 max-w-lg mx-auto font-normal">
           Convert macro textile photographs into mathematically verified, 4-shaft loom drafts and
           interoperable WIF 1.1 specifications.
         </p>
@@ -124,7 +124,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
         <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           Upload Textile Swatch Photo
         </h3>
-        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
           Drag and drop a macro photograph, or click to browse (JPEG, PNG, WebP up to 2MB).
         </p>
 
@@ -150,7 +150,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
 
         {/* Real macro fabric samples */}
         <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-          <span className="text-zinc-500 font-medium">Real macro samples:</span>
+          <span className="text-zinc-600 dark:text-zinc-400 font-medium">Real macro samples:</span>
           <button
             type="button"
             onClick={() => loadRealPhotoSample("tartan_2_2_twill.jpg")}
@@ -168,8 +168,8 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onOpenGuidance }) 
         </div>
 
         {/* Synthetic procedural samples */}
-        <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-zinc-500">
-          <span>Synthetic / simulated:</span>
+        <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] text-zinc-600 dark:text-zinc-400">
+          <span className="font-medium">Synthetic / simulated:</span>
           <button
             type="button"
             onClick={() => loadSampleSwatch("plain")}

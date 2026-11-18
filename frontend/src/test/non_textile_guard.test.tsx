@@ -65,5 +65,18 @@ describe('Issue #46 - Non-Textile Image Ingestion Guard', () => {
       expect(alert).toHaveTextContent(/Not a Woven Textile/i);
       expect(alert).toHaveTextContent(/does not appear to be a woven fabric/i);
     });
+
+    // 5. Verify that draft compilation is locked/disabled
+    const compileBtn = screen.getByRole('button', { name: /Compile 4-Shaft Loom Draft/i });
+    expect(compileBtn).toBeDisabled();
+
+    // 6. Verify clicking "Adjust Crop" recovery button navigates back to crop step
+    const adjustCropBtn = screen.getByRole('button', { name: /Adjust Crop/i });
+    expect(adjustCropBtn).toBeInTheDocument();
+    fireEvent.click(adjustCropBtn);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Square Macro Swatch Crop/i)).toBeInTheDocument();
+    });
   });
 });

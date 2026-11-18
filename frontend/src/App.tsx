@@ -159,7 +159,7 @@ const Header: React.FC = () => {
           <ThreadLoreIcon className="h-10 w-10 shadow-sm flex-shrink-0" size={40} />
           <div>
             <span className="text-lg sm:text-xl font-bold tracking-tight">ThreadLore</span>
-            <span className="hidden sm:inline-block ml-2.5 text-xs sm:text-sm text-zinc-400 font-normal">
+            <span className="hidden sm:inline-block ml-2.5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 font-normal">
               | Preserve the weave, not just the photograph
             </span>
           </div>
@@ -212,12 +212,6 @@ const Header: React.FC = () => {
               <Monitor className="h-3.5 w-3.5 pointer-events-none" />
             </button>
           </div>
-
-          <span className="flex items-center space-x-1.5 rounded-full border border-zinc-200 bg-zinc-100/60 px-2.5 py-1 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="hidden sm:inline">4-Shaft Rising-Shed Engine</span>
-            <span className="sm:hidden">4-Shaft</span>
-          </span>
         </div>
       </div>
     </header>

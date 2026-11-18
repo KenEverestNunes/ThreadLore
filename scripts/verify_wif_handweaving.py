@@ -107,7 +107,7 @@ def main() -> int:
     from backend.app.core.wif import serialize_wif
 
     print("============================================================")
-    print(" ThreadLore — WIF 1.1 Compliance & Interoperability Verifier")
+    print(" ThreadLore: WIF 1.1 Compliance & Interoperability Verifier")
     print("============================================================")
 
     twill_2_2 = [

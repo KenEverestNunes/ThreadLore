@@ -14,7 +14,7 @@
 ### 1.1 Problem Statement
 Traditional woven textiles encode generations of cultural heritage, ancestral mathematics, and artisanal craftsmanship. Across the world, physical heritage fabrics survive in museums, community archives, and family heirlooms, but their original weaving instructions (loom drafts) have been lost. 
 
-Reconstructing a weaving draft manually from physical cloth requires rare master-weaver expertise, optical magnification, and tedious grid plotting. Existing digital weaving software (e.g., WeavePoint, Handweaving.net) functions only as manual design editors—they cannot ingest physical textile photographs and translate them into verified mechanical loom instructions.
+Reconstructing a weaving draft manually from physical cloth requires rare master-weaver expertise, optical magnification, and tedious grid plotting. Existing digital weaving software (e.g., WeavePoint, Handweaving.net) functions only as manual design editors - they cannot ingest physical textile photographs and translate them into verified mechanical loom instructions.
 
 ### 1.2 Product Vision & Positioning
 **"Preserve the weave, not just the photograph."**
@@ -305,21 +305,21 @@ Nov 19:          [Integration & Demo Asset]    ───► End-to-End Tests + 6
 Nov 20:          [Launch & Live Submission]    ───► Product Hunt Launch & Contest Opt-in
 ```
 
-### Day 1: November 16 (Today) — Core Math & Serializer
+### Day 1: November 16 (Today)  -  Core Math & Serializer
 - [ ] Implement Boolean Matrix Factorization algorithm (`compiler.py`).
 - [ ] Implement Cyclic Float Validator (`validator.py`).
 - [ ] Implement standards-compliant WIF 1.1 Serializer (`wif_serializer.py`).
 - [ ] Write Pytest suite verifying 20 standard drafts (Plain weave, $2/1$ twill, $2/2$ twill, $3/1$ twill).
 - [ ] Test `.wif` output in independent external viewer (Handweaving.net parser).
 
-### Day 2: November 17 — Cloud Run Services & AI Integration
+### Day 2: November 17  -  Cloud Run Services & AI Integration
 - [ ] Build FastAPI application with `/api/swatch` and `/api/compile` endpoints.
 - [ ] Implement OpenCV preprocessing pipeline (FFT magnitude spectrum, $\Delta x / \Delta y$ extraction, affine deskew).
 - [ ] Implement Vertex AI Gemini 2.0 Flash curation client with structured JSON output.
 - [ ] Dockerize application with multi-stage build (`python:3.11-slim`, `opencv-python-headless`).
 - [ ] Deploy initial service to Google Cloud Run; verify `/healthz` endpoint.
 
-### Day 3: November 18 — React Frontend & Verification Canvas
+### Day 3: November 18  -  React Frontend & Verification Canvas
 - [ ] Set up React + TypeScript + Tailwind CSS project with Vite.
 - [ ] Build Swatch Cropper component (1:1 square lock).
 - [ ] Build HTML5 Canvas Live Tiled Overlay with interactive $\Delta x$, $\Delta y$, and opacity sliders.
@@ -327,7 +327,7 @@ Nov 20:          [Launch & Live Submission]    ───► Product Hunt Launch 
 - [ ] Integrate primary warp and weft color pickers.
 - [ ] Connect frontend to Cloud Run API.
 
-### Day 4: November 19 — Integration, Demo Recording & Submission Prep
+### Day 4: November 19  -  Integration, Demo Recording & Submission Prep
 - [ ] End-to-end integration testing across real photographed textile swatches.
 - [ ] Set `min-instances: 1` on Cloud Run service.
 - [ ] Record high-definition 60–90 second product walkthrough video:
@@ -338,7 +338,7 @@ Nov 20:          [Launch & Live Submission]    ───► Product Hunt Launch 
 - [ ] Prepare Product Hunt launch copy, tagline, screenshots, and architecture write-up.
 - [ ] Schedule Product Hunt launch for November 20.
 
-### Day 5: November 20 — Launch Day
+### Day 5: November 20  -  Launch Day
 - [ ] Launch ThreadLore publicly on Product Hunt.
 - [ ] Opt into the official Google Cloud Run Hackathon contest.
 - [ ] Publish detailed architecture breakdown in the maker comment explaining Cloud Run backend and Vertex AI usage.

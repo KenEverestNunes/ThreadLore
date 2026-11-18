@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, ChevronRight, Cpu, Loader2, Sparkles } from "lucide-react";
+import { AlertCircle, ChevronRight, Cpu, Crop, Loader2, RotateCcw, Sparkles } from "lucide-react";
 import { useWeave } from "../context/WeaveContext";
 import { CanvasOverlay } from "./CanvasOverlay";
 import { MasterTileEditor } from "./MasterTileEditor";
@@ -13,6 +13,8 @@ export const VerificationPanel: React.FC = () => {
     isCompiling,
     triggerCompile,
     error,
+    setStep,
+    resetWorkflow,
   } = useWeave();
 
   return (
@@ -37,7 +39,7 @@ export const VerificationPanel: React.FC = () => {
                   </span>
                 )}
               </h3>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-zinc-600 dark:text-zinc-400">
                 {isAnalyzing
                   ? "Analyzing optical thread density and reconstructing weave interlacing..."
                   : analysisResult?.technical_description ||
@@ -48,8 +50,13 @@ export const VerificationPanel: React.FC = () => {
 
           <button
             onClick={triggerCompile}
-            disabled={isCompiling || isAnalyzing}
-            className="flex items-center space-x-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white shadow hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition"
+            disabled={isCompiling || isAnalyzing || analysisResult?.is_woven_textile === false}
+            title={
+              analysisResult?.is_woven_textile === false
+                ? "Draft compilation disabled: Uploaded photo is not a woven textile"
+                : "Compile 4-shaft loom draft"
+            }
+            className="flex items-center space-x-2 rounded-xl bg-zinc-900 px-5 py-2.5 text-xs font-semibold text-white shadow hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition"
           >
             {isCompiling ? (
               <>
@@ -70,15 +77,35 @@ export const VerificationPanel: React.FC = () => {
         {analysisResult?.is_woven_textile === false && (
           <div
             role="alert"
-            className="mt-4 flex items-start space-x-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 shadow-sm"
+            className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 shadow-sm"
           >
-            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
-            <div className="flex-1 space-y-1">
-              <span className="font-semibold text-sm block">Not a Woven Textile</span>
-              <p>
-                The uploaded photograph does not appear to be a woven fabric (e.g. non-textile object, solid surface, or basketry).
-                Please upload a macro fabric swatch with visible interlaced yarns for 4-shaft loom reconstruction.
-              </p>
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+              <div className="space-y-1">
+                <span className="font-semibold text-sm block">Not a Woven Textile</span>
+                <p>
+                  The uploaded photograph does not appear to be a woven fabric (e.g. non-textile object, solid surface, or basketry).
+                  Draft compilation is locked. Please crop a clearer section of yarns or upload a macro fabric photo.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 shrink-0 sm:self-center pt-2 sm:pt-0">
+              <button
+                type="button"
+                onClick={() => setStep("crop")}
+                className="flex items-center space-x-1.5 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100/80 dark:border-red-800 dark:bg-zinc-900 dark:text-red-300 dark:hover:bg-zinc-800 shadow-sm transition"
+              >
+                <Crop className="h-3.5 w-3.5" />
+                <span>Adjust Crop</span>
+              </button>
+              <button
+                type="button"
+                onClick={resetWorkflow}
+                className="flex items-center space-x-1.5 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100/80 dark:border-red-800 dark:bg-zinc-900 dark:text-red-300 dark:hover:bg-zinc-800 shadow-sm transition"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>Change Photo</span>
+              </button>
             </div>
           </div>
         )}
