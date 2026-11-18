@@ -52,13 +52,9 @@ describe('Issue #18 - Optical Spacing Slider Limits Regression Test', () => {
         expect(screen.getByText(/Interactive Photo & Weave Overlay/i)).toBeInTheDocument();
       });
 
-      // Find the Δx and Δy range sliders
-      const rangeSliders = screen.getAllByRole('slider');
-      // The overlay transparency slider is index 0; spacingX is index 1; spacingY is index 2
-      expect(rangeSliders.length).toBeGreaterThanOrEqual(3);
-
-      const sliderX = rangeSliders[1];
-      const sliderY = rangeSliders[2];
+      // Find the Δx and Δy range sliders via their accessible labels
+      const sliderX = screen.getByLabelText(/Warp Spacing/i);
+      const sliderY = screen.getByLabelText(/Weft Spacing/i);
 
       const minX = parseFloat(sliderX.getAttribute('min') || '0');
       const maxX = parseFloat(sliderX.getAttribute('max') || '0');

@@ -490,16 +490,20 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #024: Non-Textile Image Ingestion Guard and Semantic Validation
 - **GitHub Issue:** [#46](https://github.com/KenEverestNunes/ThreadLore/issues/46)
-- **Status:** 🔴 Open (Planned)
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (AI Robustness / Error Handling)
 - **Reported Date:** 2026-11-17
-- **Component:** `backend/app/ai/gemini_curator.py`, `backend/app/api/schemas.py`, `frontend/src/components/VerificationPanel.tsx`
+- **Component:** `backend/app/ai/gemini_curator.py`, `backend/app/api/schemas.py`, `backend/app/api/routes_swatch.py`, `frontend/src/components/VerificationPanel.tsx`, `frontend/src/components/PhotoUploader.tsx`
 - **Description:**
-  If a user uploads a non-textile image (e.g. an apple, a face, or a landscape), OpenCV FFT fails to find repeating frequency peaks and Gemini assigns 0.0 confidence, which currently drops the user into manual master tile editing. Users could be confused as to why a grid overlay appears over an unrelated object.
+  If a user uploads a non-textile image (e.g. an apple, a face, or a landscape), OpenCV FFT fails to find repeating frequency peaks and Gemini assigns 0.0 confidence, which previously dropped the user into manual master tile editing. Users could be confused as to why a grid overlay appears over an unrelated object.
 - **Expected Behavior:**
-  Gemini curation schema should include an explicit `is_woven_textile: bool` flag. If a non-textile object is uploaded, the app should reject the swatch with a clear user banner: "Not a Woven Textile: The uploaded photograph does not appear to be woven fabric. Please upload a macro fabric swatch."
+  Gemini curation schema should include an explicit `is_woven_textile: bool` flag. If a non-textile object is uploaded, the app should reject the swatch with a clear user banner: "Not a Woven Textile: The uploaded photograph does not appear to be a woven fabric. Please upload a macro fabric swatch." Additionally, bundle high-resolution real-world macro photo samples (Tartan 2/2 Twill and Denim 3/1 Twill) in the uploader for reliable demonstrations.
 - **Resolution / Notes:**
-  Planned: Extend `GeminiWeaveSuggestion` schema with `is_woven_textile`, update prompt instructions, and display a prominent warning banner when `is_woven_textile` is false.
+  1. Extended `GeminiWeaveSuggestion` schema with `is_woven_textile: bool` and updated Gemini system prompt instructions.
+  2. Exposed `is_woven_textile` through `SwatchAnalysisResponse` in `schemas.py` and `routes_swatch.py`.
+  3. Added prominent non-textile alert banner in `VerificationPanel.tsx`.
+  4. Bundled real macro photo samples (`tartan_2_2_twill.jpg` and `denim_3_1_twill.jpg`) in `frontend/public/samples/` with 1-click sample buttons in `PhotoUploader.tsx`.
+  5. Added comprehensive backend unit tests in `test_gemini.py` and frontend tests in `non_textile_guard.test.tsx` and `real_sample_buttons.test.tsx`.
 
 ---
 

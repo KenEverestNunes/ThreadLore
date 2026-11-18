@@ -40,6 +40,11 @@ Follow these strict invariants:
    provenance metadata. Keep the technical description focused on yarn interlacing and physical weave physics.
 4. CONFIDENCE: Treat confidence as an uncalibrated heuristic indicator [0.0, 1.0]. If the swatch is blurry,
    fuzzed, damaged, or ambiguous, assign confidence < 0.60 so the weaver is prompted to verify manually.
+5. TEXTILE FABRIC VALIDATION: Determine whether the image actually depicts a loom-woven or spun-yarn textile fabric (cloth, tweed, denim, linen, wool, cotton, silk, canvas, etc.).
+   - If the image is a non-textile object (e.g. fruit, apple, face, animal, nature, wood, wicker/basket, plain surface, paper, building, electronic screen, non-woven plastic):
+     Set is_woven_textile to false, status to "unavailable", confidence to 0.0, and technical_description to: "Not a Woven Textile: The uploaded photograph does not appear to be a woven fabric. Please upload a macro fabric swatch."
+   - If the image IS a woven textile:
+     Set is_woven_textile to true.
 """
 
 
@@ -49,6 +54,10 @@ class GeminiWeaveSuggestion(BaseModel):
     status: Literal["success", "unavailable"] = Field(
         default="success",
         description="Identification status. 'unavailable' if uncertain or failed.",
+    )
+    is_woven_textile: bool = Field(
+        default=True,
+        description="Whether the photograph depicts a loom-woven or interworked textile fabric rather than a non-textile object (fruit, face, scenery, animal, solid surface, basketry, etc.).",
     )
     weave_family: WeaveFamily = Field(
         default=WeaveFamily.CUSTOM,
@@ -115,15 +124,24 @@ class GeminiCurator:
                 self._client = None
         return self._client
 
-    def fallback_suggestion(self, reason: str = "") -> GeminiWeaveSuggestion:
+    def fallback_suggestion(
+        self, reason: str = "", is_woven_textile: bool = True
+    ) -> GeminiWeaveSuggestion:
         """Return a safe 'unavailable' suggestion prompting manual weaver verification."""
-        desc = "Weave structure could not be identified with certainty. "
-        if reason:
-            desc += f"({reason}) "
-        desc += "Please select a weave preset or configure the master tile manually."
+        if not is_woven_textile:
+            desc = (
+                "Not a Woven Textile: The uploaded photograph does not appear to be a woven "
+                "fabric. Please upload a macro fabric swatch."
+            )
+        else:
+            desc = "Weave structure could not be identified with certainty. "
+            if reason:
+                desc += f"({reason}) "
+            desc += "Please select a weave preset or configure the master tile manually."
 
         return GeminiWeaveSuggestion(
             status="unavailable",
+            is_woven_textile=is_woven_textile,
             weave_family=WeaveFamily.CUSTOM,
             twill_direction=None,
             repeat_size=2,
@@ -176,6 +194,13 @@ class GeminiCurator:
             raw_text = response.text or ""
             data: dict[str, Any] = json.loads(raw_text)
             suggestion = GeminiWeaveSuggestion.model_validate(data)
+
+            # Enforce non-textile object guard
+            if not suggestion.is_woven_textile:
+                logger.info("Uploaded image classified as non-textile object")
+                return self.fallback_suggestion(
+                    "Image does not depict woven fabric", is_woven_textile=False
+                )
 
             # Enforce uncalibrated confidence threshold gate
             if suggestion.confidence < self.CONFIDENCE_THRESHOLD:

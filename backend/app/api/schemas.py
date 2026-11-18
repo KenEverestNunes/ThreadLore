@@ -20,6 +20,10 @@ class SwatchAnalysisResponse(BaseModel):
     status: Literal["success", "unavailable", "uncertain"] = Field(
         description="Overall swatch analysis status."
     )
+    is_woven_textile: bool = Field(
+        default=True,
+        description="True if the image depicts a woven textile fabric; false if non-textile object is detected.",
+    )
     weave_family: WeaveFamily = Field(
         description="Suggested weave structure family classification."
     )

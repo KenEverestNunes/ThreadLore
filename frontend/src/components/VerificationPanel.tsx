@@ -66,6 +66,23 @@ export const VerificationPanel: React.FC = () => {
           </button>
         </div>
 
+        {/* Non-Textile Ingestion Guard Warning Banner */}
+        {analysisResult?.is_woven_textile === false && (
+          <div
+            role="alert"
+            className="mt-4 flex items-start space-x-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-800 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300 shadow-sm"
+          >
+            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+            <div className="flex-1 space-y-1">
+              <span className="font-semibold text-sm block">Not a Woven Textile</span>
+              <p>
+                The uploaded photograph does not appear to be a woven fabric (e.g. non-textile object, solid surface, or basketry).
+                Please upload a macro fabric swatch with visible interlaced yarns for 4-shaft loom reconstruction.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Diagnostic error / warning */}
         {error && (
           <div className="mt-3 flex items-start space-x-2 rounded-lg bg-amber-50 p-2.5 text-xs text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-900">

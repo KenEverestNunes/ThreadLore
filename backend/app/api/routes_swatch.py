@@ -95,6 +95,7 @@ async def analyze_swatch(
 
     return SwatchAnalysisResponse(
         status=composite_status,
+        is_woven_textile=ai_res.is_woven_textile,
         weave_family=ai_res.weave_family,
         twill_direction=ai_res.twill_direction,
         repeat_size=ai_res.repeat_size,
