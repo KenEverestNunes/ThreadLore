@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # =============================================================================
-# ThreadLore — Automated Google Cloud Run Deployment Script
+# ThreadLore: Automated Google Cloud Run Deployment Script
 # =============================================================================
 set -euo pipefail
 
-PROJECT_ID="${PROJECT_ID:-threadlore-prod}"
+PROJECT_ID="${PROJECT_ID:-threadlore-2026}"
 REGION="${REGION:-us-central1}"
 SERVICE_NAME="${SERVICE_NAME:-threadlore}"
 GEMINI_LOCATION="${GEMINI_LOCATION:-global}"
 GEMINI_MODEL="${GEMINI_MODEL:-gemini-3.8-flash}"
-GCS_BUCKET="${GCS_BUCKET:-threadlore-swatches-prod}"
+GCS_BUCKET="${GCS_BUCKET:-threadlore-swatches-2026}"
 
 echo "============================================================"
 echo " Deploying ThreadLore to Google Cloud Run"

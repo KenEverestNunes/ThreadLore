@@ -10,11 +10,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """ThreadLore system settings loaded from environment or defaults."""
 
-    PROJECT_ID: str = "threadlore-prod"
+    PROJECT_ID: str = "threadlore-2026"
     LOCATION: str = "global"  # Gemini 3.8 Flash endpoint location (decoupled from Cloud Run region)
     GEMINI_MODEL: str = "gemini-3.8-flash"
     GEMINI_API_KEY: str | None = None
-    GCS_BUCKET_NAME: str = "threadlore-swatches-prod"
+    GCS_BUCKET_NAME: str = "threadlore-swatches-2026"
     MAX_UPLOAD_SIZE_BYTES: int = 2 * 1024 * 1024  # 2MB
     ALLOW_EXTERNAL_IMAGE_PROCESSING: bool = True  # Policy control gate for external AI analysis
     CORS_ORIGINS: list[str] = [

@@ -8,8 +8,8 @@ services:
       - "8080:8080"
     environment:
       - PORT=8080
-      - PROJECT_ID=threadlore-prod
+      - PROJECT_ID=threadlore-2026
       - LOCATION=global
       - GEMINI_MODEL=gemini-3.8-flash
-      - GCS_BUCKET_NAME=threadlore-swatches-prod
+      - GCS_BUCKET_NAME=threadlore-swatches-2026
     restart: unless-stopped
