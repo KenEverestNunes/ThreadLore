@@ -66,6 +66,14 @@ class SwatchAnalysisResponse(BaseModel):
     rotation_degrees: float = Field(
         description="Detected fabric skew angle in degrees.",
     )
+    dominant_warp_hex: str | None = Field(
+        default=None,
+        description="Dominant warp yarn color hex code extracted via K-Means clustering.",
+    )
+    dominant_weft_hex: str | None = Field(
+        default=None,
+        description="Dominant weft yarn color hex code extracted via K-Means clustering.",
+    )
 
 
 class CompileDraftRequest(BaseModel):

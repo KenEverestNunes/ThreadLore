@@ -154,3 +154,31 @@ def test_gemini_system_prompt_includes_textile_validation_guard() -> None:
     assert "non-textile" in prompt_lower
     assert "is_woven_textile" in prompt_lower
 
+
+def test_gemini_curator_policy_gate_blocks_external_call() -> None:
+    """Verify ALLOW_EXTERNAL_IMAGE_PROCESSING=False prevents external API egress."""
+    mock_client = MagicMock()
+    settings = Settings(ALLOW_EXTERNAL_IMAGE_PROCESSING=False)
+    curator = GeminiCurator(client=mock_client, settings=settings)
+
+    result = curator.analyze_swatch(b"swatch_bytes")
+
+    assert result.status == "unavailable"
+    assert "not permitted by policy" in result.technical_description.lower()
+    mock_client.models.generate_content.assert_not_called()
+
+
+def test_gemini_suggestion_model_validator_normalizes_inconsistent_fields() -> None:
+    """Verify model validator forces status=unavailable and confidence=0.0 when is_woven_textile is False."""
+    suggestion = GeminiWeaveSuggestion.model_validate({
+        "status": "success",
+        "is_woven_textile": False,
+        "confidence": 0.95,
+        "technical_description": "Apple photo",
+    })
+    assert suggestion.status == "unavailable"
+    assert suggestion.confidence == 0.0
+    assert suggestion.is_woven_textile is False
+    assert "not a woven textile" in suggestion.technical_description.lower()
+
+

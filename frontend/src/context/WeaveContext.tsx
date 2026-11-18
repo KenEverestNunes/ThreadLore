@@ -131,6 +131,14 @@ export const WeaveProvider: React.FC<{
       const res = await analyzeSwatch(blob);
       setAnalysisResult(res);
 
+      // Auto-populate dominant yarn colors extracted from swatch (Issue #45)
+      if (res.dominant_warp_hex) {
+        setWarpColor(res.dominant_warp_hex);
+      }
+      if (res.dominant_weft_hex) {
+        setWeftColor(res.dominant_weft_hex);
+      }
+
       if (res.default_matrix && res.default_matrix.length > 0) {
         setMasterMatrix(res.default_matrix);
         setRepeatSize(res.repeat_size);

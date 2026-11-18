@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str | None = None
     GCS_BUCKET_NAME: str = "threadlore-swatches-prod"
     MAX_UPLOAD_SIZE_BYTES: int = 2 * 1024 * 1024  # 2MB
+    ALLOW_EXTERNAL_IMAGE_PROCESSING: bool = True  # Policy control gate for external AI analysis
     CORS_ORIGINS: list[str] = [
         "http://localhost:5173",
         "http://localhost:3000",

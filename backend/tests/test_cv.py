@@ -165,3 +165,40 @@ def test_fft_profiler_uniform_image() -> None:
     assert result.status == "uncertain"
     assert result.dx_px is None
     assert result.dy_px is None
+
+
+def test_extract_dominant_colors_bicolor() -> None:
+    """Verify K-Means extracts distinct dominant warp and weft hex colors."""
+    # Create image with vertical stripes of dark blue and gold
+    img = np.zeros((100, 100, 3), dtype=np.uint8)
+    # BGR format: dark blue (B=139, G=58, R=30 -> #1E3A8B), gold (B=0, G=215, R=255 -> #FFD700)
+    img[:, :50] = [139, 58, 30]
+    img[:, 50:] = [0, 215, 255]
+
+    warp_hex, weft_hex = ImagePreprocessor.extract_dominant_colors(img, k=2)
+
+    assert warp_hex.startswith("#")
+    assert len(warp_hex) == 7
+    assert weft_hex.startswith("#")
+    assert len(weft_hex) == 7
+    assert warp_hex != weft_hex
+
+    # Check colors correspond to dark blue and gold
+    extracted_set = {warp_hex.upper(), weft_hex.upper()}
+    assert "#1E3A8B" in extracted_set
+    assert "#FFD700" in extracted_set
+
+
+def test_extract_dominant_colors_monochrome_contrast_fallback() -> None:
+    """Verify monochromatic images generate contrasting tints for loom draft visibility."""
+    # Pure white fabric
+    white_img = np.full((100, 100, 3), 255, dtype=np.uint8)
+    c1, c2 = ImagePreprocessor.extract_dominant_colors(white_img, k=2)
+
+    assert c1.startswith("#")
+    assert c2.startswith("#")
+    assert c1 != c2
+    assert c1.upper() == "#FFFFFF"
+    # c2 should have luminance reduced to create contrast
+    assert c2.upper() == "#D7D7D7"
+

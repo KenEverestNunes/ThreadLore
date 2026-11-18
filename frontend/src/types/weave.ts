@@ -51,6 +51,8 @@ export interface SwatchAnalysisResponse {
   dy_px?: number | null;
   spacing_detected: boolean;
   rotation_degrees: number;
+  dominant_warp_hex?: string | null;
+  dominant_weft_hex?: string | null;
 }
 
 export interface CompileDraftRequest {

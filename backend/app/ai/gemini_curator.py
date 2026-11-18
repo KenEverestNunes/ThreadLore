@@ -13,7 +13,7 @@ from typing import Any, Literal
 
 from google import genai
 from google.genai import types
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from backend.app.config import Settings, get_settings
 from backend.app.core.types import (
@@ -57,7 +57,11 @@ class GeminiWeaveSuggestion(BaseModel):
     )
     is_woven_textile: bool = Field(
         default=True,
-        description="Whether the photograph depicts a loom-woven or interworked textile fabric rather than a non-textile object (fruit, face, scenery, animal, solid surface, basketry, etc.).",
+        description=(
+            "Model-claimed advisory classification indicating whether the photograph depicts "
+            "a loom-woven or interworked textile fabric rather than a non-textile object. "
+            "Subject to deterministic confidence and policy validation."
+        ),
     )
     weave_family: WeaveFamily = Field(
         default=WeaveFamily.CUSTOM,
@@ -91,6 +95,28 @@ class GeminiWeaveSuggestion(BaseModel):
         default=None,
         description="Advisory notes on float lengths or snagging risks for practical weaving.",
     )
+
+    @model_validator(mode="after")
+    def validate_consistency(self) -> GeminiWeaveSuggestion:
+        """Validate consistency of model-claimed advisory classifications."""
+        # Non-textile classifications must fail closed to unavailable status with zero confidence
+        if not self.is_woven_textile:
+            self.status = "unavailable"
+            self.confidence = 0.0
+            if (
+                not self.technical_description
+                or "not a woven textile" not in self.technical_description.lower()
+            ):
+                self.technical_description = (
+                    "Not a Woven Textile: The uploaded photograph does not appear to be a woven fabric."
+                )
+        # Any unavailable status must have 0.0 confidence
+        if self.status == "unavailable":
+            self.confidence = 0.0
+        # Normalization: low confidence below threshold is marked unavailable
+        elif self.confidence < 0.60:
+            self.status = "unavailable"
+        return self
 
 
 class GeminiCurator:
@@ -172,6 +198,13 @@ class GeminiCurator:
         if cli is None:
             return self.fallback_suggestion("AI service not initialized")
 
+        # Policy control gate: prevent unauthorized external data egress if disabled
+        if not getattr(self.settings, "ALLOW_EXTERNAL_IMAGE_PROCESSING", True):
+            logger.warning(
+                "External image analysis blocked by policy (ALLOW_EXTERNAL_IMAGE_PROCESSING is false)"
+            )
+            return self.fallback_suggestion("External image analysis not permitted by policy")
+
         image_part = types.Part.from_bytes(data=image_bytes, mime_type=mime_type)
         prompt_text = (
             "Analyze this textile macro swatch image. Identify the weave structure, "
@@ -197,17 +230,23 @@ class GeminiCurator:
 
             # Enforce non-textile object guard
             if not suggestion.is_woven_textile:
-                logger.info("Uploaded image classified as non-textile object")
+                logger.info(
+                    "Uploaded image classified as non-textile object (confidence=%.2f)",
+                    suggestion.confidence,
+                )
                 return self.fallback_suggestion(
                     "Image does not depict woven fabric", is_woven_textile=False
                 )
 
-            # Enforce uncalibrated confidence threshold gate
-            if suggestion.confidence < self.CONFIDENCE_THRESHOLD:
+            # Enforce conservative confidence threshold gate
+            if (
+                suggestion.confidence < self.CONFIDENCE_THRESHOLD
+                or suggestion.status == "unavailable"
+            ):
                 logger.info(
-                    "Gemini confidence (%.2f) below threshold (%.2f); marking unavailable",
+                    "Gemini suggestion gated (confidence=%.2f, status=%s); marking unavailable",
                     suggestion.confidence,
-                    self.CONFIDENCE_THRESHOLD,
+                    suggestion.status,
                 )
                 return self.fallback_suggestion(
                     f"Heuristic confidence {suggestion.confidence:.2f} below threshold"

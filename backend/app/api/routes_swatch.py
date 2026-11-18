@@ -84,6 +84,12 @@ async def analyze_swatch(
     curator = GeminiCurator(settings=settings)
     ai_res = curator.analyze_swatch(gemini_payload, mime_type="image/jpeg")
 
+    # Extract dominant yarn colors via OpenCV K-Means clustering (Issue #45)
+    try:
+        dominant_warp, dominant_weft = ImagePreprocessor.extract_dominant_colors(raw_bgr)
+    except Exception:
+        dominant_warp, dominant_weft = None, None
+
     # Determine composite status
     composite_status: Literal["success", "unavailable", "uncertain"]
     if ai_res.status == "unavailable":
@@ -107,4 +113,6 @@ async def analyze_swatch(
         dy_px=cv_res.dy_px,
         spacing_detected=cv_res.spacing_detected,
         rotation_degrees=cv_res.rotation_degrees,
+        dominant_warp_hex=dominant_warp,
+        dominant_weft_hex=dominant_weft,
     )

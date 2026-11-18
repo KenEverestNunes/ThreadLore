@@ -475,16 +475,21 @@ This document tracks identified bugs, functional discrepancies, user interface e
 
 ### Issue #023: Automatic Dominant Yarn Color Extraction via OpenCV K-Means Clustering
 - **GitHub Issue:** [#45](https://github.com/KenEverestNunes/ThreadLore/issues/45)
-- **Status:** 🔴 Open (Planned)
+- **Status:** 🟢 Resolved
 - **Severity:** Medium (UX / Visual Polish)
 - **Reported Date:** 2026-11-17
-- **Component:** `backend/app/cv/preprocessor.py`, `backend/app/api/routes_swatch.py`, `frontend/src/context/WeaveContext.tsx`
+- **Component:** `backend/app/cv/preprocessor.py`, `backend/app/api/schemas.py`, `backend/app/api/routes_swatch.py`, `frontend/src/context/WeaveContext.tsx`, `frontend/src/components/ColorPickerRow.tsx`
 - **Description:**
   When a user crops and analyzes a fabric swatch, the warp and weft yarn colors in Screen 3 default to hardcoded navy (`#1E293B`) and off-white (`#E2E8F0`). If the user uploads a red, green, or yellow fabric, the draft colors look disconnected from the source photograph until manually adjusted with the color pickers.
 - **Expected Behavior:**
   The backend swatch analysis pipeline should use OpenCV K-Means clustering (k=2) on the cropped swatch image to extract the two dominant yarn color hex codes (`dominant_warp_hex` and `dominant_weft_hex`). The frontend should automatically initialize the warp and weft palette to these extracted colors while still allowing full user override via the color pickers and preset buttons.
 - **Resolution / Notes:**
-  Planned: Implement 5ms OpenCV K-Means clustering in `ImagePreprocessor`, expose detected hex colors in `SwatchAnalysisResponse`, and initialize `warpColor`/`weftColor` in `WeaveContext`.
+  1. Implemented `ImagePreprocessor.extract_dominant_colors(image_bgr, k=2)` using OpenCV K-Means clustering with k-means++ initialization on downsampled 128px representations, returning dominant warp and weft hex colors.
+  2. Added automatic contrast fallbacks for monochromatic swatches (adjusting secondary cluster luminance if Euclidean distance in RGB space is under 15) so warp and weft remain visually distinguishable on loom drafts.
+  3. Extended `SwatchAnalysisResponse` in `schemas.py` and `routes_swatch.py` to transmit `dominant_warp_hex` and `dominant_weft_hex`.
+  4. Updated `WeaveContext.tsx` to automatically set `warpColor` and `weftColor` upon analysis completion.
+  5. Added "Extracted from Swatch" 1-click button with preview swatch chips in `ColorPickerRow.tsx` allowing instant restoration of the optical colors after experimenting with presets.
+  6. Added comprehensive test suites in `backend/tests/test_cv.py`, `backend/tests/test_api.py`, and `frontend/src/test/dominant_color_extraction.test.tsx`.
 
 ---
 
