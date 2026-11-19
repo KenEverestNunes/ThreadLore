@@ -31,7 +31,9 @@ jobs:
         run: mypy backend/app/ scripts/
 
       - name: Run Handweaving WIF Compliance Verifier
-        run: python scripts/verify_wif_handweaving.py docs/assets/validation/Plain_Weave_Test.wif
+        run: |
+          python scripts/verify_wif_handweaving.py docs/assets/validation/Plain_Weave_Test.wif
+          git show HEAD:docs/assets/validation/Plain_Weave_Test.wif | python scripts/verify_wif_handweaving.py -
 
       - name: Run Pytest Suite (All 49 unit and integration tests)
         run: pytest backend/tests/ -v

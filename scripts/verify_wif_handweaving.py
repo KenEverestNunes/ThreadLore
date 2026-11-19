@@ -95,25 +95,32 @@ def verify_wif_text(wif_text: str) -> tuple[bool, list[str]]:
     return len(errors) == 0, errors
 
 
+def verify_wif_bytes(raw_bytes: bytes, source_name: str = "WIF") -> tuple[bool, list[str]]:
+    """Validate raw WIF bytes, checking raw byte stream for mandatory CRLF endings."""
+    if b"\r\n" not in raw_bytes:
+        return False, [f"{source_name} must use Windows CRLF (\\r\\n) line endings (none found in raw bytes)."]
+
+    try:
+        wif_text = raw_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        return False, [f"{source_name} encoding error (expected UTF-8/ASCII): {exc}"]
+
+    return verify_wif_text(wif_text)
+
+
 def verify_wif_file(file_path: Path) -> tuple[bool, list[str]]:
     """Validate a .wif file on disk, checking raw bytes for CRLF line endings."""
     if not file_path.is_file():
         return False, [f"File not found: {file_path}"]
 
     raw_bytes = file_path.read_bytes()
-    if b"\r\n" not in raw_bytes:
-        return False, ["WIF file must use Windows CRLF (\\r\\n) line endings."]
-
-    try:
-        wif_text = raw_bytes.decode("utf-8")
-    except UnicodeDecodeError as exc:
-        return False, [f"File encoding error (expected UTF-8/ASCII): {exc}"]
-
-    return verify_wif_text(wif_text)
+    return verify_wif_bytes(raw_bytes, f"File '{file_path.name}'")
 
 
 def main() -> int:
     """Run verification on sample generated WIF or command line file."""
+    import subprocess
+
     # Ensure backend path is on sys.path
     project_root = Path(__file__).resolve().parent.parent
     if str(project_root) not in sys.path:
@@ -129,11 +136,27 @@ def main() -> int:
 
     all_passed = True
 
-    # 1. Verify files provided via CLI arguments
-    target_files = [Path(arg) for arg in sys.argv[1:]]
+    # 1. Verify files provided via CLI arguments or stdin
+    cli_args = sys.argv[1:]
+    target_files: list[Path] = []
+
+    for arg in cli_args:
+        if arg == "-":
+            print("\n[CHECK] Validating raw bytes from standard input (stdin):")
+            stdin_bytes = sys.stdin.buffer.read()
+            is_valid, errors = verify_wif_bytes(stdin_bytes, "stdin")
+            if is_valid:
+                print("[PASS] Standard input bytes strictly comply with WIF 1.1 specification.")
+            else:
+                print("[FAIL] Errors in stdin bytes:")
+                for err in errors:
+                    print(f"  - {err}")
+                all_passed = False
+        else:
+            target_files.append(Path(arg))
 
     # If no files specified, also check standard committed validation file if present
-    if not target_files:
+    if not cli_args:
         default_validation_wif = project_root / "docs" / "assets" / "validation" / "Plain_Weave_Test.wif"
         if default_validation_wif.is_file():
             target_files.append(default_validation_wif)
@@ -148,6 +171,27 @@ def main() -> int:
             for err in errors:
                 print(f"  - {err}")
             all_passed = False
+
+    # 2. Verify committed Git blob bytes if git repository is available
+    try:
+        git_blob = subprocess.run(
+            ["git", "show", "HEAD:docs/assets/validation/Plain_Weave_Test.wif"],
+            cwd=str(project_root),
+            capture_output=True,
+            check=False,
+        )
+        if git_blob.returncode == 0 and git_blob.stdout:
+            print("\n[CHECK] Validating committed Git blob (git show HEAD:docs/assets/validation/Plain_Weave_Test.wif):")
+            is_valid, errors = verify_wif_bytes(git_blob.stdout, "Git blob")
+            if is_valid:
+                print("[PASS] Committed Git blob strictly complies with WIF 1.1 specification (CRLF preserved).")
+            else:
+                print("[FAIL] Committed Git blob failed CRLF compliance:")
+                for err in errors:
+                    print(f"  - {err}")
+                all_passed = False
+    except Exception:
+        pass
 
     # 2. Verify synthetic generated draft serialization
     print("\n[CHECK] Validating synthetic draft serialization pipeline:")
