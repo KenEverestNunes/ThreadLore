@@ -13,20 +13,30 @@ Traditional textile digitization tools either treat weaving drafts as purely gra
 2. **Deterministic Mathematical Factorization:** Once the weaver verifies or adjusts the $N \times N$ master tile ($N \in \{2, 3, 4\}$), the deterministic compiler factors the repeat matrix into threading, tie-up, and treadling for physical 4-shaft rising-shed looms using closed-form Boolean matrix algebra.
 3. **Phase Ambiguity Resolution:** 2D Fast Fourier Transform (FFT) measures thread periodicity ($\Delta x, \Delta y$) and orientation skew ($\theta$), but frequency analysis inherently discards spatial phase origin $(x_0, y_0)$. The interactive frontend canvas provides draggable $X/Y$ phase alignment so the weaver aligns the mathematical grid directly over photographed yarn crossings.
 
+![ThreadLore Architecture](assets/threadlore_architecture.png)
+
+*High-resolution vector available at [assets/threadlore_architecture.svg](assets/threadlore_architecture.svg) and editable diagram source at [assets/ThreadLore_Architecture.excalidraw](assets/ThreadLore_Architecture.excalidraw).*
+
 ```mermaid
 flowchart TD
-    A["Uploaded Swatch Photo (JPEG/PNG/WebP)"] --> B["ImagePreprocessor (CLAHE + Bilateral)"]
+    A["Uploaded Swatch Photo (JPEG/PNG/WebP)"] --> A1["Crop Quality Guard (Resolution >= 128px & Aspect Check)"]
+    A1 --> B["ImagePreprocessor (CLAHE + Bilateral Filtering)"]
     B --> C["FFTProfiler (2D FFT Spectrum)"]
+    B --> KM["OpenCV K-Means Clustering (LAB Space, K=2/K=4)"]
+    KM -->|Dominant Warp/Weft Hex Colors| G["Human Verification Loop (Master Tile + Canvas)"]
     C -->|Detect Skew Angle| D["Affine Deskewing"]
     C -->|Detect Periodicity| E["Warp/Weft Spacing (dx, dy)"]
-    D --> F["Gemini 3.8 Flash Curation"]
-    F -->|Heuristic Weave Suggestion| G["Human Verification Loop (Master Tile + Canvas)"]
+    D --> F["Vertex AI Gemini 3.8 Flash Curation"]
+    F -->|Non-Textile Guard: is_woven_textile == false| NT["Fail-Closed Guard: Lock Draft Compilation"]
+    F -->|Heuristic Weave Suggestion (Plain / Twill)| G
     E --> G
-    G -->|Confirmed NxN Tile| H["Boolean Matrix Compiler (M[s,t] = D[i_t, j_s])"]
+    PROV["User-Supplied Provenance Form (Origin, Maker, Era)"] --> H
+    G -->|Confirmed NxN Master Tile| H["Boolean Matrix Compiler (M[s,t] = D[i_t, j_s])"]
     H --> I["Cyclic Float & Uniformity Validator"]
-    I -->|Passed| J["WIF 1.1 Exporter ([WEAVING], Physical Units)"]
-    I -->|Violated| K["Validation Error Feedback"]
-    J --> L["Interoperable .WIF File & Visual Draft Card"]
+    I -->|Passed: Shafts & Treadles <= 4| J["WIF 1.1 Exporter ([WEAVING], Physical Units, [NOTES])"]
+    I -->|Violated| K["Validation Error Feedback (Prompt Manual Tile Adjustment)"]
+    J --> L["Interoperable .WIF File & Visual 4-Part Draft Card"]
+    J --> M["Printable Physical Loom Bench Sheet (window.print)"]
 ```
 
 ---
@@ -121,3 +131,25 @@ The Weaving Information File (WIF) specification (v1.1, October 1997) is the uni
   6=Reconstructed via ThreadLore (Google Cloud Run)
   ```
 - **1-Based Indexing:** Ends, picks, shafts, treadles, and palette colors strictly use 1-based keys (`1=`, `2=`, never `0=`).
+
+---
+
+## 7. OpenCV K-Means Dominant Yarn Color Extraction
+
+Physical textiles consist of distinct warp and weft yarns with contrasting colors (e.g. indigo warp and ecru weft in denim; red, green, and black yarns in tartans). Rather than forcing weavers to manually search RGB values:
+
+1. **Color Space Transform:** Input RGB swatch is transformed to CIE LAB color space, where Euclidean distance reflects human perceptual color difference ($\Delta E$).
+2. **K-Means Clustering:** `cv2.kmeans` identifies the two most dominant color clusters ($K=2$, with $K=4$ fallback for multi-color tartans).
+3. **Contrast Distance Verification:** The algorithm verifies perceptual contrast ($\Delta E \ge 12.0$) between the two cluster centers. If contrast is insufficient (e.g. solid piece-dyed fabrics), default high-contrast indigo and ecru palette values are returned as fallbacks.
+4. **Hex Palette Seeding:** The resulting RGB centroids are serialized into `#RRGGBB` strings, auto-populating the UI warp and weft color pickers while remaining 100% editable by the user.
+
+---
+
+## 8. Non-Textile Guard & Live Crop Resolution Quality Gates
+
+To prevent garbage-in, garbage-out failure modes and preserve ethical AI guarantees:
+
+1. **Live Crop Quality Guard:** The frontend `SwatchCropper` computes live aspect ratio and pixel dimensions. Swatches below $128 \times 128$ px display an amber advisory warning to prevent aliasing during 2D FFT frequency profiling. Crops below $100 \times 100$ px lock confirmation.
+2. **Non-Textile Ingestion Guard:** When Gemini 3.8 Flash detects a non-woven object (wood, fruit, basketry, plain paper), it returns `is_woven_textile: false`. The Pydantic model validator automatically enforces `status: "unavailable"` and `confidence: 0.0`.
+3. **Fail-Closed Compilation Lock:** If `is_woven_textile` is false, the "Compile 4-Shaft Loom Draft" button is hard-disabled, and a prominent banner presents options to adjust the crop or upload a macro fabric photograph.
+

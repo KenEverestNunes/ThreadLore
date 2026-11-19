@@ -41,7 +41,7 @@ ThreadLore deploys a stateless **Google Cloud Run** container combining compute-
 
 ![ThreadLore Architecture](docs/assets/threadlore_architecture.png)
 
-*High-resolution Excalidraw vector available at [docs/assets/threadlore_architecture.svg](docs/assets/threadlore_architecture.svg) or via the [Interactive HTML Board](docs/architecture_whiteboard.html).*
+*High-resolution vector available at [docs/assets/threadlore_architecture.svg](docs/assets/threadlore_architecture.svg) and editable diagram source at [docs/assets/ThreadLore_Architecture.excalidraw](docs/assets/ThreadLore_Architecture.excalidraw).*
 
 ---
 
@@ -99,7 +99,7 @@ The pipeline enforces mathematical verification at every stage, combining optica
 |---|---|
 | 📐 **[Technical Architecture](docs/architecture.md)** | In-depth breakdown of 2D FFT, Gemini curation, and Boolean matrix factorization. |
 | 📜 **[WIF 1.1 Specification Guide](docs/wif_spec_guide.md)** | Standard compliance rules, section layout, and parser verification. |
-| 🖼️ **[Architecture Whiteboard](docs/architecture_whiteboard.html)** | Standalone browser whiteboard diagram. |
+| 🎨 **[Architecture Diagram Source](docs/assets/ThreadLore_Architecture.excalidraw)** | Editable hand-drawn chalkboard architecture blueprint (Excalidraw). |
 
 ---
 
