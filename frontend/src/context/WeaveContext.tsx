@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useRef, ReactNode } from "react";
 import {
   BinaryMatrix,
   CANONICAL_PRESETS,
@@ -43,6 +43,7 @@ interface WeaveContextType {
   handleFileSelect: (file: File) => void;
   handleCropComplete: (blob: Blob, dataUrl: string) => Promise<void>;
   toggleMatrixCell: (row: number, col: number) => void;
+  mirrorMasterMatrix: () => void;
   selectPreset: (preset: WeaveFamily) => void;
   setCustomRepeatSize: (size: number) => void;
   triggerCompile: () => Promise<void>;
@@ -87,6 +88,9 @@ export const WeaveProvider: React.FC<{
   const [compiledResult, setCompiledResult] = useState<CompileDraftResponse | null>(initialCompiledResult);
   const [error, setError] = useState<string | null>(null);
 
+  // Analysis request ID ref to guard against out-of-order race conditions
+  const analysisRequestIdRef = useRef<number>(0);
+
   const selectPreset = useCallback((preset: WeaveFamily) => {
     setActivePreset(preset);
     setCompiledResult(null);
@@ -98,11 +102,13 @@ export const WeaveProvider: React.FC<{
   }, []);
 
   const handleFileSelect = useCallback((file: File) => {
+    analysisRequestIdRef.current += 1;
     setError(null);
     setCroppedBlob(null);
     setCroppedImageUrl(null);
     setAnalysisResult(null);
     setCompiledResult(null);
+    setIsAnalyzing(false);
     if (!file.type.startsWith("image/")) {
       setError("Invalid file format. Please upload a valid image (JPEG, PNG, or WebP).");
       return;
@@ -120,6 +126,7 @@ export const WeaveProvider: React.FC<{
   }, [selectPreset]);
 
   const handleCropComplete = useCallback(async (blob: Blob, dataUrl: string) => {
+    const requestId = ++analysisRequestIdRef.current;
     setCroppedBlob(blob);
     setCroppedImageUrl(dataUrl);
     setCompiledResult(null);
@@ -129,6 +136,9 @@ export const WeaveProvider: React.FC<{
 
     try {
       const res = await analyzeSwatch(blob);
+      if (requestId !== analysisRequestIdRef.current) {
+        return;
+      }
       setAnalysisResult(res);
 
       // Auto-populate dominant yarn colors extracted from swatch (Issue #45)
@@ -153,6 +163,9 @@ export const WeaveProvider: React.FC<{
         setActivePreset("custom");
       }
     } catch (err: unknown) {
+      if (requestId !== analysisRequestIdRef.current) {
+        return;
+      }
       console.warn("CV/AI Analysis warning:", err);
       const detail = err instanceof Error && err.message ? err.message : null;
       setError(
@@ -162,7 +175,9 @@ export const WeaveProvider: React.FC<{
       );
       setActivePreset("plain_1_1");
     } finally {
-      setIsAnalyzing(false);
+      if (requestId === analysisRequestIdRef.current) {
+        setIsAnalyzing(false);
+      }
     }
   }, []);
 
@@ -194,6 +209,11 @@ export const WeaveProvider: React.FC<{
       );
       return next;
     });
+  }, []);
+
+  const mirrorMasterMatrix = useCallback(() => {
+    setCompiledResult(null);
+    setMasterMatrix((prev) => prev.map((row) => [...row].reverse()));
   }, []);
 
   const handleSetWarpColor = useCallback((color: string) => {
@@ -256,12 +276,14 @@ export const WeaveProvider: React.FC<{
   }, [masterMatrix, warpColor, weftColor, repeatWarp, repeatWeft, units, provenance]);
 
   const resetWorkflow = useCallback(() => {
+    analysisRequestIdRef.current += 1;
     setStep("upload");
     setRawImage(null);
     setCroppedBlob(null);
     setCroppedImageUrl(null);
     setAnalysisResult(null);
     setCompiledResult(null);
+    setIsAnalyzing(false);
     setError(null);
     setProvenance({
       title: "Preserved Textile Sample",
@@ -311,6 +333,7 @@ export const WeaveProvider: React.FC<{
         handleFileSelect,
         handleCropComplete,
         toggleMatrixCell,
+        mirrorMasterMatrix,
         selectPreset,
         setCustomRepeatSize,
         triggerCompile,

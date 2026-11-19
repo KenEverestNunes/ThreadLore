@@ -60,4 +60,63 @@ describe('Issue #9 - Printable Physical Loom Bench Card', () => {
     expect(benchSheetHeader).toHaveClass('print:block');
     expect(screen.getByText(/Bench Sheet/i)).toBeInTheDocument();
   });
+
+  it('renders synchronized descending shaft order (4 down to 1) with visible labels in both threading and tie-up for a 4-shaft twill', () => {
+    render(
+      <WeaveProvider initialCompiledResult={mockCompiledResult}>
+        <LoomDraftCard />
+      </WeaveProvider>
+    );
+
+    const thLabels = screen.getByLabelText('Threading shaft labels');
+    const tuLabels = screen.getByLabelText('Tie-up shaft labels');
+
+    expect(thLabels).toBeInTheDocument();
+    expect(tuLabels).toBeInTheDocument();
+
+    // Check shaft labels descending order: S4, S3, S2, S1
+    const thText = thLabels.textContent || '';
+    const tuText = tuLabels.textContent || '';
+
+    expect(thText).toBe('S4S3S2S1');
+    expect(tuText).toBe('S4S3S2S1');
+  });
+
+  it('renders synchronized 2-shaft order (2 down to 1) without orphaned rows for a 2-shaft plain weave', () => {
+    const plainWeave2Shafts: CompileDraftResponse = {
+      is_valid: true,
+      validation_errors: [],
+      validation_warnings: [],
+      draft: {
+        shafts: 2,
+        treadles: 2,
+        warp_threads: 8,
+        weft_picks: 8,
+        threading: [1, 2, 1, 2, 1, 2, 1, 2],
+        tieup: [
+          [1, 0],
+          [0, 1],
+        ],
+        treadling: [1, 2, 1, 2, 1, 2, 1, 2],
+        drawdown: [
+          [1, 0, 1, 0, 1, 0, 1, 0],
+          [0, 1, 0, 1, 0, 1, 0, 1],
+        ],
+      },
+      wif_text: '[WIF]\nVersion=1.1',
+    };
+
+    render(
+      <WeaveProvider initialCompiledResult={plainWeave2Shafts}>
+        <LoomDraftCard />
+      </WeaveProvider>
+    );
+
+    const thLabels = screen.getByLabelText('Threading shaft labels');
+    const tuLabels = screen.getByLabelText('Tie-up shaft labels');
+
+    // Only S2 and S1 must be rendered for a 2-shaft draft
+    expect(thLabels.textContent).toBe('S2S1');
+    expect(tuLabels.textContent).toBe('S2S1');
+  });
 });

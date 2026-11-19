@@ -10,6 +10,7 @@ export const CanvasOverlay: React.FC = () => {
     warpColor,
     weftColor,
     analysisResult,
+    mirrorMasterMatrix,
   } = useWeave();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -29,13 +30,39 @@ export const CanvasOverlay: React.FC = () => {
   const [isPanning, setIsPanning] = useState(false);
   const panStartRef = useRef({ x: 0, y: 0, initOffX: 0, initOffY: 0 });
 
+  // Compute scaled spacing from raw image crop coordinates into 450x450 canvas coordinates
+  const computeScaledSpacing = useCallback(
+    (rawDx: number | null | undefined, rawDy: number | null | undefined) => {
+      const img = imageObjRef.current;
+      const baseDx = rawDx ?? 22.0;
+      const baseDy = rawDy ?? 22.0;
+
+      const canvasW = 450;
+      const canvasH = 450;
+
+      if (!img || !img.naturalWidth || !img.naturalHeight) {
+        return { dx: baseDx, dy: baseDy };
+      }
+
+      const scaleX = canvasW / img.naturalWidth;
+      const scaleY = canvasH / img.naturalHeight;
+
+      return {
+        dx: Math.round(baseDx * scaleX * 10) / 10,
+        dy: Math.round(baseDy * scaleY * 10) / 10,
+      };
+    },
+    []
+  );
+
   // Update spacing when analysisResult changes
   useEffect(() => {
     if (analysisResult?.spacing_detected) {
-      if (analysisResult.dx_px) setSpacingX(analysisResult.dx_px);
-      if (analysisResult.dy_px) setSpacingY(analysisResult.dy_px);
+      const { dx, dy } = computeScaledSpacing(analysisResult.dx_px, analysisResult.dy_px);
+      setSpacingX(dx);
+      setSpacingY(dy);
     }
-  }, [analysisResult]);
+  }, [analysisResult, computeScaledSpacing]);
 
   // Load cropped image into Image object
   useEffect(() => {
@@ -45,9 +72,14 @@ export const CanvasOverlay: React.FC = () => {
     img.src = croppedImageUrl;
     img.onload = () => {
       imageObjRef.current = img;
+      if (analysisResult?.spacing_detected) {
+        const { dx, dy } = computeScaledSpacing(analysisResult.dx_px, analysisResult.dy_px);
+        setSpacingX(dx);
+        setSpacingY(dy);
+      }
       renderCanvas();
     };
-  }, [croppedImageUrl]);
+  }, [croppedImageUrl, analysisResult, computeScaledSpacing]);
 
   const renderCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -93,10 +125,7 @@ export const CanvasOverlay: React.FC = () => {
 
         for (let x = startX; x < w + tileWidthPx; x += dx) {
           // Find which column in the master tile this end belongs to
-          let colInTile = Math.floor(((x - offsetX) / dx) % repeatSize + repeatSize) % repeatSize;
-          if (mirrorWale) {
-            colInTile = repeatSize - 1 - colInTile;
-          }
+          const colInTile = Math.floor(((x - offsetX) / dx) % repeatSize + repeatSize) % repeatSize;
 
           const isWarpOver =
             rowInTile < masterMatrix.length &&
@@ -138,7 +167,6 @@ export const CanvasOverlay: React.FC = () => {
     spacingX,
     spacingY,
     fineAngle,
-    mirrorWale,
     offsetX,
     offsetY,
   ]);
@@ -215,30 +243,28 @@ export const CanvasOverlay: React.FC = () => {
     setOffsetX(0);
     setOffsetY(0);
     setFineAngle(0.0);
-    setMirrorWale(false);
-    if (analysisResult?.spacing_detected) {
-      if (analysisResult.dx_px) setSpacingX(analysisResult.dx_px);
-      if (analysisResult.dy_px) setSpacingY(analysisResult.dy_px);
-    } else {
-      setSpacingX(22.0);
-      setSpacingY(22.0);
+    if (mirrorWale) {
+      setMirrorWale(false);
+      mirrorMasterMatrix();
     }
+    const { dx, dy } = computeScaledSpacing(
+      analysisResult?.spacing_detected ? analysisResult.dx_px : 22.0,
+      analysisResult?.spacing_detected ? analysisResult.dy_px : 22.0
+    );
+    setSpacingX(dx);
+    setSpacingY(dy);
   };
 
   // Dynamic min/max bounds accommodating fine silk micro-weaves and coarse yarns
   const minSliderSpacing = Math.min(
     4.0,
     Math.floor(spacingX),
-    Math.floor(spacingY),
-    Math.floor(analysisResult?.dx_px || 4.0),
-    Math.floor(analysisResult?.dy_px || 4.0)
+    Math.floor(spacingY)
   );
   const maxSliderSpacing = Math.max(
-    100.0,
-    Math.ceil(spacingX),
-    Math.ceil(spacingY),
-    Math.ceil(analysisResult?.dx_px || 100.0),
-    Math.ceil(analysisResult?.dy_px || 100.0)
+    120.0,
+    Math.ceil(spacingX * 2),
+    Math.ceil(spacingY * 2)
   );
 
   return (
@@ -412,7 +438,10 @@ export const CanvasOverlay: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-200/60 dark:border-zinc-700/60">
           <button
             type="button"
-            onClick={() => setMirrorWale((prev) => !prev)}
+            onClick={() => {
+              setMirrorWale((prev) => !prev);
+              mirrorMasterMatrix();
+            }}
             className={`flex items-center space-x-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
               mirrorWale
                 ? "border-indigo-500 bg-indigo-50 text-indigo-700 dark:border-indigo-500 dark:bg-indigo-950/60 dark:text-indigo-300"

@@ -268,64 +268,102 @@ export const LoomDraftCard: React.FC = () => {
 
         <div className="inline-block min-w-full space-y-4">
           {/* Top Row: Threading + Tieup */}
-          <div className="flex items-end space-x-4">
-            {/* Threading Matrix (Shafts 4..1 down, Warp ends 1..N across) */}
-            <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
-              <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
-                Threading (Warp Shaft Assignments 1..4)
-              </span>
-              <div
-                className="grid gap-0.5"
-                style={{
-                  gridTemplateColumns: `repeat(${visibleWarp}, minmax(${Math.max(4, cellSize)}px, 1fr))`,
-                }}
-              >
-                {[4, 3, 2, 1].map((shaftNum) =>
-                  draft.threading.slice(0, visibleWarp).map((assignedShaft, endIdx) => (
-                    <div
-                      key={`th-${shaftNum}-${endIdx}`}
-                      className={`h-3 w-3 rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[7px] font-bold leading-none ${
-                        assignedShaft === shaftNum
-                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
-                          : "bg-transparent print:bg-white"
-                      }`}
-                      title={`End ${endIdx + 1}: Shaft ${shaftNum}`}
-                    >
-                      {assignedShaft === shaftNum ? "■" : ""}
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+          {(() => {
+            const numShafts = draft.shafts;
+            const shaftNumbers = Array.from({ length: numShafts }, (_, i) => numShafts - i);
 
-            {/* Tie-up Matrix (Shafts × Treadles) */}
-            <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
-              <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
-                Tie-Up ({draft.shafts}×{draft.treadles})
-              </span>
-              <div
-                className="grid gap-0.5"
-                style={{
-                  gridTemplateColumns: `repeat(${draft.treadles}, minmax(14px, 1fr))`,
-                }}
-              >
-                {draft.tieup.map((row, sIdx) =>
-                  row.map((val, tIdx) => (
-                    <div
-                      key={`tu-${sIdx}-${tIdx}`}
-                      className={`h-4 w-4 rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[9px] font-bold ${
-                        val === 1
-                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
-                          : "bg-white text-zinc-400 dark:bg-zinc-900 print:bg-white print:text-transparent"
-                      }`}
-                    >
-                      {val === 1 ? "X" : ""}
+            return (
+              <div className="flex items-end space-x-4">
+                {/* Threading Matrix (Shafts N..1 down, Warp ends 1..N across) */}
+                <div className="flex-1 overflow-x-auto border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
+                  <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
+                    Threading (Warp Shaft Assignments 1..{numShafts})
+                  </span>
+                  <div className="flex">
+                    {/* Shaft Labels Column */}
+                    <div className="flex flex-col gap-0.5 mr-1 select-none" aria-label="Threading shaft labels">
+                      {shaftNumbers.map((shaftNum) => (
+                        <div
+                          key={`th-lbl-${shaftNum}`}
+                          className="h-4 flex items-center justify-end pr-1 text-[9px] font-mono font-bold text-zinc-500 dark:text-zinc-400 print:text-zinc-800"
+                        >
+                          S{shaftNum}
+                        </div>
+                      ))}
                     </div>
-                  ))
-                )}
+                    {/* Threading Grid */}
+                    <div
+                      className="grid gap-0.5 flex-1"
+                      style={{
+                        gridTemplateColumns: `repeat(${visibleWarp}, minmax(${Math.max(4, cellSize)}px, 1fr))`,
+                      }}
+                    >
+                      {shaftNumbers.map((shaftNum) =>
+                        draft.threading.slice(0, visibleWarp).map((assignedShaft, endIdx) => (
+                          <div
+                            key={`th-${shaftNum}-${endIdx}`}
+                            className={`h-4 min-w-[4px] rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[7px] font-bold leading-none ${
+                              assignedShaft === shaftNum
+                                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
+                                : "bg-transparent print:bg-white"
+                            }`}
+                            title={`End ${endIdx + 1}: Shaft ${shaftNum}`}
+                          >
+                            {assignedShaft === shaftNum ? "■" : ""}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tie-up Matrix (Shafts × Treadles) */}
+                <div className="border border-zinc-200 rounded-lg p-2 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 print:border-zinc-400 print:bg-white">
+                  <span className="block text-[11px] font-medium text-zinc-500 mb-1 print:text-zinc-900">
+                    Tie-Up ({numShafts}×{draft.treadles})
+                  </span>
+                  <div className="flex">
+                    {/* Shaft Labels Column */}
+                    <div className="flex flex-col gap-0.5 mr-1 select-none" aria-label="Tie-up shaft labels">
+                      {shaftNumbers.map((shaftNum) => (
+                        <div
+                          key={`tu-lbl-${shaftNum}`}
+                          className="h-4 flex items-center justify-end pr-1 text-[9px] font-mono font-bold text-zinc-500 dark:text-zinc-400 print:text-zinc-800"
+                        >
+                          S{shaftNum}
+                        </div>
+                      ))}
+                    </div>
+                    {/* Tie-up Grid */}
+                    <div
+                      className="grid gap-0.5"
+                      style={{
+                        gridTemplateColumns: `repeat(${draft.treadles}, minmax(14px, 1fr))`,
+                      }}
+                    >
+                      {shaftNumbers.map((shaftNum) => {
+                        const sIdx = shaftNum - 1;
+                        const row = draft.tieup[sIdx] || [];
+                        return row.map((val, tIdx) => (
+                          <div
+                            key={`tu-${shaftNum}-${tIdx}`}
+                            className={`h-4 w-4 rounded-[1px] border border-zinc-300 dark:border-zinc-700 print:border-zinc-600 flex items-center justify-center text-[9px] font-bold ${
+                              val === 1
+                                ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 print:bg-black print:text-white"
+                                : "bg-white text-zinc-400 dark:bg-zinc-900 print:bg-white print:text-transparent"
+                            }`}
+                            title={`Shaft ${shaftNum}, Treadle ${tIdx + 1}`}
+                          >
+                            {val === 1 ? "X" : ""}
+                          </div>
+                        ));
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            );
+          })()}
 
           {/* Bottom Row: Drawdown + Treadling */}
           <div className="flex items-start space-x-4">

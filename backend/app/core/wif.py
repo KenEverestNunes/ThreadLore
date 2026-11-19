@@ -154,8 +154,11 @@ def serialize_wif(
             lines.append(f"{note_idx}=Date/Period: {provenance.date_period}")
             note_idx += 1
         if provenance.notes:
-            lines.append(f"{note_idx}=Conservation Notes: {provenance.notes}")
-            note_idx += 1
+            for note_line in provenance.notes.splitlines():
+                stripped = note_line.strip()
+                if stripped:
+                    lines.append(f"{note_idx}=Conservation Notes: {stripped}")
+                    note_idx += 1
         lines.append(f"{note_idx}=Reconstructed via ThreadLore (Google Cloud Run)")
 
     # Join using official WIF Windows CRLF line delimiter

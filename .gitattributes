@@ -1,5 +1,5 @@
 # Auto-detect text files and normalize line endings to LF on commit
 * text=auto
 
-# Preserve Windows CRLF (\r\n) line terminators required by the WIF 1.1 specification
-*.wif text eol=crlf
+# Preserve exact binary bytes and CRLF (\r\n) line terminators for WIF files without normalization
+*.wif -text

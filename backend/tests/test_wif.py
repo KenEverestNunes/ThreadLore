@@ -57,6 +57,31 @@ def test_wif_numbered_notes(twill_2_2_z: BinaryMatrix) -> None:
     assert "5=Conservation Notes: Recovered wool specimen" in wif_text
 
 
+def test_wif_multiline_conservation_notes(twill_2_2_z: BinaryMatrix) -> None:
+    """Multiline notes must be serialized as separately numbered entries and reopen cleanly."""
+    draft = factor_drawdown(twill_2_2_z)
+    provenance = ProvenanceMetadata(
+        title="Fragment with Multiline Log",
+        notes="Cotton warp.\nBlue weft.\nArchival catalog 402.",
+    )
+    wif_text = serialize_wif(draft, provenance=provenance)
+
+    assert "[NOTES]" in wif_text
+    assert "1=Title: Fragment with Multiline Log" in wif_text
+    assert "2=Conservation Notes: Cotton warp." in wif_text
+    assert "3=Conservation Notes: Blue weft." in wif_text
+    assert "4=Conservation Notes: Archival catalog 402." in wif_text
+
+    # Reopening and parsing must succeed without syntax or unkeyed line errors
+    parsed = parse_wif(wif_text)
+    assert parsed.drawdown == twill_2_2_z
+
+    # Re-verify through official validator
+    from scripts.verify_wif_handweaving import verify_wif_text
+    is_valid, errors = verify_wif_text(wif_text)
+    assert is_valid, f"WIF validation failed on multiline notes: {errors}"
+
+
 def test_wif_1_based_indexing(twill_2_2_z: BinaryMatrix) -> None:
     """All table sections in WIF 1.1 must use strictly 1-based indexing (no 0= keys)."""
     draft = factor_drawdown(twill_2_2_z)
