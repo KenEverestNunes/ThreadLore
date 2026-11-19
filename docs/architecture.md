@@ -141,7 +141,7 @@ Physical textiles consist of distinct warp and weft yarns with contrasting color
 1. **Color Space Transform:** Input RGB swatch is transformed to CIE LAB color space, where Euclidean distance reflects human perceptual color difference ($\Delta E$).
 2. **K-Means Clustering:** `cv2.kmeans` identifies the two most dominant color clusters ($K=2$, with $K=4$ fallback for multi-color tartans).
 3. **Contrast Distance Verification:** The algorithm verifies perceptual contrast ($\Delta E \ge 12.0$) between the two cluster centers. If contrast is insufficient (e.g. solid piece-dyed fabrics), default high-contrast indigo and ecru palette values are returned as fallbacks.
-4. **Hex Palette Seeding:** The resulting RGB centroids are serialized into `#RRGGBB` strings, auto-populating the UI warp and weft color pickers while remaining 100% editable by the user.
+4. **Hex Palette Seeding:** The resulting RGB centroids are serialized into `#RRGGBB` strings, auto-populating the UI warp and weft color pickers while remaining fully editable by the user.
 
 ---
 

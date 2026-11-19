@@ -4,7 +4,7 @@
 
 The **Weaving Information File (WIF)** specification, ratified in October 1997 by the international computer-aided handweaving community, serves as the open interchange format across loom design software (WeavePoint, Fiberworks PCW, ArahWeave, Handweaving.net, and AVL Compu-Dobby looms).
 
-ThreadLore adheres to strict WIF 1.1 compliance, ensuring that exported files open seamlessly in desktop weaving applications and digital dobby loom drivers without conversion errors.
+ThreadLore adheres to the October 1997 WIF 1.1 specification, verified with automated compliance parsing (scripts/verify_wif_handweaving.py) to ensure correct syntax, section headers, coordinate indexing, and physical loom constraints.
 
 ---
 
