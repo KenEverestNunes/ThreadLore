@@ -9,12 +9,13 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it privately:
+If you discover a security vulnerability or security defect, please report it through GitHub:
 
-1. **Email:** Send details to `security@threadlore.org` or submit a private security advisory through GitHub.
-2. **Details:** Include reproduction steps, environment details, and proof of concept.
-3. **Response SLA:** We acknowledge reports within 48 hours and provide regular status updates until a patch is released.
-4. **Coordinated Disclosure:** Please do not disclose findings publicly until a patch is released.
+1. **GitHub Advisory:** Submit a private security advisory through the repository's **Security** tab.
+2. **Issue Tracker:** Alternatively, open an issue labeled `security` on this repository.
+3. **Details:** Include reproduction steps, environment details, and proof of concept.
+
+Reports are reviewed directly by the repository maintainer.
 
 ## Security Controls & Hardening
 

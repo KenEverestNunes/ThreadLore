@@ -2,6 +2,10 @@
 ### AI-Assisted Physical Textile-to-Loom Reconstruction Pipeline
 **"Preserve the weave, not just the photograph."**
 
+**[🚀 Try ThreadLore Live on Google Cloud Run](https://threadlore-122120455814.us-central1.run.app/)**
+
+ThreadLore helps a weaver recover a repeating pattern from a close-up fabric photo. The weaver checks the suggested tile against the photo, then downloads loom instructions or prints a bench sheet.
+
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Deploys_Serverless-4285F4?style=flat&logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 [![Vertex AI](https://img.shields.io/badge/Vertex_AI-Gemini_Flash-34A853?style=flat&logo=google&logoColor=white)](https://cloud.google.com/vertex-ai)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -10,17 +14,26 @@
 [![Python](https://img.shields.io/badge/Python-3.11_Strict_Mypy-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> Built for the **Google Cloud Run "Build for Good" Hackathon** · Official Launch: **November 20, 2026** on Product Hunt.
+> Built for the **Google Cloud Run "Build for Good" Hackathon** · Scheduled Launch: **November 20, 2026** on Product Hunt.
+
+---
+
+## 🔬 Verified Swatch Benchmark
+
+In a live test on an external macro photograph documented as a 1/1 plain weave:
+- **Automatic Curation:** The live API analyzed the cropped photograph, extracted dominant yarn colors, and suggested the correct $2 \times 2$ plain-weave repeat tile without manual correction.
+- **Factorization & Serialization:** The Boolean compiler factored the repeat and exported a standards-compliant WIF 1.1 draft.
+- **Round-Trip Reproduction:** An independent read of the exported WIF reproduced the expected alternating interlacing pattern across the full $16 \times 16$ drawdown simulation (all 256 yarn crossings repeating the confirmed $2 \times 2$ tile).
+
+*Test swatch credit:* Based on **"Plain Weaving Detail"** by **Paulo Roberto C M Jr.** ([Wikimedia Commons source](https://commons.wikimedia.org/wiki/File:Plain_weaving_detail.jpg)), licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/). The test photograph was cropped and resized for optical macro frequency profiling.
 
 ---
 
 ## 🌟 Overview: What is ThreadLore?
 
-Traditional handwoven textiles encode ancestral mathematics and cultural heritage. Physical heritage fabrics survive in community archives, museums, and family collections, but their original weaving drafts (loom setup instructions) are frequently lost to history.
+Physical heritage fabrics survive in community archives, museums, and family collections, but their original weaving drafts (loom setup instructions) are frequently lost.
 
-Reconstructing weaving drafts manually requires optical magnification, days of tedious graph plotting, and master-level weaving expertise.
-
-**ThreadLore** is an **AI-assisted, human-verified weave reconstruction tool** that converts macro photographs of flat woven fabrics into editable, mathematically validated, loom-compatible **WIF 1.1 (Weaving Information Files)** and visual 4-part loom draft cards (Threading, Tie-Up, Treadling, and Drawdown) ready for physical 4-shaft floor or table looms.
+Manually reconstructing weaving drafts requires optical counting, thread analysis, and tedious graph plotting. **ThreadLore** provides an **AI-assisted, human-verified reconstruction pipeline** that converts macro photographs of flat woven fabrics into editable, mathematically validated, loom-compatible **WIF 1.1 (Weaving Information Files)** and visual 4-part loom draft cards (Threading, Tie-Up, Treadling, and Drawdown) ready for physical 4-shaft floor or table looms.
 
 ThreadLore does not attempt ungrounded archaeological discovery or speculative storytelling from a photograph alone:
 - **Computer Vision & Gemini Flash:** Estimate thread density, deskew geometry, detect non-textile objects, and suggest candidate weave structures.
@@ -57,9 +70,9 @@ The sequence coordinates browser-based validation, serverless Cloud Run preproce
 
 ## 💡 Core Features & Engineering Highlights
 
-### 1. The UX Inversion: Master Repeat Tile
-- **Problem:** Editing an entire $16 \times 16$ grid (256 cells) cell-by-cell is tedious. A single misclick breaks mathematical symmetry, causing draft compilers to explode from 4 shafts to 16 shafts.
-- **Solution:** The user only edits an $N \times N$ Master Tile ($N \in \{2, 3, 4\}$, max 16 cells). The frontend live-tiles this block across the fabric photo. Mathematical symmetry is guaranteed by construction.
+### 1. Master Repeat Tile (Guaranteed Symmetry)
+- **Problem:** Manually plotting every yarn crossing across an entire $16 \times 16$ grid (256 cells) is error-prone. A single misclick breaks mathematical symmetry, causing standard draft compilers to demand more shafts than an entry-level loom possesses.
+- **Solution:** The user only edits an $N \times N$ Master Tile ($N \in \{2, 3, 4\}$, max 16 cells). The frontend live-tiles this block across the fabric photo. Mathematical symmetry across all simulated thread crossings is guaranteed by construction.
 
 ### 2. Automatic Dominant Yarn Color Extraction (OpenCV K-Means)
 - Analyzes cropped textile pixels in LAB color space via K-Means clustering ($K=2$ dominant clusters with $K=4$ fallback).
@@ -84,12 +97,12 @@ The sequence coordinates browser-based validation, serverless Cloud Run preproce
   - Unique columns map to Loom Shafts ($S \le 4$).
   - Unique rows map to Loom Treadles ($T \le 4$).
   - Tie-up matrix is solved in closed form: $M[s, t] = D[i_t, j_s]$.
-- Proves 100% mathematical round-trip equivalence between simulated drawdown and input pattern.
+- The compiler simulates the loom instructions and checks that the resulting weave matches the tile the weaver approved.
 
 ### 7. Universal WIF 1.1 Specification Export
 - Generates plain-text `.wif` files adhering to the October 1997 WIF 1.1 specification.
-- Enforces 1-based indexing, mandatory `[WEAVING]` sections (`Shafts=4`, `Treadles=4`, `Rising shed=1`), dual-color palettes, and CRLF line terminators.
-- Ready for immediate import into WeavePoint, Fiberworks, Handweaving.net, or digital dobby looms.
+- Enforces 1-based indexing, mandatory `[WEAVING]` sections (specifying the exact number of shafts and treadles required by the weave, up to a 4-shaft / 4-treadle ceiling, with `Rising shed=1`), dual-color palettes, and CRLF line terminators.
+- Validated against the official WIF 1.1 specification using our automated compliance parser (`scripts/verify_wif_handweaving.py`).
 
 ---
 
@@ -112,8 +125,8 @@ The sequence coordinates browser-based validation, serverless Cloud Run preproce
 | **Backend** | Python 3.11, FastAPI, Uvicorn | Stateless REST API, async image and compilation pipelines |
 | **Computer Vision** | OpenCV Headless, NumPy, SciPy | 2D FFT frequency spectrum, CLAHE contrast, affine deskew, K-Means color clustering |
 | **Generative AI** | Google Cloud Vertex AI (Gemini 3.8 Flash) | Weave structure curation, template pre-population, technical explanations |
-| **Hosting & Cloud** | Google Cloud Run, Cloud Storage, Cloud Build | Serverless container execution, swatch archiving |
-| **Quality & Testing** | Pytest, Ruff, Mypy (strict), ESLint, Vitest | Static analysis, strict typing, automated unit and integration tests |
+| **Hosting & Cloud** | Google Cloud Run, Cloud Build, Artifact Registry | Serverless container execution, automated container builds |
+| **Quality & Testing** | Pytest, Ruff, Mypy (strict), TypeScript (strict type check), Vitest | Static analysis, strict typing, automated unit and integration tests |
 
 ---
 
@@ -188,7 +201,7 @@ npm --prefix frontend run build
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/healthz` | Container health probe. |
-| `POST` | `/api/swatch` | Ingests macro swatch photo; returns deskewed image, thread periodicity, dominant colors, and Gemini curation. |
+| `POST` | `/api/swatch` | Ingests macro swatch photo; performs internal deskewing and returns optical thread spacing (dx, dy), dominant yarn colors, and Gemini weave proposal. |
 | `POST` | `/api/compile` | Ingests $N \times N$ master tile; returns validated draft, shaft/treadle allocation, and WIF string. |
 | `POST` | `/api/download-wif` | Streams downloadable standards-compliant `.wif` attachment. |
 
@@ -198,7 +211,7 @@ npm --prefix frontend run build
 
 - **Why Cap at 4 Shafts?** The vast majority of traditional handweavers and community studios operate 4-shaft table or floor looms. Capping at 4 shafts ensures exported WIF files are immediately usable on common looms.
 - **Why Exclude Satin?** True satin requires at least 5 shafts (5-end satin). Supporting satin would exceed the 4-shaft ceiling and produce unweavable drafts on entry-level looms.
-- **Why Human-in-the-Loop?** Macro smartphone photos contain yarn fuzz, irregular slubs, and directional shadows that make fully automated pixel crossing detection brittle. Human verification guarantees 100% mathematical accuracy before taking the draft to a physical loom.
+- **Why Human-in-the-Loop?** Macro smartphone photos contain yarn fuzz, irregular slubs, and directional shadows that make fully automated pixel crossing detection brittle. The weaver confirms the minimal repeat tile against the real fabric photo, and the compiler simulates the loom instructions to verify that the resulting drawdown reproduces the confirmed tile without algorithmic rounding error.
 
 ---
 
