@@ -95,6 +95,23 @@ def verify_wif_text(wif_text: str) -> tuple[bool, list[str]]:
     return len(errors) == 0, errors
 
 
+def verify_wif_file(file_path: Path) -> tuple[bool, list[str]]:
+    """Validate a .wif file on disk, checking raw bytes for CRLF line endings."""
+    if not file_path.is_file():
+        return False, [f"File not found: {file_path}"]
+
+    raw_bytes = file_path.read_bytes()
+    if b"\r\n" not in raw_bytes:
+        return False, ["WIF file must use Windows CRLF (\\r\\n) line endings."]
+
+    try:
+        wif_text = raw_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        return False, [f"File encoding error (expected UTF-8/ASCII): {exc}"]
+
+    return verify_wif_text(wif_text)
+
+
 def main() -> int:
     """Run verification on sample generated WIF or command line file."""
     # Ensure backend path is on sys.path
@@ -110,6 +127,30 @@ def main() -> int:
     print(" ThreadLore: WIF 1.1 Compliance & Interoperability Verifier")
     print("============================================================")
 
+    all_passed = True
+
+    # 1. Verify files provided via CLI arguments
+    target_files = [Path(arg) for arg in sys.argv[1:]]
+
+    # If no files specified, also check standard committed validation file if present
+    if not target_files:
+        default_validation_wif = project_root / "docs" / "assets" / "validation" / "Plain_Weave_Test.wif"
+        if default_validation_wif.is_file():
+            target_files.append(default_validation_wif)
+
+    for target in target_files:
+        print(f"\n[CHECK] Validating file on disk: {target}")
+        is_valid, errors = verify_wif_file(target)
+        if is_valid:
+            print(f"[PASS] File '{target.name}' strictly complies with WIF 1.1 specification.")
+        else:
+            print(f"[FAIL] Errors in '{target.name}':")
+            for err in errors:
+                print(f"  - {err}")
+            all_passed = False
+
+    # 2. Verify synthetic generated draft serialization
+    print("\n[CHECK] Validating synthetic draft serialization pipeline:")
     twill_2_2 = [
         [1, 1, 0, 0],
         [0, 1, 1, 0],
@@ -134,12 +175,13 @@ def main() -> int:
         print("  - Numbered [NOTES] verified")
         print("  - Valid physical units ('Centimeters') verified")
         print("  - 1-based indexing verified")
-        return 0
     else:
-        print("[FAIL] WIF compliance errors detected:")
+        print("[FAIL] Generated WIF compliance errors detected:")
         for err in errors:
             print(f"  - {err}")
-        return 1
+        all_passed = False
+
+    return 0 if all_passed else 1
 
 
 if __name__ == "__main__":

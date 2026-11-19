@@ -10,8 +10,9 @@ This directory contains bundled reference images used for 1-click demonstrations
 - **Physical Weave Structure:** 2/2 balanced twill (two warp floats over two weft picks, forming symmetric 45-degree diagonal wales).
 - **Observed Characteristics:** Multi-colored dyed wool yarns (indigo blue and slate gray-blue dominant clusters).
 - **Basis for Label:** Direct visual inspection of the yarn interlacing pattern confirms an alternating over-2, under-2 float repeat across warp and weft.
-- **Edits:** Cropped from a larger close-up photograph to focus on thread crossings.
-- **Attribution & Provenance Status:** Added during Issue #46 development. Original photographer and textile maker are unconfirmed in repository records; treated as an internal demonstration sample pending archival attribution.
+- **Source & Attribution:** "Tartan cloth closeup" by SMcCandlish ([Wikimedia Commons source](https://commons.wikimedia.org/wiki/File:Tartan_cloth_closeup.jpg)).
+- **License:** Creative Commons CC0 1.0 Universal Public Domain Dedication ([CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)).
+- **Modifications:** Resized and cropped to 1024px width for lightweight web demonstration.
 
 ---
 
@@ -21,8 +22,9 @@ This directory contains bundled reference images used for 1-click demonstrations
 - **Physical Weave Structure:** 3/1 right-hand twill (warp-faced denim weave where dyed indigo warp passes over three ecru weft picks before passing under one).
 - **Observed Characteristics:** Indigo warp yarns and undyed/ecru weft yarns with clear diagonal wale lines.
 - **Basis for Label:** Direct visual inspection confirms a classic 3/1 twill repeat with prominent warp dominance on the technical face.
-- **Edits:** Cropped from a close-up photograph and resized for macro demonstration.
-- **Attribution & Provenance Status:** Added during Issue #46 development. Original photographer and denim manufacturer are unconfirmed in repository records; treated as an internal demonstration sample pending archival attribution.
+- **Source & Attribution:** "Jeansfabric" by Thegreenj ([Wikimedia Commons source](https://commons.wikimedia.org/wiki/File:Jeansfabric.jpg)), photographed August 21, 2007.
+- **License:** Creative Commons Attribution-ShareAlike 3.0 Unported ([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)) and GNU Free Documentation License (GFDL 1.2+).
+- **Modifications:** Cropped and scaled to 1024px height for macro demonstration.
 
 ---
 
