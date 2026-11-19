@@ -43,6 +43,7 @@ interface WeaveContextType {
   handleFileSelect: (file: File) => void;
   handleCropComplete: (blob: Blob, dataUrl: string) => Promise<void>;
   toggleMatrixCell: (row: number, col: number) => void;
+  mirrorMasterMatrix: () => void;
   selectPreset: (preset: WeaveFamily) => void;
   setCustomRepeatSize: (size: number) => void;
   triggerCompile: () => Promise<void>;
@@ -196,6 +197,11 @@ export const WeaveProvider: React.FC<{
     });
   }, []);
 
+  const mirrorMasterMatrix = useCallback(() => {
+    setCompiledResult(null);
+    setMasterMatrix((prev) => prev.map((row) => [...row].reverse()));
+  }, []);
+
   const handleSetWarpColor = useCallback((color: string) => {
     setWarpColor(color);
     setCompiledResult(null);
@@ -311,6 +317,7 @@ export const WeaveProvider: React.FC<{
         handleFileSelect,
         handleCropComplete,
         toggleMatrixCell,
+        mirrorMasterMatrix,
         selectPreset,
         setCustomRepeatSize,
         triggerCompile,
