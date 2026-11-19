@@ -19,24 +19,24 @@ Traditional textile digitization tools either treat weaving drafts as purely gra
 
 ```mermaid
 flowchart TD
-    A["Uploaded Swatch Photo (JPEG/PNG/WebP)"] --> A1["Crop Quality Guard (Resolution >= 128px & Aspect Check)"]
-    A1 --> B["ImagePreprocessor (CLAHE + Bilateral Filtering)"]
-    B --> C["FFTProfiler (2D FFT Spectrum)"]
-    B --> KM["OpenCV K-Means Clustering (LAB Space, K=2/K=4)"]
-    KM -->|Dominant Warp/Weft Hex Colors| G["Human Verification Loop (Master Tile + Canvas)"]
-    C -->|Detect Skew Angle| D["Affine Deskewing"]
-    C -->|Detect Periodicity| E["Warp/Weft Spacing (dx, dy)"]
+    A["Uploaded Swatch Photo (JPEG, PNG, WebP)"] --> A1["Crop Quality Guard: Resolution and Aspect Check"]
+    A1 --> B["ImagePreprocessor: CLAHE and Bilateral Filtering"]
+    B --> C["FFTProfiler: 2D FFT Spectrum"]
+    B --> KM["OpenCV K-Means Clustering: LAB Space"]
+    KM -->|"Dominant Warp and Weft Hex Colors"| G["Human Verification Loop: Master Tile and Canvas"]
+    C -->|"Detect Skew Angle"| D["Affine Deskewing"]
+    C -->|"Detect Periodicity"| E["Warp and Weft Spacing: dx, dy"]
     D --> F["Vertex AI Gemini 3.8 Flash Curation"]
-    F -->|Non-Textile Guard: is_woven_textile == false| NT["Fail-Closed Guard: Lock Draft Compilation"]
-    F -->|Heuristic Weave Suggestion (Plain / Twill)| G
+    F -->|"Non-Textile Guard: is_woven_textile is False"| NT["Fail-Closed Guard: Lock Draft Compilation"]
+    F -->|"Heuristic Weave Suggestion: Plain or Twill"| G
     E --> G
-    PROV["User-Supplied Provenance Form (Origin, Maker, Era)"] --> H
-    G -->|Confirmed NxN Master Tile| H["Boolean Matrix Compiler (M[s,t] = D[i_t, j_s])"]
-    H --> I["Cyclic Float & Uniformity Validator"]
-    I -->|Passed: Shafts & Treadles <= 4| J["WIF 1.1 Exporter ([WEAVING], Physical Units, [NOTES])"]
-    I -->|Violated| K["Validation Error Feedback (Prompt Manual Tile Adjustment)"]
-    J --> L["Interoperable .WIF File & Visual 4-Part Draft Card"]
-    J --> M["Printable Physical Loom Bench Sheet (window.print)"]
+    PROV["User-Supplied Provenance Form"] --> H["Boolean Matrix Compiler"]
+    G -->|"Confirmed NxN Master Tile"| H
+    H --> I["Cyclic Float and Uniformity Validator"]
+    I -->|"Passed: 4 Shafts and Treadles or Fewer"| J["WIF 1.1 Exporter"]
+    I -->|"Constraint Violated"| K["Validation Error Feedback"]
+    J --> L["Interoperable WIF File and Visual Draft Card"]
+    J --> M["Printable Physical Loom Bench Sheet"]
 ```
 
 ---
