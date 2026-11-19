@@ -45,13 +45,13 @@ ThreadLore deploys a stateless **Google Cloud Run** container combining compute-
 
 ---
 
-## 🔄 System Flow & State Machine
+## 🔄 End-to-End Execution Sequence
 
-The pipeline enforces mathematical verification at every stage, combining optical deskewing with human-in-the-loop pattern confirmation before calculating loom harness mechanics.
+The sequence coordinates browser-based validation, serverless Cloud Run preprocessing, Gemini Flash structural analysis, and deterministic Boolean factorization.
 
-![ThreadLore Flow State Machine](docs/assets/threadlore_flow_diagram.png)
+![ThreadLore Execution Sequence](docs/assets/threadlore_sequence_diagram.png)
 
-*High-resolution vector available at [docs/assets/threadlore_flow_diagram.svg](docs/assets/threadlore_flow_diagram.svg).*
+*High-resolution vector available at [docs/assets/threadlore_sequence_diagram.svg](docs/assets/threadlore_sequence_diagram.svg) and editable diagram source at [docs/assets/threadlore_sequence_diagram.excalidraw](docs/assets/threadlore_sequence_diagram.excalidraw).*
 
 ---
 
@@ -100,6 +100,7 @@ The pipeline enforces mathematical verification at every stage, combining optica
 | 📐 **[Technical Architecture](docs/architecture.md)** | In-depth breakdown of 2D FFT, Gemini curation, and Boolean matrix factorization. |
 | 📜 **[WIF 1.1 Specification Guide](docs/wif_spec_guide.md)** | Standard compliance rules, section layout, and parser verification. |
 | 🎨 **[Architecture Diagram Source](docs/assets/ThreadLore_Architecture.excalidraw)** | Editable hand-drawn chalkboard architecture blueprint (Excalidraw). |
+| 🔄 **[Execution Sequence Source](docs/assets/threadlore_sequence_diagram.excalidraw)** | Editable hand-drawn chalkboard execution sequence (Excalidraw). |
 
 ---
 
