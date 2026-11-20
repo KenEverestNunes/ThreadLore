@@ -56,3 +56,11 @@ build_sketch_svg.py
 build_flow_svg.py
 inline_svg.py
 excalidraw_preview.html
+video_build/
+test_playwright_nav.py
+test_workflow_automation.py
+build_demo_video.py
+generate_audio.py
+generate_complete_video.py
+generate_perfect_demo.py
+test_cursor_animation.py

@@ -1,0 +1,116 @@
+1
+00:00:00,000 --> 00:00:04,800
+This is a photograph of tartan. Beside it is a draft showing how to weave its repeating structure.
+
+2
+00:00:04,800 --> 00:00:10,200
+I built ThreadLore to help a weaver get from one to the other.
+
+3
+00:00:10,410 --> 00:00:15,500
+Imagine you're documenting a textile whose weaving instructions have been lost.
+
+4
+00:00:15,500 --> 00:00:19,200
+The photograph preserves the colors and checks.
+
+5
+00:00:19,200 --> 00:00:23,700
+To set up a loom, you also need to know which yarn passes over the other at each crossing.
+
+6
+00:00:23,730 --> 00:00:28,500
+I'll start with this tartan, choosing a patch where I can follow individual yarns.
+
+7
+00:00:28,500 --> 00:00:32,500
+When I click Confirm and Analyze, watch the loading indicator.
+
+8
+00:00:32,500 --> 00:00:39,700
+ThreadLore is analyzing optical thread density, matching warp and weft yarn colors, and reconstructing the weave structure.
+
+9
+00:00:39,740 --> 00:00:45,200
+Here's the analysis. The engine matched the yarn colors and labeled this as two-over, two-under twill, so I'll use that as my starting point.
+
+10
+00:00:45,200 --> 00:00:51,500
+Now I want to see whether those crossings line up with the photograph.
+
+11
+00:00:51,520 --> 00:00:57,500
+Watch this yarn near the middle. I'll slide the grid until the intersection sits over the crossing I'm looking at.
+
+12
+00:00:57,500 --> 00:01:03,900
+Now I can follow the yarn across the photo and compare the next few crossings with the proposed weave.
+
+13
+00:01:03,930 --> 00:01:10,200
+Now watch the photo while I change one square on the right. That crossing flips everywhere the tile repeats across the fabric.
+
+14
+00:01:10,200 --> 00:01:17,700
+This whole design has just sixteen crossings to review. I'll flip that square back before compiling.
+
+15
+00:01:17,780 --> 00:01:21,500
+I can give the swatch a title and record what I know about it.
+
+16
+00:01:21,500 --> 00:01:24,000
+I'll leave the maker and date blank because I don't know them.
+
+17
+00:01:24,020 --> 00:01:31,000
+Once I approve the tile, the compiler works out which shaft carries each thread, which shafts lift together, and which treadle to press for each row.
+
+18
+00:01:31,000 --> 00:01:37,700
+Then it simulates those instructions and checks the crossings against the tile I approved.
+
+19
+00:01:37,720 --> 00:01:43,500
+Here's the sheet a weaver can take to the loom. It puts the setup instructions beside a preview of the fabric.
+
+20
+00:01:43,500 --> 00:01:48,600
+I can also export the draft as a WIF file for weaving software.
+
+21
+00:01:48,640 --> 00:01:54,500
+I also tested a photograph documented as plain weave. ThreadLore identified its two-by-two repeat.
+
+22
+00:01:54,500 --> 00:02:05,500
+Reading the exported loom instructions back independently reproduced the expected over-under pattern at all 256 crossings in this test.
+
+23
+00:02:05,510 --> 00:02:11,500
+The first request starts here, with the cropped photo.
+
+24
+00:02:11,500 --> 00:02:16,050
+React sends it to FastAPI on Cloud Run, where OpenCV estimates the spacing and angle of the yarns.
+
+25
+00:02:16,050 --> 00:02:20,500
+Gemini Flash on Vertex AI suggests a weave.
+
+26
+00:02:20,500 --> 00:02:27,140
+Back in the browser, the weaver can align the overlay with the photo and correct individual crossings in the tile.
+
+27
+00:02:27,140 --> 00:02:31,000
+The second request sends that approved tile to the loom compiler. It calculates the loom setup.
+
+28
+00:02:31,000 --> 00:02:38,660
+The validator simulates those instructions and checks every crossing against the tile.
+
+29
+00:02:38,660 --> 00:02:46,240
+The result is a four-part draft to inspect, a WIF file for weaving software, and a printable card to take to the loom.
+

@@ -2,10 +2,11 @@
 ### AI-Assisted Physical Textile-to-Loom Reconstruction Pipeline
 **"Preserve the weave, not just the photograph."**
 
-**[🚀 Try ThreadLore Live on Google Cloud Run](https://threadlore-122120455814.us-central1.run.app/)**
+**[🚀 Try ThreadLore Live on Google Cloud Run](https://threadlore-122120455814.us-central1.run.app/)** · **[📺 Watch 3-Minute Video Demo on YouTube](https://youtu.be/QQ4wO8BPFlU)**
 
 ThreadLore helps a weaver recover a repeating pattern from a close-up fabric photo. The weaver checks the suggested tile against the photo, then downloads loom instructions or prints a bench sheet.
 
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Watch_Demo_Video-FF0000?style=flat&logo=youtube&logoColor=white)](https://youtu.be/QQ4wO8BPFlU)
 [![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Deploys_Serverless-4285F4?style=flat&logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 [![Vertex AI](https://img.shields.io/badge/Vertex_AI-Gemini_Flash-34A853?style=flat&logo=google&logoColor=white)](https://cloud.google.com/vertex-ai)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -15,6 +16,8 @@ ThreadLore helps a weaver recover a repeating pattern from a close-up fabric pho
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > Built for the **Google Cloud Run "Build for Good" Hackathon** · Scheduled Launch: **November 20, 2026** on Product Hunt.
+
+[![Watch the ThreadLore Demo Video](docs/assets/ThreadLore_Thumbnail.png)](https://youtu.be/QQ4wO8BPFlU)
 
 ---
 
