@@ -1,8 +1,8 @@
-# 🧵 ThreadLore
+# ThreadLore
 ### AI-Assisted Physical Textile-to-Loom Reconstruction Pipeline
 **"Preserve the weave, not just the photograph."**
 
-**[🚀 Try ThreadLore Live on Google Cloud Run](https://threadlore-122120455814.us-central1.run.app/)** · **[📺 Watch 3-Minute Video Demo on YouTube](https://youtu.be/QQ4wO8BPFlU)**
+**[Try ThreadLore Live on Google Cloud Run](https://threadlore-122120455814.us-central1.run.app/)** · **[Watch Video Demo on YouTube](https://youtu.be/QQ4wO8BPFlU)**
 
 ThreadLore helps a weaver recover a repeating pattern from a close-up fabric photo. The weaver checks the suggested tile against the photo, then downloads loom instructions or prints a bench sheet.
 
@@ -17,7 +17,7 @@ ThreadLore helps a weaver recover a repeating pattern from a close-up fabric pho
 
 > Built for the **Google Cloud Run "Build for Good" Hackathon** · Scheduled Launch: **November 20, 2026** on Product Hunt.
 
-[![Watch the ThreadLore Demo Video](docs/assets/ThreadLore_Thumbnail.png)](https://youtu.be/QQ4wO8BPFlU)
+[![ThreadLore Demo on YouTube](https://img.youtube.com/vi/QQ4wO8BPFlU/maxresdefault.jpg)](https://youtu.be/QQ4wO8BPFlU)
 
 ---
 
@@ -35,7 +35,7 @@ The 256 crossings repeat the same 2×2 tile. The comparison is a digital reconst
 
 ---
 
-## 🌟 Overview: What is ThreadLore?
+## Overview: What is ThreadLore?
 
 Physical heritage fabrics survive in community archives, museums, and family collections, but their original weaving drafts (loom setup instructions) are frequently lost.
 
@@ -54,7 +54,7 @@ ThreadLore does not attempt ungrounded archaeological discovery or speculative s
 
 ---
 
-## 📐 System Architecture
+## System Architecture
 
 ThreadLore deploys a stateless **Google Cloud Run** container combining compute-heavy OpenCV pre-processing and Python compilation, orchestrated with **Vertex AI** for zero-shot pattern curation.
 
@@ -64,7 +64,7 @@ ThreadLore deploys a stateless **Google Cloud Run** container combining compute-
 
 ---
 
-## 🔄 End-to-End Execution Sequence
+## End-to-End Execution Sequence
 
 The sequence coordinates browser-based validation, serverless Cloud Run preprocessing, Gemini Flash structural analysis, and deterministic Boolean factorization.
 
@@ -74,7 +74,7 @@ The sequence coordinates browser-based validation, serverless Cloud Run preproce
 
 ---
 
-## 💡 Core Features & Engineering Highlights
+## Core Features & Engineering Highlights
 
 ### 1. Master Repeat Tile (Guaranteed Symmetry)
 - **Problem:** Manually plotting every yarn crossing across an entire $16 \times 16$ grid (256 cells) is error-prone. A single misclick breaks mathematical symmetry, causing standard draft compilers to demand more shafts than an entry-level loom possesses.
@@ -112,18 +112,18 @@ The sequence coordinates browser-based validation, serverless Cloud Run preproce
 
 ---
 
-## 📚 Documentation Index
+## Documentation Index
 
 | Document | Purpose |
 |---|---|
-| 📐 **[Technical Architecture](docs/architecture.md)** | In-depth breakdown of 2D FFT, Gemini curation, and Boolean matrix factorization. |
-| 📜 **[WIF 1.1 Specification Guide](docs/wif_spec_guide.md)** | Standard compliance rules, section layout, and parser verification. |
-| 🎨 **[Architecture Diagram Source](docs/assets/ThreadLore_Architecture.excalidraw)** | Editable hand-drawn chalkboard architecture blueprint (Excalidraw). |
-| 🔄 **[Execution Sequence Source](docs/assets/threadlore_sequence_diagram.excalidraw)** | Editable hand-drawn chalkboard execution sequence (Excalidraw). |
+| **[Technical Architecture](docs/architecture.md)** | In-depth breakdown of 2D FFT, Gemini curation, and Boolean matrix factorization. |
+| **[WIF 1.1 Specification Guide](docs/wif_spec_guide.md)** | Standard compliance rules, section layout, and parser verification. |
+| **[Architecture Diagram Source](docs/assets/ThreadLore_Architecture.excalidraw)** | Editable hand-drawn chalkboard architecture blueprint (Excalidraw). |
+| **[Execution Sequence Source](docs/assets/threadlore_sequence_diagram.excalidraw)** | Editable hand-drawn chalkboard execution sequence (Excalidraw). |
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Domain | Technology | Purpose |
 |---|---|---|
@@ -136,7 +136,7 @@ The sequence coordinates browser-based validation, serverless Cloud Run preproce
 
 ---
 
-## 🚀 Quickstart & Local Setup
+## Quickstart & Local Setup
 
 ### Prerequisites
 - Python 3.11+
@@ -181,7 +181,7 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🧪 Testing & Verification
+## Testing & Verification
 
 ThreadLore enforces automated quality gates:
 
@@ -202,7 +202,7 @@ npm --prefix frontend run build
 
 ---
 
-## 📡 REST API Reference
+## REST API Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -213,7 +213,7 @@ npm --prefix frontend run build
 
 ---
 
-## ⚖️ Engineering Decisions & Guardrails
+## Engineering Decisions & Guardrails
 
 - **Why Cap at 4 Shafts?** The vast majority of traditional handweavers and community studios operate 4-shaft table or floor looms. Capping at 4 shafts ensures exported WIF files are immediately usable on common looms.
 - **Why Exclude Satin?** True satin requires at least 5 shafts (5-end satin). Supporting satin would exceed the 4-shaft ceiling and produce unweavable drafts on entry-level looms.
@@ -221,6 +221,6 @@ npm --prefix frontend run build
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the **MIT License**. See `LICENSE` for details.
